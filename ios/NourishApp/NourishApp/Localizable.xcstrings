@@ -1857,6 +1857,81 @@
     "Explore with sample meals. Sign in later to restore your own reviewed week." : {
       "localizations" : { "hi" : { "stringUnit" : { "state" : "translated", "value" : "नमूना भोजन के साथ देखें। अपना समीक्षित सप्ताह वापस पाने के लिए बाद में साइन इन करें।" } } }
     },
+    "YOUR REVIEWED WEEK" : {
+      "localizations" : { "hi" : { "stringUnit" : { "state" : "translated", "value" : "आपका समीक्षित सप्ताह" } } }
+    },
+    "Your week, at a glance." : {
+      "localizations" : { "hi" : { "stringUnit" : { "state" : "translated", "value" : "आपका सप्ताह, एक नज़र में।" } } }
+    },
+    "Choose a day to see its meals, nutrition, and intentional leftovers." : {
+      "localizations" : { "hi" : { "stringUnit" : { "state" : "translated", "value" : "भोजन, पोषण और जानबूझकर बचाए गए भोजन देखने के लिए कोई दिन चुनें।" } } }
+    },
+    "days planned" : {
+      "localizations" : { "hi" : { "stringUnit" : { "state" : "translated", "value" : "नियोजित दिन" } } }
+    },
+    "Built around seven planned days and intentional leftovers." : {
+      "localizations" : { "hi" : { "stringUnit" : { "state" : "translated", "value" : "सात नियोजित दिनों और सोच-समझकर बचाए गए भोजन के अनुसार बनाया गया।" } } }
+    },
+    "WEEKLY SHOP" : {
+      "localizations" : { "hi" : { "stringUnit" : { "state" : "translated", "value" : "साप्ताहिक खरीदारी" } } }
+    },
+    "Your grocery list." : {
+      "localizations" : { "hi" : { "stringUnit" : { "state" : "translated", "value" : "आपकी किराने की सूची।" } } }
+    },
+    "Consolidated from your reviewed week, with pantry items kept separate." : {
+      "localizations" : { "hi" : { "stringUnit" : { "state" : "translated", "value" : "आपके समीक्षित सप्ताह से एकत्रित, पैंट्री की चीज़ें अलग रखी गई हैं।" } } }
+    },
+    "Check off purchases or mark items already at home." : {
+      "localizations" : { "hi" : { "stringUnit" : { "state" : "translated", "value" : "खरीदी गई चीज़ों को चुनें या घर में मौजूद चीज़ों को चिह्नित करें।" } } }
+    },
+    "This preview list is built from the visible week, counts planned leftovers once, and updates when meals change." : {
+      "localizations" : { "hi" : { "stringUnit" : { "state" : "translated", "value" : "यह पूर्वावलोकन सूची दिख रहे सप्ताह से बनी है, नियोजित बचे भोजन को एक बार गिनती है और भोजन बदलने पर अपडेट होती है।" } } }
+    },
+    "Checked and pantry items both count toward progress." : {
+      "localizations" : { "hi" : { "stringUnit" : { "state" : "translated", "value" : "चुनी हुई और पैंट्री की चीज़ें, दोनों प्रगति में गिनी जाती हैं।" } } }
+    },
+    "WEEKLY PREP" : {
+      "localizations" : { "hi" : { "stringUnit" : { "state" : "translated", "value" : "साप्ताहिक तैयारी" } } }
+    },
+    "Sunday prep" : {
+      "localizations" : { "hi" : { "stringUnit" : { "state" : "translated", "value" : "रविवार की तैयारी" } } }
+    },
+    "Set up an easier week." : {
+      "localizations" : { "hi" : { "stringUnit" : { "state" : "translated", "value" : "सप्ताह को आसान बनाएँ।" } } }
+    },
+    " active time across small, reusable prep steps." : {
+      "localizations" : { "hi" : { "stringUnit" : { "state" : "translated", "value" : " सक्रिय समय, छोटे और दोबारा उपयोगी तैयारी चरणों में।" } } }
+    },
+    " active time now makes the week easier." : {
+      "localizations" : { "hi" : { "stringUnit" : { "state" : "translated", "value" : " सक्रिय समय अभी, ताकि सप्ताह आसान हो।" } } }
+    },
+    "Your prep flow" : {
+      "localizations" : { "hi" : { "stringUnit" : { "state" : "translated", "value" : "आपकी तैयारी का क्रम" } } }
+    },
+    "Everything is ready" : {
+      "localizations" : { "hi" : { "stringUnit" : { "state" : "translated", "value" : "सब कुछ तैयार है" } } }
+    },
+    "Complete one small win at a time" : {
+      "localizations" : { "hi" : { "stringUnit" : { "state" : "translated", "value" : "एक बार में एक छोटा काम पूरा करें" } } }
+    },
+    "START HERE" : {
+      "localizations" : { "hi" : { "stringUnit" : { "state" : "translated", "value" : "यहाँ से शुरू करें" } } }
+    },
+    "Show first task" : {
+      "localizations" : { "hi" : { "stringUnit" : { "state" : "translated", "value" : "पहला काम दिखाएँ" } } }
+    },
+    "All prep done" : {
+      "localizations" : { "hi" : { "stringUnit" : { "state" : "translated", "value" : "सारी तैयारी पूरी" } } }
+    },
+    " small wins completed" : {
+      "localizations" : { "hi" : { "stringUnit" : { "state" : "translated", "value" : " छोटे काम पूरे" } } }
+    },
+    "min" : {
+      "localizations" : { "hi" : { "stringUnit" : { "state" : "translated", "value" : "मिनट" } } }
+    },
+    "This week has no linked batch-prep tasks." : {
+      "localizations" : { "hi" : { "stringUnit" : { "state" : "translated", "value" : "इस सप्ताह कोई जुड़ा हुआ बैच-तैयारी काम नहीं है।" } } }
+    },
     "Week" : {
       "localizations" : {
         "hi" : { "stringUnit" : { "state" : "translated", "value" : "सप्ताह" } }

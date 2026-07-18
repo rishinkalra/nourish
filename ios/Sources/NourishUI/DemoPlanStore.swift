@@ -462,7 +462,7 @@ private extension DemoPlanStore {
                 title: "Prepare shared onion-tomato base",
                 activeMinutes: 20,
                 storageNote: "Cool within 2 hours and refrigerate portions in clean sealed containers.",
-                reuseNote: "Derived from \(recurringCounts["onion", default: 0]) meals using onion and \(recurringCounts["tomato", default: 0]) using tomato."
+                reuseNote: "Shared across the week's meals that use onion and tomato."
             ), at: 0)
         }
         return tasks

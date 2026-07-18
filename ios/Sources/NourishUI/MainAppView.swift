@@ -312,7 +312,18 @@ private struct ActiveWeekScreen: View {
                 let safeIndex = min(selectedIndex, plan.days.count - 1)
                 let day = plan.days[safeIndex]
                 VStack(alignment: .leading, spacing: 18) {
-                    ActiveSyncBanner()
+                    VStack(alignment: .leading, spacing: 6) {
+                        Text("YOUR REVIEWED WEEK")
+                            .font(.caption.bold())
+                            .tracking(1.2)
+                            .foregroundStyle(NourishTheme.inkSoft)
+                        Text("Your week, at a glance.")
+                            .font(.system(.largeTitle, design: .serif, weight: .semibold))
+                            .foregroundStyle(NourishTheme.ink)
+                            .accessibilityAddTraits(.isHeader)
+                        Text("Choose a day to see its meals, nutrition, and intentional leftovers.")
+                            .foregroundStyle(NourishTheme.inkSoft)
+                    }
                     if featureFlags.isEnabled(.weeklyInsights) {
                         WeeklyInsightsCard(plan: plan)
                     }
@@ -335,7 +346,9 @@ private struct ActiveWeekScreen: View {
                             }
                         }
                     }
-                    Text(activeDate(day.localDate)).font(.title2.bold())
+                    Text(activeDate(day.localDate))
+                        .font(.system(.title2, design: .serif, weight: .semibold))
+                        .foregroundStyle(NourishTheme.ink)
                     ActiveNutritionSummary(day: day, target: plan.targetSnapshot.dailyCalories)
                     ForEach(day.items, id: \.id) { item in
                         NavigationLink { ActiveRecipeDetail(itemID: item.id) } label: {
@@ -345,6 +358,7 @@ private struct ActiveWeekScreen: View {
                         .accessibilityIdentifier("active.meal.\(item.id)")
                         .accessibilityHint("Opens recipe details and safe swap options")
                     }
+                    ActiveSyncBanner()
                 }
                 .padding(18)
                 .padding(.bottom, 28)
@@ -352,6 +366,7 @@ private struct ActiveWeekScreen: View {
         }
         .background(NourishTheme.paper)
         .navigationTitle("My week")
+        .navigationBarTitleDisplayMode(.inline)
     }
 }
 
@@ -368,29 +383,12 @@ private struct WeeklyInsightsCard: View {
     }
 
     var body: some View {
-        VStack(alignment: .leading, spacing: 12) {
-            Label("Your week at a glance", systemImage: "chart.line.uptrend.xyaxis")
-                .font(.headline)
-                .foregroundStyle(NourishTheme.forest)
-            HStack(spacing: 10) {
-                insight(completed.formatted(), "completed")
-                insight(items.count.formatted(), "planned meals")
-                insight(plannedLeftovers.formatted(), "planned leftovers")
-            }
-            Text("This summary is being introduced gradually and can be disabled immediately by Nourish operations.")
-                .font(.caption)
-                .foregroundStyle(.secondary)
-        }
-        .padding(18)
-        .background(NourishTheme.limeSoft, in: RoundedRectangle(cornerRadius: 20))
-    }
-
-    private func insight(_ value: String, _ label: LocalizedStringKey) -> some View {
-        VStack(alignment: .leading, spacing: 2) {
-            Text(verbatim: value).font(.title3.bold())
-            Text(label).font(.caption2).foregroundStyle(.secondary)
-        }
-        .frame(maxWidth: .infinity, alignment: .leading)
+        WeekOverviewCard(
+            days: plan.days.count,
+            meals: items.count,
+            plannedLeftovers: plannedLeftovers,
+            completed: completed
+        )
     }
 }
 
@@ -686,23 +684,36 @@ private struct ActiveGroceryScreen: View {
     @State private var recordedListID: String?
 
     private var categories: [GroceryCategory] {
-        Array(Set(store.snapshot?.groceryList.items.map(\.category) ?? [])).sorted { $0.displayName < $1.displayName }
+        let available = Set(store.snapshot?.groceryList.items.map(\.category) ?? [])
+        return GroceryCategory.allCases.filter(available.contains)
     }
+
+    private var items: [GroceryItem] { store.snapshot?.groceryList.items ?? [] }
+    private var accountedItemCount: Int { items.filter { $0.disposition != .needed }.count }
 
     var body: some View {
         ScrollView {
             VStack(alignment: .leading, spacing: 18) {
-                ActiveSyncBanner()
-                Text("Weekly shop").font(.largeTitle.bold())
+                VStack(alignment: .leading, spacing: 6) {
+                    Text("WEEKLY SHOP")
+                        .font(.caption.bold())
+                        .tracking(1.2)
+                        .foregroundStyle(NourishTheme.inkSoft)
+                    Text("Your grocery list.")
+                        .font(.system(.largeTitle, design: .serif, weight: .semibold))
+                        .foregroundStyle(NourishTheme.ink)
+                    Text("Consolidated from your reviewed week, with pantry items kept separate.")
+                        .foregroundStyle(NourishTheme.inkSoft)
+                }
                     .accessibilityAddTraits(.isHeader)
-                Text("Normalized from the active reviewed plan. Planned leftovers are counted once.")
-                    .foregroundStyle(.secondary)
+                GroceryProgressCard(accounted: accountedItemCount, total: items.count)
                 ForEach(categories, id: \.rawValue) { category in
                     Text(category.localizedTitle).textCase(.uppercase).font(.caption.bold()).foregroundStyle(.secondary)
                     ForEach(store.snapshot?.groceryList.items.filter { $0.category == category } ?? [], id: \.id) { item in
                         ActiveGroceryRow(item: item)
                     }
                 }
+                ActiveSyncBanner()
             }
             .padding(18)
             .padding(.bottom, 28)
@@ -797,43 +808,83 @@ private struct ActivePrepScreen: View {
     @EnvironmentObject private var analyticsEventStore: AnalyticsEventStore
     @State private var recordedPlanID: String?
 
+    private var tasks: [PrepTask] { store.snapshot?.prepTimeline.tasks ?? [] }
+    private var firstIncompleteTask: PrepTask? { tasks.first { !$0.isComplete } }
+    private var completedCount: Int { tasks.filter(\.isComplete).count }
+    private var totalActiveMinutes: Int { tasks.reduce(0) { $0 + $1.activeMinutes } }
+
     var body: some View {
-        ScrollView {
-            VStack(alignment: .leading, spacing: 18) {
-                ActiveSyncBanner()
-                Text("Prep once. Coast later.").font(.largeTitle.bold())
-                if let tasks = store.snapshot?.prepTimeline.tasks, tasks.isEmpty {
-                    Text("This week has no linked batch-prep tasks.").foregroundStyle(.secondary)
-                } else {
-                    ForEach(store.snapshot?.prepTimeline.tasks ?? [], id: \.id) { task in
-                        Button { Task { await store.togglePrep(taskID: task.id) } } label: {
-                            HStack(alignment: .top, spacing: 12) {
-                                Image(systemName: task.isComplete ? "checkmark.circle.fill" : "circle")
-                                    .foregroundStyle(task.isComplete ? NourishTheme.leaf : .secondary)
-                                VStack(alignment: .leading, spacing: 7) {
-                                    HStack {
-                                        Text(task.title).font(.headline)
-                                        Spacer()
-                                        Text(verbatim: NourishFormatting.durationMinutes(Double(task.activeMinutes)))
-                                            .font(.caption.bold()).foregroundStyle(.secondary)
-                                    }
-                                    Text(activeDate(task.localDate)).font(.caption.bold()).foregroundStyle(.secondary)
-                                    Label { Text(verbatim: task.storageNote) } icon: { Image(systemName: "snowflake") }
-                                    Label { Text(verbatim: task.reuseNote) } icon: { Image(systemName: "arrow.triangle.2.circlepath") }
-                                }
-                                .font(.subheadline)
-                                .multilineTextAlignment(.leading)
-                            }
-                            .foregroundStyle(.primary)
-                            .padding(16)
-                            .background(NourishTheme.card, in: RoundedRectangle(cornerRadius: 20))
-                        }
-                        .buttonStyle(.plain)
+        ScrollViewReader { proxy in
+            ScrollView {
+                VStack(alignment: .leading, spacing: 18) {
+                    VStack(alignment: .leading, spacing: 6) {
+                        Text("WEEKLY PREP")
+                            .font(.caption.bold())
+                            .tracking(1.2)
+                            .foregroundStyle(NourishTheme.inkSoft)
+                        Text("Set up an easier week.")
+                            .font(.system(.largeTitle, design: .serif, weight: .semibold))
+                            .foregroundStyle(NourishTheme.ink)
+                            .accessibilityAddTraits(.isHeader)
+                        (Text(verbatim: NourishFormatting.durationMinutes(Double(totalActiveMinutes)))
+                            + Text(" active time across small, reusable prep steps."))
+                            .foregroundStyle(NourishTheme.inkSoft)
                     }
+
+                    if tasks.isEmpty {
+                        Text("This week has no linked batch-prep tasks.").foregroundStyle(.secondary)
+                    } else {
+                        if let firstIncompleteTask {
+                            PrepPriorityCard(
+                                title: firstIncompleteTask.title,
+                                detail: firstIncompleteTask.reuseNote,
+                                activeMinutes: firstIncompleteTask.activeMinutes,
+                                completed: completedCount,
+                                total: tasks.count
+                            ) {
+                                withAnimation { proxy.scrollTo(firstIncompleteTask.id, anchor: .center) }
+                            }
+                        } else {
+                            PrepCompleteCard(total: tasks.count)
+                        }
+
+                        sectionTitle(
+                            "Your prep flow",
+                            subtitle: completedCount == tasks.count ? "Everything is ready" : "Complete one small win at a time"
+                        )
+
+                        ForEach(tasks, id: \.id) { task in
+                            Button { Task { await store.togglePrep(taskID: task.id) } } label: {
+                                HStack(alignment: .top, spacing: 12) {
+                                    Image(systemName: task.isComplete ? "checkmark.circle.fill" : "circle")
+                                        .foregroundStyle(task.isComplete ? NourishTheme.leaf : .secondary)
+                                    VStack(alignment: .leading, spacing: 7) {
+                                        HStack {
+                                            Text(task.title).font(.headline)
+                                            Spacer()
+                                            Text(verbatim: NourishFormatting.durationMinutes(Double(task.activeMinutes)))
+                                                .font(.caption.bold()).foregroundStyle(.secondary)
+                                        }
+                                        Text(activeDate(task.localDate)).font(.caption.bold()).foregroundStyle(.secondary)
+                                        Label { Text(verbatim: task.storageNote) } icon: { Image(systemName: "snowflake") }
+                                        Label { Text(verbatim: task.reuseNote) } icon: { Image(systemName: "arrow.triangle.2.circlepath") }
+                                    }
+                                    .font(.subheadline)
+                                    .multilineTextAlignment(.leading)
+                                }
+                                .foregroundStyle(.primary)
+                                .padding(16)
+                                .background(NourishTheme.card, in: RoundedRectangle(cornerRadius: 20))
+                            }
+                            .buttonStyle(.plain)
+                            .id(task.id)
+                        }
+                    }
+                    ActiveSyncBanner()
                 }
+                .padding(18)
+                .padding(.bottom, 28)
             }
-            .padding(18)
-            .padding(.bottom, 28)
         }
         .background(NourishTheme.paper)
         .navigationTitle("Prep")
@@ -1527,7 +1578,24 @@ private struct WeekScreen: View {
     var body: some View {
         ScrollView {
             VStack(alignment: .leading, spacing: 18) {
-                IllustrativePlanBanner()
+                VStack(alignment: .leading, spacing: 6) {
+                    Text(verbatim: "13–19 JULY")
+                        .font(.caption.bold())
+                        .tracking(1.2)
+                        .foregroundStyle(NourishTheme.inkSoft)
+                    Text("Your week, at a glance.")
+                        .font(.system(.largeTitle, design: .serif, weight: .semibold))
+                        .foregroundStyle(NourishTheme.ink)
+                        .accessibilityAddTraits(.isHeader)
+                    Text("Built around seven planned days and intentional leftovers.")
+                        .foregroundStyle(NourishTheme.inkSoft)
+                }
+
+                WeekOverviewCard(
+                    days: store.days.count,
+                    meals: store.days.flatMap(\.meals).count,
+                    plannedLeftovers: store.days.flatMap(\.meals).filter(\.intentionalLeftover).count
+                )
 
                 ScrollView(.horizontal, showsIndicators: false) {
                     HStack(spacing: 10) {
@@ -1553,7 +1621,8 @@ private struct WeekScreen: View {
                 }
 
                 Text(verbatim: illustrativeDate(store.selectedDay, abbreviated: false))
-                    .font(.title2.bold())
+                    .font(.system(.title2, design: .serif, weight: .semibold))
+                    .foregroundStyle(NourishTheme.ink)
                 NutritionSummary(day: store.selectedDay)
 
                 ForEach(store.selectedDay.meals) { meal in
@@ -1563,6 +1632,7 @@ private struct WeekScreen: View {
                 }
 
                 VarietyCard()
+                IllustrativePlanBanner()
             }
             .padding(.horizontal, 18)
             .padding(.vertical, 12)
@@ -1570,10 +1640,61 @@ private struct WeekScreen: View {
         }
         .background(NourishTheme.paper)
         .navigationTitle("My week")
+        .navigationBarTitleDisplayMode(.inline)
         .sheet(item: $selectedMeal) { meal in
             RecipeDetailSheet(meal: meal)
                 .environmentObject(store)
         }
+    }
+}
+
+private struct WeekOverviewCard: View {
+    let days: Int
+    let meals: Int
+    let plannedLeftovers: Int
+    var completed: Int? = nil
+
+    var body: some View {
+        ViewThatFits(in: .horizontal) {
+            HStack(spacing: 0) {
+                metrics
+            }
+            VStack(spacing: 12) {
+                metrics
+            }
+        }
+        .padding(18)
+        .background(NourishTheme.card, in: RoundedRectangle(cornerRadius: 24))
+        .shadow(color: NourishTheme.ink.opacity(0.06), radius: 16, y: 8)
+    }
+
+    @ViewBuilder
+    private var metrics: some View {
+        metric(days, "days planned", systemImage: "calendar")
+        Divider().padding(.horizontal, 12)
+        metric(meals, "planned meals", systemImage: "fork.knife")
+        Divider().padding(.horizontal, 12)
+        metric(plannedLeftovers, "planned leftovers", systemImage: "arrow.triangle.2.circlepath")
+        if let completed {
+            Divider().padding(.horizontal, 12)
+            metric(completed, "completed", systemImage: "checkmark.circle")
+        }
+    }
+
+    private func metric(_ value: Int, _ label: LocalizedStringKey, systemImage: String) -> some View {
+        VStack(alignment: .leading, spacing: 5) {
+            Label {
+                Text(verbatim: NourishFormatting.integer(value))
+                    .font(.title2.bold())
+            } icon: {
+                Image(systemName: systemImage)
+                    .foregroundStyle(NourishTheme.leaf)
+            }
+            Text(label)
+                .font(.caption)
+                .foregroundStyle(NourishTheme.inkSoft)
+        }
+        .frame(maxWidth: .infinity, alignment: .leading)
     }
 }
 
@@ -1620,26 +1741,34 @@ private struct GroceryScreen: View {
     @EnvironmentObject private var store: DemoPlanStore
 
     private var categories: [String] {
-        Array(Set(store.groceries.map(\.category))).sorted { lhs, rhs in
-            if lhs == "Changed by swap" { return false }
-            if rhs == "Changed by swap" { return true }
-            return lhs < rhs
-        }
+        let order = ["Produce", "Dairy", "Protein", "Grains", "Pantry", "Spices", "Other", "Changed by swap"]
+        let available = Set(store.groceries.map(\.category))
+        return order.filter(available.contains) + available.filter { !order.contains($0) }.sorted()
+    }
+
+    private var accountedItemCount: Int {
+        store.groceries.filter {
+            store.checkedGroceryIDs.contains($0.id) || store.pantryGroceryIDs.contains($0.id)
+        }.count
     }
 
     var body: some View {
         ScrollView {
             VStack(alignment: .leading, spacing: 20) {
                 VStack(alignment: .leading, spacing: 8) {
-                    Text("Weekly shop").font(.largeTitle.bold())
-                    Text("Check items off, or mark what is already in your pantry.")
-                        .foregroundStyle(.secondary)
-                    ProgressView(value: store.groceryProgress)
-                        .tint(NourishTheme.leaf)
-                    (Text(verbatim: NourishFormatting.integer(Int(store.groceryProgress * 100)) + "%")
-                        + Text(" accounted for"))
-                        .font(.caption.bold()).foregroundStyle(.secondary)
+                    Text("WEEKLY SHOP")
+                        .font(.caption.bold())
+                        .tracking(1.2)
+                        .foregroundStyle(NourishTheme.inkSoft)
+                    Text("Your grocery list.")
+                        .font(.system(.largeTitle, design: .serif, weight: .semibold))
+                        .foregroundStyle(NourishTheme.ink)
+                        .accessibilityAddTraits(.isHeader)
+                    Text("Check off purchases or mark items already at home.")
+                        .foregroundStyle(NourishTheme.inkSoft)
                 }
+
+                GroceryProgressCard(accounted: accountedItemCount, total: store.groceries.count)
 
                 ForEach(categories, id: \.self) { category in
                     VStack(alignment: .leading, spacing: 10) {
@@ -1652,10 +1781,16 @@ private struct GroceryScreen: View {
                     }
                 }
 
-                Text("This development list is derived from the visible week, excludes planned leftovers from double-counting, persists offline, and recalculates with swaps. Production will use reviewed recipe snapshots.")
+                Label {
+                    Text("This preview list is built from the visible week, counts planned leftovers once, and updates when meals change.")
+                } icon: {
+                    Image(systemName: "info.circle")
+                }
                     .font(.footnote)
-                    .foregroundStyle(.secondary)
-                    .padding(.top, 4)
+                    .foregroundStyle(NourishTheme.inkSoft)
+                    .padding(16)
+                    .frame(maxWidth: .infinity, alignment: .leading)
+                    .background(NourishTheme.limeSoft, in: RoundedRectangle(cornerRadius: 18))
             }
             .padding(18)
             .padding(.bottom, 28)
@@ -1663,6 +1798,48 @@ private struct GroceryScreen: View {
         .background(NourishTheme.paper)
         .navigationTitle("Groceries")
         .navigationBarTitleDisplayMode(.inline)
+    }
+}
+
+private struct GroceryProgressCard: View {
+    let accounted: Int
+    let total: Int
+
+    private var progress: Double {
+        guard total > 0 else { return 0 }
+        return Double(accounted) / Double(total)
+    }
+
+    var body: some View {
+        VStack(alignment: .leading, spacing: 13) {
+            HStack(alignment: .firstTextBaseline) {
+                VStack(alignment: .leading, spacing: 3) {
+                    Text("WEEKLY SHOP")
+                        .font(.caption2.bold())
+                        .tracking(1.1)
+                        .foregroundStyle(Color.white.opacity(0.72))
+                    (Text(verbatim: "\(NourishFormatting.integer(accounted)) / \(NourishFormatting.integer(total))")
+                        + Text(" accounted for"))
+                        .font(.title2.bold())
+                }
+                Spacer()
+                Text(verbatim: NourishFormatting.integer(Int((progress * 100).rounded())) + "%")
+                    .font(.headline)
+                    .padding(.horizontal, 11)
+                    .padding(.vertical, 7)
+                    .background(Color.white.opacity(0.14), in: Capsule())
+            }
+            ProgressView(value: progress)
+                .tint(NourishTheme.limeSoft)
+                .background(Color.white.opacity(0.16))
+            Text("Checked and pantry items both count toward progress.")
+                .font(.caption)
+                .foregroundStyle(Color.white.opacity(0.72))
+        }
+        .foregroundStyle(.white)
+        .padding(20)
+        .background(NourishTheme.forest, in: RoundedRectangle(cornerRadius: 24))
+        .shadow(color: NourishTheme.ink.opacity(0.10), radius: 18, y: 9)
     }
 }
 
@@ -1746,28 +1923,149 @@ private struct PrepScreen: View {
         }
     }
 
-    var body: some View {
-        ScrollView {
-            VStack(alignment: .leading, spacing: 20) {
-                Text("Prep once. Coast later.").font(.largeTitle.bold())
-                Text("Small batches reduce active cooking time without hiding repetition.")
-                    .foregroundStyle(.secondary)
+    private var firstIncompleteTask: DemoPrepTask? {
+        store.prepTasks.first { !store.completedPrepIDs.contains($0.id) }
+    }
 
-                ForEach(prepDays, id: \.self) { day in
-                    VStack(alignment: .leading, spacing: 12) {
-                        localizedDemoLabel(day).textCase(.uppercase).font(.caption.bold()).foregroundStyle(.secondary)
-                        ForEach(store.prepTasks.filter { $0.day == day }) { task in
-                            PrepTaskRow(task: task)
+    private var totalActiveMinutes: Int { store.prepTasks.reduce(0) { $0 + $1.activeMinutes } }
+
+    var body: some View {
+        ScrollViewReader { proxy in
+            ScrollView {
+                VStack(alignment: .leading, spacing: 20) {
+                    VStack(alignment: .leading, spacing: 6) {
+                        Text("Sunday prep")
+                            .textCase(.uppercase)
+                            .font(.caption.bold())
+                            .tracking(1.2)
+                            .foregroundStyle(NourishTheme.inkSoft)
+                        Text("Set up an easier week.")
+                            .font(.system(.largeTitle, design: .serif, weight: .semibold))
+                            .foregroundStyle(NourishTheme.ink)
+                            .accessibilityAddTraits(.isHeader)
+                        (Text(verbatim: NourishFormatting.durationMinutes(Double(totalActiveMinutes)))
+                            + Text(" active time now makes the week easier."))
+                            .foregroundStyle(NourishTheme.inkSoft)
+                    }
+
+                    if let firstIncompleteTask {
+                        PrepPriorityCard(
+                            title: firstIncompleteTask.title,
+                            detail: firstIncompleteTask.reuseNote,
+                            activeMinutes: firstIncompleteTask.activeMinutes,
+                            completed: store.completedPrepIDs.count,
+                            total: store.prepTasks.count
+                        ) {
+                            withAnimation { proxy.scrollTo(firstIncompleteTask.id, anchor: .center) }
+                        }
+                    } else {
+                        PrepCompleteCard(total: store.prepTasks.count)
+                    }
+
+                    sectionTitle(
+                        "Your prep flow",
+                        subtitle: store.completedPrepIDs.count == store.prepTasks.count
+                            ? "Everything is ready"
+                            : "Complete one small win at a time"
+                    )
+
+                    ForEach(prepDays, id: \.self) { day in
+                        VStack(alignment: .leading, spacing: 12) {
+                            localizedDemoLabel(day).textCase(.uppercase).font(.caption.bold()).foregroundStyle(.secondary)
+                            ForEach(store.prepTasks.filter { $0.day == day }) { task in
+                                PrepTaskRow(task: task)
+                                    .id(task.id)
+                            }
                         }
                     }
                 }
+                .padding(18)
+                .padding(.bottom, 28)
             }
-            .padding(18)
-            .padding(.bottom, 28)
         }
         .background(NourishTheme.paper)
         .navigationTitle("Prep")
         .navigationBarTitleDisplayMode(.inline)
+    }
+}
+
+private struct PrepPriorityCard: View {
+    let title: String
+    let detail: String
+    let activeMinutes: Int
+    let completed: Int
+    let total: Int
+    let revealTask: () -> Void
+
+    var body: some View {
+        VStack(alignment: .leading, spacing: 16) {
+            HStack(alignment: .top, spacing: 15) {
+                ZStack {
+                    Circle().stroke(Color.white.opacity(0.24), lineWidth: 7)
+                    Circle()
+                        .trim(from: 0, to: progress)
+                        .stroke(NourishTheme.limeSoft, style: StrokeStyle(lineWidth: 7, lineCap: .round))
+                        .rotationEffect(.degrees(-90))
+                    VStack(spacing: 0) {
+                        Text(verbatim: NourishFormatting.integer(activeMinutes)).font(.title3.bold())
+                        Text("min").font(.caption2)
+                    }
+                }
+                .frame(width: 78, height: 78)
+
+                VStack(alignment: .leading, spacing: 5) {
+                    Text("START HERE")
+                        .font(.caption2.bold())
+                        .tracking(1.1)
+                        .foregroundStyle(Color.white.opacity(0.70))
+                    Text(verbatim: title)
+                        .font(.system(.title2, design: .serif, weight: .semibold))
+                    Text(verbatim: detail)
+                        .font(.subheadline)
+                        .foregroundStyle(Color.white.opacity(0.76))
+                }
+            }
+
+            Button(action: revealTask) {
+                Label("Show first task", systemImage: "arrow.down")
+                    .font(.subheadline.bold())
+                    .foregroundStyle(NourishTheme.ink)
+                    .frame(maxWidth: .infinity, minHeight: 48)
+                    .background(.white, in: RoundedRectangle(cornerRadius: 14))
+            }
+            .buttonStyle(.plain)
+        }
+        .foregroundStyle(.white)
+        .padding(20)
+        .background(NourishTheme.forest, in: RoundedRectangle(cornerRadius: 26))
+        .shadow(color: NourishTheme.ink.opacity(0.12), radius: 20, y: 10)
+        .accessibilityElement(children: .contain)
+    }
+
+    private var progress: Double {
+        guard total > 0 else { return 0 }
+        return Double(completed) / Double(total)
+    }
+}
+
+private struct PrepCompleteCard: View {
+    let total: Int
+
+    var body: some View {
+        HStack(spacing: 14) {
+            Image(systemName: "checkmark.circle.fill")
+                .font(.largeTitle)
+            VStack(alignment: .leading, spacing: 4) {
+                Text("All prep done").font(.headline)
+                (Text(verbatim: NourishFormatting.integer(total)) + Text(" small wins completed"))
+                    .font(.subheadline)
+                    .foregroundStyle(NourishTheme.inkSoft)
+            }
+        }
+        .foregroundStyle(NourishTheme.forest)
+        .padding(18)
+        .frame(maxWidth: .infinity, alignment: .leading)
+        .background(NourishTheme.limeSoft, in: RoundedRectangle(cornerRadius: 22))
     }
 }
 
