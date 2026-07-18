@@ -813,7 +813,8 @@ function isCookingDay(profile, dayOffset) {
 function dietCompatible(recipeDiet, requestedDiet) {
   if (requestedDiet === "vegan") return recipeDiet === "vegan";
   if (requestedDiet === "vegetarian") return recipeDiet === "vegan" || recipeDiet === "vegetarian";
-  return true;
+  if (requestedDiet === "eggetarian") return ["vegan", "vegetarian", "eggetarian"].includes(recipeDiet);
+  return requestedDiet === "nonVegetarian";
 }
 
 function cuisineMatches(recipe, profile) {

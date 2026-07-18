@@ -15,6 +15,7 @@ public enum DietType: String, Codable, CaseIterable, Sendable {
     case vegetarian
     case eggetarian
     case vegan
+    case nonVegetarian
 }
 
 public enum UnitSystem: String, Codable, CaseIterable, Sendable {

@@ -60,6 +60,22 @@ test("wellness score v3 applies protein, cost, and equipment signals after hard 
   assert.deepEqual(eligibilityReasons(recipe({ equipment: ["oven"] }), profile, "lunch"), ["equipmentUnavailable"]);
 });
 
+test("diet eligibility distinguishes eggetarian from non-vegetarian profiles", () => {
+  const nonVegetarianRecipe = recipe({ dietType: "nonVegetarian" });
+  assert.deepEqual(
+    eligibilityReasons(nonVegetarianRecipe, { ...profile, diet: "eggetarian" }, "lunch"),
+    ["dietMismatch"],
+  );
+  assert.deepEqual(
+    eligibilityReasons(nonVegetarianRecipe, { ...profile, diet: "nonVegetarian" }, "lunch"),
+    [],
+  );
+  assert.deepEqual(
+    eligibilityReasons(recipe({ dietType: "vegan" }), { ...profile, diet: "nonVegetarian" }, "lunch"),
+    [],
+  );
+});
+
 test("wellness score v3 scales only within reviewed bounds", () => {
   const scalable = recipe({
     nutritionPerServing: { calories: 500, proteinGrams: 25, carbohydrateGrams: 50, fatGrams: 15, fibreGrams: 8 },

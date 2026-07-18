@@ -1779,6 +1779,36 @@
     "Choose common equipment" : {
       "localizations" : { "hi" : { "stringUnit" : { "state" : "translated", "value" : "सामान्य उपकरण चुनें" } } }
     },
+    "Non-vegetarian" : {
+      "localizations" : { "hi" : { "stringUnit" : { "state" : "translated", "value" : "मांसाहारी" } } }
+    },
+    "View recipe & options" : {
+      "localizations" : { "hi" : { "stringUnit" : { "state" : "translated", "value" : "रेसिपी और विकल्प देखें" } } }
+    },
+    "Want something different?" : {
+      "localizations" : { "hi" : { "stringUnit" : { "state" : "translated", "value" : "कुछ और खाना चाहते हैं?" } } }
+    },
+    "Nourish will only show replacements that still fit your diet, allergens, targets, and the variety of your whole week." : {
+      "localizations" : { "hi" : { "stringUnit" : { "state" : "translated", "value" : "Nourish केवल वे विकल्प दिखाएगा जो आपके आहार, एलर्जी, लक्ष्यों और पूरे सप्ताह की विविधता के अनुकूल हों।" } } }
+    },
+    "Find another meal" : {
+      "localizations" : { "hi" : { "stringUnit" : { "state" : "translated", "value" : "कोई दूसरा भोजन खोजें" } } }
+    },
+    "No suitable replacements are available right now. Your current meal is unchanged." : {
+      "localizations" : { "hi" : { "stringUnit" : { "state" : "translated", "value" : "अभी कोई उपयुक्त विकल्प उपलब्ध नहीं है। आपका वर्तमान भोजन नहीं बदला है।" } } }
+    },
+    "Fits your plan" : {
+      "localizations" : { "hi" : { "stringUnit" : { "state" : "translated", "value" : "आपकी योजना के अनुकूल" } } }
+    },
+    "Choose this replacement" : {
+      "localizations" : { "hi" : { "stringUnit" : { "state" : "translated", "value" : "यह विकल्प चुनें" } } }
+    },
+    "Choose a replacement" : {
+      "localizations" : { "hi" : { "stringUnit" : { "state" : "translated", "value" : "विकल्प चुनें" } } }
+    },
+    "Every option shown keeps your diet, allergen, exclusion, and weekly variety rules in place." : {
+      "localizations" : { "hi" : { "stringUnit" : { "state" : "translated", "value" : "दिखाया गया हर विकल्प आपके आहार, एलर्जी, परहेज़ और साप्ताहिक विविधता के नियमों को बनाए रखता है।" } } }
+    },
     "Week" : {
       "localizations" : {
         "hi" : { "stringUnit" : { "state" : "translated", "value" : "सप्ताह" } }

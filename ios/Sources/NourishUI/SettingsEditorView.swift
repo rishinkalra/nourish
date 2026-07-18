@@ -75,6 +75,7 @@ struct ProfileEditorView: View {
                         Text("Vegetarian").tag(DietType.vegetarian)
                         Text("Eggetarian").tag(DietType.eggetarian)
                         Text("Vegan").tag(DietType.vegan)
+                        Text("Non-vegetarian").tag(DietType.nonVegetarian)
                     }
                     TextField("Allergens, comma separated", text: setBinding(\.allergens))
                     TextField("Ingredients to avoid", text: setBinding(\.ingredientExclusions))

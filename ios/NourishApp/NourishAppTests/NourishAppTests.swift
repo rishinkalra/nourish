@@ -68,6 +68,18 @@ final class NourishAppTests: XCTestCase {
         XCTAssertNoThrow(try OnboardingValidator.validate(.review, draft: draft))
     }
 
+    func testNonVegetarianDietRoundTripsThroughTheProfileContract() throws {
+        var draft = OnboardingDraft()
+        draft.diet = .nonVegetarian
+        let profile = draft.profile(consentAcceptedAt: Date(timeIntervalSince1970: 0))
+
+        let encoded = try JSONEncoder().encode(profile)
+        let decoded = try JSONDecoder().decode(UserProfile.self, from: encoded)
+
+        XCTAssertEqual(decoded.diet, .nonVegetarian)
+        XCTAssertEqual(decoded.diet.rawValue, "nonVegetarian")
+    }
+
     func testPlanningAndAccountMutationRoutesPreserveSafetyRequirements() {
         XCTAssertTrue(ConsumerRoute.createPlan.descriptor.requiresIdempotencyKey)
         XCTAssertTrue(ConsumerRoute.confirmSwap(planItemID: "meal/1").descriptor.requiresIdempotencyKey)
@@ -290,6 +302,8 @@ final class NourishAppTests: XCTestCase {
         XCTAssertEqual(catalog["Replaced outside app"], "ऐप के बाहर बदला गया")
         XCTAssertEqual(catalog["Published"], "प्रकाशित")
         XCTAssertEqual(catalog["Current"], "वर्तमान")
+        XCTAssertEqual(catalog["Non-vegetarian"], "मांसाहारी")
+        XCTAssertEqual(catalog["Find another meal"], "कोई दूसरा भोजन खोजें")
         XCTAssertEqual(catalog[" · regenerated successor"], " · पुनः बनाई गई अगली योजना")
         XCTAssertEqual(catalog["Feedback saved"], "प्रतिक्रिया सहेजी गई")
         XCTAssertEqual(

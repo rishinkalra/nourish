@@ -26,6 +26,7 @@ extension DietType {
         case .vegetarian: "Vegetarian"
         case .eggetarian: "Eggetarian"
         case .vegan: "Vegan"
+        case .nonVegetarian: "Non-vegetarian"
         }
     }
 }

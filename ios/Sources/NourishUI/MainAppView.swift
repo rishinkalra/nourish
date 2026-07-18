@@ -437,6 +437,16 @@ private struct ActiveMealCard: View {
                 Label("Intentional planned leftover", systemImage: "arrow.triangle.2.circlepath")
                     .font(.caption.bold()).foregroundStyle(NourishTheme.forest)
             }
+            Divider().padding(.top, 3)
+            HStack(spacing: 8) {
+                Text("View recipe & options")
+                    .font(.subheadline.bold())
+                    .foregroundStyle(NourishTheme.forest)
+                Spacer()
+                Image(systemName: "chevron.right")
+                    .font(.caption.bold())
+                    .foregroundStyle(NourishTheme.forest)
+            }
         }
         .padding(16)
         .background(NourishTheme.card, in: RoundedRectangle(cornerRadius: 20))
@@ -450,6 +460,7 @@ private struct ActiveRecipeDetail: View {
     let itemID: String
     @State private var candidates: [SwapCandidate] = []
     @State private var loadingCandidates = false
+    @State private var candidatesRequested = false
     @AccessibilityFocusState private var focusedCandidateID: String?
 
     private var item: PlanItem? {
@@ -475,51 +486,95 @@ private struct ActiveRecipeDetail: View {
                             Text(verbatim: "\(NourishFormatting.integer(index + 1)). \(step)")
                         }
                     }
-                    Menu("Update meal status") {
+                    Menu {
                         ForEach(MealCompletionState.allCases, id: \.rawValue) { status in
                             Button(status.activeTitle) { Task { await store.setMealState(status, itemID: item.id) } }
                         }
+                    } label: {
+                        HStack(spacing: 10) {
+                            Label("Update meal status", systemImage: "checkmark.circle")
+                            Spacer()
+                            Text(item.completionState.activeTitle)
+                                .foregroundStyle(.secondary)
+                            Image(systemName: "chevron.down")
+                                .font(.caption.bold())
+                        }
+                        .frame(maxWidth: .infinity, minHeight: 48)
                     }
                     .buttonStyle(.bordered)
                     MealFeedbackSection(item: item)
-                    Button {
-                        loadingCandidates = true
-                        Task {
-                            candidates = await store.swapCandidates(itemID: item.id)
-                            loadingCandidates = false
-                            focusedCandidateID = candidates.first?.recipe.recipeID
-                            await analyticsEventStore.record(
-                                .swapListViewed,
-                                properties: [
-                                    "candidate_count": .integer(candidates.count),
-                                    "original_recipe_id": .string(item.recipeSnapshot.recipeID),
-                                ]
-                            )
+                    VStack(alignment: .leading, spacing: 12) {
+                        Label("Want something different?", systemImage: "arrow.triangle.2.circlepath")
+                            .font(.headline)
+                            .foregroundStyle(NourishTheme.forest)
+                        Text("Nourish will only show replacements that still fit your diet, allergens, targets, and the variety of your whole week.")
+                            .font(.subheadline)
+                            .foregroundStyle(.secondary)
+                        Button {
+                            loadingCandidates = true
+                            Task {
+                                candidates = await store.swapCandidates(itemID: item.id)
+                                candidatesRequested = true
+                                loadingCandidates = false
+                                focusedCandidateID = candidates.first?.recipe.recipeID
+                                await analyticsEventStore.record(
+                                    .swapListViewed,
+                                    properties: [
+                                        "candidate_count": .integer(candidates.count),
+                                        "original_recipe_id": .string(item.recipeSnapshot.recipeID),
+                                    ]
+                                )
+                            }
+                        } label: {
+                            HStack(spacing: 8) {
+                                if loadingCandidates {
+                                    ProgressView()
+                                    Text("Checking safe swaps…")
+                                } else {
+                                    Label("Find another meal", systemImage: "magnifyingglass")
+                                }
+                            }
+                            .frame(maxWidth: .infinity, minHeight: 44)
                         }
-                    } label: {
-                        if loadingCandidates { Text("Checking safe swaps…") }
-                        else { Text("Show safe swaps") }
+                        .buttonStyle(.borderedProminent)
+                        .tint(NourishTheme.forest)
+                        .disabled(loadingCandidates)
+                        .accessibilityIdentifier("swap.show-candidates")
+                        .accessibilityHint("Shows only replacements that keep the whole week within your safety and variety rules")
                     }
-                    .buttonStyle(.borderedProminent)
-                    .tint(NourishTheme.forest)
-                    .accessibilityIdentifier("swap.show-candidates")
-                    .accessibilityHint("Shows only replacements that keep the whole week within your safety and variety rules")
+                    .padding(16)
+                    .background(NourishTheme.limeSoft, in: RoundedRectangle(cornerRadius: 18))
+                    if candidatesRequested && candidates.isEmpty && !loadingCandidates {
+                        Label("No suitable replacements are available right now. Your current meal is unchanged.", systemImage: "checkmark.shield")
+                            .font(.subheadline)
+                            .foregroundStyle(NourishTheme.forest)
+                            .padding(14)
+                            .frame(maxWidth: .infinity, alignment: .leading)
+                            .background(NourishTheme.card, in: RoundedRectangle(cornerRadius: 16))
+                    }
                     ForEach(candidates, id: \.recipe.recipeID) { candidate in
-                        VStack(alignment: .leading, spacing: 8) {
-                            Text(candidate.recipe.displayName).font(.headline)
+                        VStack(alignment: .leading, spacing: 10) {
+                            Label("Fits your plan", systemImage: "checkmark.shield.fill")
+                                .font(.caption.bold())
+                                .foregroundStyle(NourishTheme.forest)
+                            Text(candidate.recipe.displayName).font(.title3.bold())
                             swapDeltaSummary(
                                 calories: candidate.calorieDelta,
                                 proteinGrams: candidate.proteinDeltaGrams
                             )
                                 .font(.caption).foregroundStyle(.secondary)
-                            Button("Use this meal") {
+                            Button {
                                 Task {
                                     if await store.confirmSwap(itemID: item.id, replacementRecipeID: candidate.recipe.recipeID) {
                                         dismiss()
                                     }
                                 }
+                            } label: {
+                                Label("Choose this replacement", systemImage: "checkmark")
+                                    .frame(maxWidth: .infinity, minHeight: 44)
                             }
-                            .buttonStyle(.bordered)
+                            .buttonStyle(.borderedProminent)
+                            .tint(NourishTheme.forest)
                             .accessibilityIdentifier("swap.confirm.\(candidate.recipe.recipeID)")
                             .accessibilityHint("Recalculates this meal, the week, groceries, and preparation plan")
                         }
@@ -1690,6 +1745,16 @@ private struct MealCard: View {
                         .font(.caption.bold())
                         .foregroundStyle(NourishTheme.forest)
                 }
+                Divider().padding(.top, 3)
+                HStack(spacing: 8) {
+                    Text("View recipe & options")
+                        .font(.subheadline.bold())
+                        .foregroundStyle(NourishTheme.forest)
+                    Spacer()
+                    Image(systemName: "chevron.right")
+                        .font(.caption.bold())
+                        .foregroundStyle(NourishTheme.forest)
+                }
             }
             .frame(maxWidth: .infinity, alignment: .leading)
             .padding(18)
@@ -1789,10 +1854,12 @@ private struct RecipeDetailSheet: View {
                     .padding(16)
                     .background(NourishTheme.amberSoft, in: RoundedRectangle(cornerRadius: 18))
 
-                    Button("Compare safe swaps") { showingSwaps = true }
+                    Button { showingSwaps = true } label: {
+                        Label("Find another meal", systemImage: "arrow.triangle.2.circlepath")
+                            .frame(maxWidth: .infinity, minHeight: 44)
+                    }
                         .buttonStyle(.borderedProminent)
                         .tint(NourishTheme.forest)
-                        .frame(maxWidth: .infinity)
 
                     Menu("Update meal status") {
                         ForEach(DemoMealStatus.allCases) { status in
@@ -1835,10 +1902,14 @@ private struct SwapSheet: View {
         NavigationStack {
             ScrollView {
                 VStack(alignment: .leading, spacing: 16) {
-                    Text("Compare before replacing")
+                    Text("Choose a replacement")
                         .font(.largeTitle.bold())
-                    Text("These are illustrative candidates. Production candidates must pass diet, allergen, exclusion, publication, and nutrition-review checks before ranking.")
-                        .foregroundStyle(.secondary)
+                    Label("Every option shown keeps your diet, allergen, exclusion, and weekly variety rules in place.", systemImage: "checkmark.shield.fill")
+                        .font(.subheadline)
+                        .foregroundStyle(NourishTheme.forest)
+                        .padding(14)
+                        .frame(maxWidth: .infinity, alignment: .leading)
+                        .background(NourishTheme.limeSoft, in: RoundedRectangle(cornerRadius: 16))
 
                     ForEach(store.swapCandidates(for: original)) { candidate in
                         VStack(alignment: .leading, spacing: 10) {
@@ -1850,9 +1921,12 @@ private struct SwapSheet: View {
                                 delta(label: "Calories", value: candidate.meal.calories - original.calories, suffix: " kcal")
                                 delta(label: "Protein", value: candidate.meal.protein - original.protein, suffix: "g")
                             }
-                            Button("Use this meal") {
+                            Button {
                                 store.applySwap(replacing: original, with: candidate)
                                 dismiss()
+                            } label: {
+                                Label("Choose this replacement", systemImage: "checkmark")
+                                    .frame(maxWidth: .infinity, minHeight: 44)
                             }
                             .buttonStyle(.borderedProminent)
                             .tint(NourishTheme.forest)

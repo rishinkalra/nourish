@@ -77,6 +77,8 @@ public enum RecipeEligibilityPolicy {
         case .vegetarian:
             recipeDiet == .vegetarian || recipeDiet == .vegan
         case .eggetarian:
+            recipeDiet == .eggetarian || recipeDiet == .vegetarian || recipeDiet == .vegan
+        case .nonVegetarian:
             true
         }
     }

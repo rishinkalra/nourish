@@ -199,6 +199,22 @@ struct NourishCoreChecks {
         fit.costBand = .value
         fit.equipment = ["pan"]
 
+        var nonVegetarianRecipe = fit
+        nonVegetarianRecipe.recipeID = "score-non-vegetarian"
+        nonVegetarianRecipe.dietType = .nonVegetarian
+        var eggetarianProfile = profile
+        eggetarianProfile.diet = .eggetarian
+        expect(
+            RecipeEligibilityPolicy.issues(for: nonVegetarianRecipe, profile: eggetarianProfile, slot: .lunch).contains(.dietMismatch),
+            "An eggetarian profile must not admit non-vegetarian recipes"
+        )
+        var nonVegetarianProfile = profile
+        nonVegetarianProfile.diet = .nonVegetarian
+        expect(
+            !RecipeEligibilityPolicy.issues(for: nonVegetarianRecipe, profile: nonVegetarianProfile, slot: .lunch).contains(.dietMismatch),
+            "A non-vegetarian profile should admit reviewed non-vegetarian recipes"
+        )
+
         var expensive = fit
         expensive.recipeID = "score-expensive"
         expensive.costBand = .flexible

@@ -185,6 +185,7 @@ public struct OnboardingFlowView: View {
                     ("Vegetarian", DietType.vegetarian),
                     ("Eggetarian", DietType.eggetarian),
                     ("Vegan", DietType.vegan),
+                    ("Non-vegetarian", DietType.nonVegetarian),
                 ]
             )
             TextField("Allergens, comma separated", text: setTextBinding(\.allergens))

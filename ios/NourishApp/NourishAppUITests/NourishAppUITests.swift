@@ -169,6 +169,7 @@ final class NourishAppUITests: XCTestCase {
         let showCandidates = app.buttons["swap.show-candidates"]
         reveal(showCandidates, in: app)
         XCTAssertTrue(showCandidates.isHittable)
+        XCTAssertEqual(showCandidates.label, "Find another meal")
         showCandidates.tap()
         XCTAssertTrue(app.staticTexts["Coconut poha bowl"].waitForExistence(timeout: 3))
         let confirm = app.buttons["swap.confirm.fixture-coconut-poha"]
@@ -262,7 +263,7 @@ final class NourishAppUITests: XCTestCase {
         let safeSwaps = app.buttons["swap.show-candidates"]
         reveal(safeSwaps, in: app)
         XCTAssertTrue(safeSwaps.isHittable)
-        XCTAssertEqual(safeSwaps.label, "सुरक्षित विकल्प दिखाएँ")
+        XCTAssertEqual(safeSwaps.label, "कोई दूसरा भोजन खोजें")
     }
 
     func testHindiPaywallLocalizesDisclosureAndEmptyStateAtLargeText() {
