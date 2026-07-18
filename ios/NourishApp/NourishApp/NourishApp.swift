@@ -53,6 +53,10 @@ struct NourishApp: App {
     var body: some Scene {
         WindowGroup {
             AppRootView(baseURL: NourishAppConfiguration.apiBaseURL)
+                // The current brand palette is intentionally light. Keep system text,
+                // fields, pickers, and materials in the matching appearance until a
+                // complete dark palette is available.
+                .preferredColorScheme(.light)
         }
     }
 }

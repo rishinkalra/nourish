@@ -87,18 +87,26 @@ public struct OnboardingFlowView: View {
             Toggle("A general-wellness plan is suitable for me", isOn: $draft.confirmsGeneralWellnessFit)
             TextField("Country/region code", text: $draft.countryRegionCode)
                 .textFieldStyle(.roundedBorder)
-            Picker("Units", selection: $draft.unitSystem) {
-                Text("Metric").tag(UnitSystem.metric)
-                Text("Imperial").tag(UnitSystem.imperial)
-            }.pickerStyle(.segmented)
+            selectionGroup(
+                "Units",
+                selection: $draft.unitSystem,
+                options: [
+                    ("Metric", UnitSystem.metric),
+                    ("Imperial", UnitSystem.imperial),
+                ]
+            )
             TextField("Timezone", text: $draft.timeZoneIdentifier)
                 .textFieldStyle(.roundedBorder)
         case .authentication:
             heading("Keep your plan with you.", "Choose how the production app should secure your weekly history.")
-            Picker("Sign-in method", selection: $draft.authenticationMethod) {
-                Text("Continue with Apple").tag(AuthenticationMethod.apple)
-                Text("Email magic link").tag(AuthenticationMethod.emailMagicLink)
-            }.pickerStyle(.segmented)
+            selectionGroup(
+                "Sign-in method",
+                selection: $draft.authenticationMethod,
+                options: [
+                    ("Continue with Apple", AuthenticationMethod.apple),
+                    ("Email magic link", AuthenticationMethod.emailMagicLink),
+                ]
+            )
             if draft.authenticationMethod == .emailMagicLink {
                 TextField("Email address", text: $magicLinkEmail)
                     .textContentType(.emailAddress)
@@ -132,11 +140,15 @@ public struct OnboardingFlowView: View {
                 .foregroundStyle(.secondary)
         case .goalAndTarget:
             heading("What should the week support?", "Choose a gentle direction and provide a target you trust.")
-            Picker("Goal", selection: $draft.goal) {
-                Text("Maintain").tag(WellnessGoal.maintain)
-                Text("Gradual loss").tag(WellnessGoal.gradualLoss)
-                Text("Gradual gain").tag(WellnessGoal.gradualGain)
-            }.pickerStyle(.segmented)
+            selectionGroup(
+                "Goal",
+                selection: $draft.goal,
+                options: [
+                    ("Maintain", WellnessGoal.maintain),
+                    ("Gradual loss", WellnessGoal.gradualLoss),
+                    ("Gradual gain", WellnessGoal.gradualGain),
+                ]
+            )
             Stepper(value: $draft.calorieTarget, in: 1_200...3_500, step: 50) {
                 LabeledContent("Daily target") {
                     Text(verbatim: NourishFormatting.energyKilocalories(Double(draft.calorieTarget)))
@@ -152,21 +164,29 @@ public struct OnboardingFlowView: View {
                 Text("This is a target you provide, not a target calculated or recommended by Nourish.")
                     .font(.footnote).foregroundStyle(.secondary)
             }
-            Picker("Target source", selection: $draft.targetSource) {
-                Text("Use my target").tag(TargetSource.userProvided)
-                Text("Request estimate").tag(TargetSource.reviewedEstimate)
-            }.pickerStyle(.segmented)
+            selectionGroup(
+                "Target source",
+                selection: $draft.targetSource,
+                options: [
+                    ("Use my target", TargetSource.userProvided),
+                    ("Request estimate", TargetSource.reviewedEstimate),
+                ]
+            )
             if draft.targetSource == .reviewedEstimate {
                 Text("The production estimator remains disabled until its formula and safety guardrails receive qualified nutrition review.")
                     .font(.footnote).foregroundStyle(.secondary)
             }
         case .foodProfile:
             heading("Make every option feel like yours.", "Diet and allergens are hard constraints. Cuisine preferences guide ranking.")
-            Picker("Diet", selection: $draft.diet) {
-                Text("Vegetarian").tag(DietType.vegetarian)
-                Text("Eggetarian").tag(DietType.eggetarian)
-                Text("Vegan").tag(DietType.vegan)
-            }.pickerStyle(.segmented)
+            selectionGroup(
+                "Diet",
+                selection: $draft.diet,
+                options: [
+                    ("Vegetarian", DietType.vegetarian),
+                    ("Eggetarian", DietType.eggetarian),
+                    ("Vegan", DietType.vegan),
+                ]
+            )
             TextField("Allergens, comma separated", text: setTextBinding(\.allergens))
                 .textFieldStyle(.roundedBorder)
             TextField("Ingredients to avoid", text: setTextBinding(\.ingredientExclusions))
@@ -183,32 +203,41 @@ public struct OnboardingFlowView: View {
                     }
                 }
             }
-            Picker("Snacks", selection: $draft.snackPreference) {
-                Text("None").tag(SnackPreference.none)
-                Text("Optional").tag(SnackPreference.optional)
-                Text("Planned").tag(SnackPreference.planned)
-            }.pickerStyle(.segmented)
+            selectionGroup(
+                "Snacks",
+                selection: $draft.snackPreference,
+                options: [
+                    ("None", SnackPreference.none),
+                    ("Optional", SnackPreference.optional),
+                    ("Planned", SnackPreference.planned),
+                ]
+            )
         case .practicalConstraints:
             heading("How does cooking fit your week?", "Cooking time, budget, and leftovers shape plan quality as much as calories do.")
-            Picker("Budget", selection: $draft.budget) {
-                Text("Value").tag(BudgetBand.value)
-                Text("Medium").tag(BudgetBand.medium)
-                Text("Flexible").tag(BudgetBand.flexible)
-            }.pickerStyle(.segmented)
+            selectionGroup(
+                "Budget",
+                selection: $draft.budget,
+                options: [
+                    ("Value", BudgetBand.value),
+                    ("Medium", BudgetBand.medium),
+                    ("Flexible", BudgetBand.flexible),
+                ]
+            )
             Stepper(value: $draft.maximumActiveMinutes, in: 10...120, step: 5) {
                 LabeledContent("Maximum active time") {
                     Text(verbatim: NourishFormatting.durationMinutes(Double(draft.maximumActiveMinutes)))
                 }
             }
-            Picker("Leftovers", selection: $draft.leftoverPreference) {
-                Text("Avoid").tag(LeftoverPreference.avoid)
-                Text("Planned").tag(LeftoverPreference.planned)
-                Text("Often").tag(LeftoverPreference.often)
-            }.pickerStyle(.segmented)
-            (Text("Cooking days: ")
-                + Text(verbatim: NourishFormatting.integer(draft.cookingDays.count))
-                + Text(" selected"))
-                .font(.subheadline)
+            selectionGroup(
+                "Leftovers",
+                selection: $draft.leftoverPreference,
+                options: [
+                    ("Avoid", LeftoverPreference.avoid),
+                    ("Planned", LeftoverPreference.planned),
+                    ("Often", LeftoverPreference.often),
+                ]
+            )
+            cookingDaySelector
             Stepper(value: $draft.batchPrepSessionsPerWeek, in: 0...7) {
                 LabeledContent("Batch-prep sessions") {
                     Text(verbatim: NourishFormatting.integer(draft.batchPrepSessionsPerWeek))
@@ -391,6 +420,96 @@ public struct OnboardingFlowView: View {
     private func summaryRow(_ label: LocalizedStringKey, _ value: Text) -> some View {
         HStack { Text(label).foregroundStyle(.secondary); Spacer(); value.bold() }
             .padding().background(.white.opacity(0.75), in: RoundedRectangle(cornerRadius: 14))
+    }
+
+    private func selectionGroup<Value: Hashable>(
+        _ title: LocalizedStringKey,
+        selection: Binding<Value>,
+        options: [(LocalizedStringKey, Value)]
+    ) -> some View {
+        VStack(alignment: .leading, spacing: 10) {
+            Text(title)
+                .font(.headline)
+            ForEach(options.indices, id: \.self) { index in
+                let option = options[index]
+                let isSelected = selection.wrappedValue == option.1
+                Button {
+                    selection.wrappedValue = option.1
+                } label: {
+                    HStack(spacing: 12) {
+                        Text(option.0)
+                            .font(.body.weight(.medium))
+                            .multilineTextAlignment(.leading)
+                        Spacer(minLength: 12)
+                        Image(systemName: isSelected ? "checkmark.circle.fill" : "circle")
+                            .font(.title3)
+                            .foregroundStyle(isSelected ? NourishTheme.forest : Color.secondary)
+                    }
+                    .frame(maxWidth: .infinity, minHeight: 52, alignment: .leading)
+                    .padding(.horizontal, 16)
+                    .contentShape(Rectangle())
+                }
+                .buttonStyle(.plain)
+                .foregroundStyle(Color.primary)
+                .background(isSelected ? NourishTheme.limeSoft : NourishTheme.card)
+                .clipShape(RoundedRectangle(cornerRadius: 14))
+                .overlay {
+                    RoundedRectangle(cornerRadius: 14)
+                        .stroke(isSelected ? NourishTheme.forest : Color.secondary.opacity(0.28), lineWidth: isSelected ? 2 : 1)
+                }
+                .accessibilityLabel(Text(option.0))
+                .accessibilityAddTraits(isSelected ? .isSelected : [])
+            }
+        }
+    }
+
+    private var cookingDaySelector: some View {
+        VStack(alignment: .leading, spacing: 10) {
+            (Text("Cooking days: ")
+                + Text(verbatim: NourishFormatting.integer(draft.cookingDays.count))
+                + Text(" selected"))
+                .font(.headline)
+            LazyVGrid(columns: [GridItem(.adaptive(minimum: 132), spacing: 10)], spacing: 10) {
+                ForEach(1...7, id: \.self) { weekday in
+                    let isSelected = draft.cookingDays.contains(weekday)
+                    Button {
+                        if isSelected {
+                            draft.cookingDays.remove(weekday)
+                        } else {
+                            draft.cookingDays.insert(weekday)
+                        }
+                    } label: {
+                        HStack(spacing: 8) {
+                            Image(systemName: isSelected ? "checkmark.circle.fill" : "circle")
+                            Text(verbatim: onboardingWeekdayName(weekday))
+                                .lineLimit(1)
+                            Spacer(minLength: 0)
+                        }
+                        .frame(maxWidth: .infinity, minHeight: 48, alignment: .leading)
+                        .padding(.horizontal, 12)
+                        .contentShape(Rectangle())
+                    }
+                    .buttonStyle(.plain)
+                    .foregroundStyle(isSelected ? NourishTheme.forest : Color.primary)
+                    .background(isSelected ? NourishTheme.limeSoft : NourishTheme.card)
+                    .clipShape(RoundedRectangle(cornerRadius: 12))
+                    .overlay {
+                        RoundedRectangle(cornerRadius: 12)
+                            .stroke(isSelected ? NourishTheme.forest : Color.secondary.opacity(0.28), lineWidth: isSelected ? 2 : 1)
+                    }
+                    .accessibilityLabel(Text(verbatim: onboardingWeekdayName(weekday)))
+                    .accessibilityAddTraits(isSelected ? .isSelected : [])
+                }
+            }
+        }
+    }
+
+    private func onboardingWeekdayName(_ weekday: Int) -> String {
+        let names = Calendar.current.weekdaySymbols
+        guard names.indices.contains(weekday - 1) else {
+            return String(localized: "Day ") + NourishFormatting.integer(weekday)
+        }
+        return names[weekday - 1]
     }
 
     private var mealSlotsSummary: Text {

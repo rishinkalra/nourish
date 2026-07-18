@@ -7,7 +7,10 @@ final class NourishAppUITests: XCTestCase {
     }
 
     func testOnboardingBlocksUnsafeProgressAndExposesAccessibleControls() {
-        let app = launch(arguments: ["-NourishUITestOnboarding"])
+        let app = launch(arguments: [
+            "-AppleInterfaceStyle", "Dark",
+            "-NourishUITestOnboarding",
+        ])
 
         let primaryAction = app.buttons["onboarding.primary-action"]
         XCTAssertTrue(primaryAction.waitForExistence(timeout: 5))
@@ -20,6 +23,10 @@ final class NourishAppUITests: XCTestCase {
 
         primaryAction.tap()
         XCTAssertTrue(app.staticTexts["First, a quick safety check."].waitForExistence(timeout: 2))
+        let imperial = app.buttons["Imperial"]
+        XCTAssertTrue(imperial.isHittable)
+        imperial.tap()
+        XCTAssertTrue(imperial.isSelected)
         primaryAction.tap()
         XCTAssertTrue(app.staticTexts["You must be 18 or older to use personalized planning."].exists)
 
