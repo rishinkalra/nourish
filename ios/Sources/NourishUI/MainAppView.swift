@@ -271,6 +271,8 @@ private struct ActiveTodayScreen: View {
         ScrollView {
             if let plan = store.snapshot?.plan,
                let day = activeDay(in: plan) {
+                let featuredItem = day.items.last
+                let supportingItems = Array(day.items.dropLast())
                 VStack(alignment: .leading, spacing: 18) {
                     Text(activeDate(day.localDate).uppercased())
                         .font(.caption.bold())
@@ -280,8 +282,14 @@ private struct ActiveTodayScreen: View {
                         .font(.system(.largeTitle, design: .serif, weight: .semibold))
                         .foregroundStyle(NourishTheme.ink)
                         .accessibilityAddTraits(.isHeader)
+                    Text("Meals reviewed for your preferences and this week’s targets.")
+                        .foregroundStyle(NourishTheme.inkSoft)
+                    if let featuredItem {
+                        ActiveReviewedMealHero(item: featuredItem)
+                    }
                     ActiveNutritionSummary(day: day, target: plan.targetSnapshot.dailyCalories)
-                    ForEach(day.items, id: \.id) { item in
+                    sectionTitle("Today’s plan", subtitle: "Reviewed meals, ready when you are")
+                    ForEach(supportingItems, id: \.id) { item in
                         NavigationLink { ActiveRecipeDetail(itemID: item.id) } label: {
                             ActiveMealCard(item: item)
                         }
@@ -298,6 +306,86 @@ private struct ActiveTodayScreen: View {
         .background(NourishTheme.paper)
         .navigationTitle("Today")
         .navigationBarTitleDisplayMode(.inline)
+    }
+}
+
+private struct ActiveReviewedMealHero: View {
+    let item: PlanItem
+
+    var body: some View {
+        ZStack(alignment: .bottomLeading) {
+            MealArtwork(recipeID: item.recipeSnapshot.recipeID, height: 390)
+            LinearGradient(
+                colors: [Color.black.opacity(0.02), Color.black.opacity(0.16), Color.black.opacity(0.88)],
+                startPoint: .top,
+                endPoint: .bottom
+            )
+            VStack(alignment: .leading, spacing: 0) {
+                HStack {
+                    Text(item.slot.localizedTitle)
+                        .textCase(.uppercase)
+                        .font(.caption.bold())
+                        .tracking(1.2)
+                    Spacer()
+                    Label("Reviewed", systemImage: "checkmark.seal.fill")
+                        .font(.caption.bold())
+                }
+                .foregroundStyle(Color.white.opacity(0.90))
+
+                Spacer()
+
+                Text(item.slot == .dinner ? "Tonight" : "Next in your plan")
+                    .font(.subheadline)
+                    .foregroundStyle(Color.white.opacity(0.76))
+                Text(item.recipeSnapshot.displayName)
+                    .font(.system(size: 33, weight: .semibold, design: .serif))
+                    .foregroundStyle(.white)
+                    .padding(.top, 3)
+                nutritionAndTimeSummary(
+                    calories: decimalDouble(item.nutrition.calories),
+                    proteinGrams: decimalDouble(item.nutrition.proteinGrams),
+                    activeMinutes: item.recipeSnapshot.activePreparationMinutes
+                )
+                .font(.subheadline.weight(.medium))
+                .foregroundStyle(Color.white.opacity(0.84))
+                .padding(.top, 8)
+
+                ViewThatFits(in: .horizontal) {
+                    HStack(spacing: 10) { actions }
+                    VStack(spacing: 10) { actions }
+                }
+                .padding(.top, 18)
+            }
+            .padding(20)
+        }
+        .frame(height: 390)
+        .clipShape(RoundedRectangle(cornerRadius: 28))
+        .shadow(color: NourishTheme.ink.opacity(0.12), radius: 24, y: 12)
+        .accessibilityElement(children: .contain)
+    }
+
+    @ViewBuilder
+    private var actions: some View {
+        NavigationLink { ActiveRecipeDetail(itemID: item.id) } label: {
+            Label("View recipe", systemImage: "book.closed")
+                .font(.subheadline.bold())
+                .foregroundStyle(NourishTheme.ink)
+                .padding(.horizontal, 14)
+                .frame(maxWidth: .infinity, minHeight: 46)
+                .background(.white, in: RoundedRectangle(cornerRadius: 14))
+        }
+        NavigationLink { ActiveRecipeDetail(itemID: item.id) } label: {
+            Label("Meal options", systemImage: "arrow.left.arrow.right")
+                .font(.subheadline.bold())
+                .foregroundStyle(.white)
+                .padding(.horizontal, 14)
+                .frame(maxWidth: .infinity, minHeight: 46)
+                .background(Color.white.opacity(0.16), in: RoundedRectangle(cornerRadius: 14))
+                .overlay {
+                    RoundedRectangle(cornerRadius: 14)
+                        .stroke(Color.white.opacity(0.34), lineWidth: 1)
+                }
+        }
     }
 }
 
@@ -473,40 +561,26 @@ private struct ActiveRecipeDetail: View {
         ScrollView {
             if let item {
                 VStack(alignment: .leading, spacing: 18) {
-                    Text(item.recipeSnapshot.displayName).font(.largeTitle.bold())
-                    (Text("Version ")
-                        + Text(verbatim: NourishFormatting.integer(item.recipeSnapshot.version))
-                        + Text(" · Published · nutrition review approved"))
-                        .font(.subheadline).foregroundStyle(.secondary)
-                    detailSection("Ingredients") {
-                        ForEach(item.recipeSnapshot.ingredients, id: \.ingredientID) { ingredient in
-                            Text(verbatim: "• \(decimalText(ingredient.householdQuantity)) \(ingredient.householdUnit) \(ingredient.displayName) (\(NourishFormatting.massGrams(decimalDouble(ingredient.grams))))")
-                        }
+                    ActiveRecipeDetailHero(item: item)
+
+                    LazyVGrid(columns: [GridItem(.adaptive(minimum: 118), spacing: 10)], spacing: 10) {
+                        RecipeNutrient(label: "Calories", value: NourishFormatting.integer(Int(decimalDouble(item.nutrition.calories).rounded())))
+                        RecipeNutrient(label: "Protein", value: NourishFormatting.massGrams(decimalDouble(item.nutrition.proteinGrams)))
+                        RecipeNutrient(label: "Carbs", value: NourishFormatting.massGrams(decimalDouble(item.nutrition.carbohydrateGrams)))
+                        RecipeNutrient(label: "Fat", value: NourishFormatting.massGrams(decimalDouble(item.nutrition.fatGrams)))
                     }
-                    detailSection("Method") {
-                        ForEach(Array(item.recipeSnapshot.methodSteps.enumerated()), id: \.offset) { index, step in
-                            Text(verbatim: "\(NourishFormatting.integer(index + 1)). \(step)")
-                        }
+
+                    if case .plannedReuse = item.leftoverRelationship {
+                        Label("Intentional planned leftover", systemImage: "arrow.triangle.2.circlepath")
+                            .font(.subheadline.bold())
+                            .foregroundStyle(NourishTheme.forest)
+                            .padding(14)
+                            .frame(maxWidth: .infinity, alignment: .leading)
+                            .background(NourishTheme.limeSoft, in: RoundedRectangle(cornerRadius: 16))
                     }
-                    Menu {
-                        ForEach(MealCompletionState.allCases, id: \.rawValue) { status in
-                            Button(status.activeTitle) { Task { await store.setMealState(status, itemID: item.id) } }
-                        }
-                    } label: {
-                        HStack(spacing: 10) {
-                            Label("Update meal status", systemImage: "checkmark.circle")
-                            Spacer()
-                            Text(item.completionState.activeTitle)
-                                .foregroundStyle(.secondary)
-                            Image(systemName: "chevron.down")
-                                .font(.caption.bold())
-                        }
-                        .frame(maxWidth: .infinity, minHeight: 48)
-                    }
-                    .buttonStyle(.bordered)
-                    MealFeedbackSection(item: item)
+
                     VStack(alignment: .leading, spacing: 12) {
-                        Label("Want something different?", systemImage: "arrow.triangle.2.circlepath")
+                        Label("Meal options", systemImage: "arrow.left.arrow.right")
                             .font(.headline)
                             .foregroundStyle(NourishTheme.forest)
                         Text("Nourish will only show replacements that still fit your diet, allergens, targets, and the variety of your whole week.")
@@ -543,9 +617,27 @@ private struct ActiveRecipeDetail: View {
                         .disabled(loadingCandidates)
                         .accessibilityIdentifier("swap.show-candidates")
                         .accessibilityHint("Shows only replacements that keep the whole week within your safety and variety rules")
+
+                        Menu {
+                            ForEach(MealCompletionState.allCases, id: \.rawValue) { status in
+                                Button(status.activeTitle) { Task { await store.setMealState(status, itemID: item.id) } }
+                            }
+                        } label: {
+                            HStack(spacing: 10) {
+                                Label("Update meal status", systemImage: "checkmark.circle")
+                                Spacer()
+                                Text(item.completionState.activeTitle)
+                                    .foregroundStyle(.secondary)
+                                Image(systemName: "chevron.down")
+                                    .font(.caption.bold())
+                            }
+                            .frame(maxWidth: .infinity, minHeight: 46)
+                        }
+                        .buttonStyle(.bordered)
+                        .tint(NourishTheme.forest)
                     }
-                    .padding(16)
-                    .background(NourishTheme.limeSoft, in: RoundedRectangle(cornerRadius: 18))
+                    .padding(18)
+                    .background(NourishTheme.limeSoft, in: RoundedRectangle(cornerRadius: 22))
                     if candidatesRequested && candidates.isEmpty && !loadingCandidates {
                         Label("No suitable replacements are available right now. Your current meal is unchanged.", systemImage: "checkmark.shield")
                             .font(.subheadline)
@@ -559,7 +651,16 @@ private struct ActiveRecipeDetail: View {
                             Label("Fits your plan", systemImage: "checkmark.shield.fill")
                                 .font(.caption.bold())
                                 .foregroundStyle(NourishTheme.forest)
-                            Text(candidate.recipe.displayName).font(.title3.bold())
+                            Text(candidate.recipe.displayName)
+                                .font(.system(.title2, design: .serif, weight: .semibold))
+                                .foregroundStyle(NourishTheme.ink)
+                            nutritionAndTimeSummary(
+                                calories: decimalDouble(candidate.recipe.nutritionPerServing.calories),
+                                proteinGrams: decimalDouble(candidate.recipe.nutritionPerServing.proteinGrams),
+                                activeMinutes: candidate.recipe.activePreparationMinutes
+                            )
+                            .font(.subheadline)
+                            .foregroundStyle(NourishTheme.inkSoft)
                             swapDeltaSummary(
                                 calories: candidate.calorieDelta,
                                 proteinGrams: candidate.proteinDeltaGrams
@@ -580,12 +681,48 @@ private struct ActiveRecipeDetail: View {
                             .accessibilityIdentifier("swap.confirm.\(candidate.recipe.recipeID)")
                             .accessibilityHint("Recalculates this meal, the week, groceries, and preparation plan")
                         }
-                        .padding(14)
-                        .background(NourishTheme.card, in: RoundedRectangle(cornerRadius: 16))
+                        .padding(18)
+                        .background(NourishTheme.card, in: RoundedRectangle(cornerRadius: 22))
+                        .shadow(color: NourishTheme.ink.opacity(0.05), radius: 12, y: 6)
                         .accessibilityFocused($focusedCandidateID, equals: candidate.recipe.recipeID)
                     }
+
+                    detailSection("Ingredients") {
+                        ForEach(item.recipeSnapshot.ingredients, id: \.ingredientID) { ingredient in
+                            Text(verbatim: "• \(decimalText(ingredient.householdQuantity)) \(ingredient.householdUnit) \(ingredient.displayName) (\(NourishFormatting.massGrams(decimalDouble(ingredient.grams))))")
+                        }
+                    }
+                    detailSection("Method") {
+                        ForEach(Array(item.recipeSnapshot.methodSteps.enumerated()), id: \.offset) { index, step in
+                            Text(verbatim: "\(NourishFormatting.integer(index + 1)). \(step)")
+                        }
+                    }
+                    MealFeedbackSection(item: item)
+
+                    DisclosureGroup {
+                        VStack(alignment: .leading, spacing: 7) {
+                            (Text("Version ")
+                                + Text(verbatim: NourishFormatting.integer(item.recipeSnapshot.version))
+                                + Text(verbatim: " · ")
+                                + Text(item.recipeSnapshot.publicationStatus.localizedLabel)
+                                + Text(verbatim: " · ")
+                                + Text("nutrition review ")
+                                + Text(item.recipeSnapshot.reviewStatus.localizedLabel))
+                                .font(.subheadline.bold())
+                            Text(verbatim: item.recipeSnapshot.nutritionSourceSummary)
+                                .font(.footnote)
+                                .foregroundStyle(.secondary)
+                        }
+                        .padding(.top, 8)
+                    } label: {
+                        Label("Recipe review & nutrition source", systemImage: "checkmark.seal")
+                            .font(.headline)
+                    }
+                    .padding(16)
+                    .background(NourishTheme.amberSoft, in: RoundedRectangle(cornerRadius: 18))
                 }
-                .padding(20)
+                .padding(.horizontal, 18)
+                .padding(.bottom, 28)
             }
         }
         .background(NourishTheme.paper)
@@ -603,6 +740,44 @@ private struct ActiveRecipeDetail: View {
                 ]
             )
         }
+    }
+}
+
+private struct ActiveRecipeDetailHero: View {
+    let item: PlanItem
+
+    var body: some View {
+        ZStack(alignment: .bottomLeading) {
+            MealArtwork(recipeID: item.recipeSnapshot.recipeID, height: 310)
+            LinearGradient(
+                colors: [Color.black.opacity(0.02), Color.black.opacity(0.18), Color.black.opacity(0.86)],
+                startPoint: .top,
+                endPoint: .bottom
+            )
+            VStack(alignment: .leading, spacing: 5) {
+                HStack {
+                    Text(item.slot.localizedTitle)
+                        .textCase(.uppercase)
+                        .font(.caption.bold())
+                        .tracking(1.1)
+                    Spacer()
+                    Label("Reviewed", systemImage: "checkmark.seal.fill")
+                        .font(.caption.bold())
+                }
+                Text(item.recipeSnapshot.displayName)
+                    .font(.system(size: 34, weight: .semibold, design: .serif))
+                (Text(verbatim: NourishFormatting.durationMinutes(Double(item.recipeSnapshot.activePreparationMinutes)))
+                    + Text(" active · ")
+                    + Text(item.recipeSnapshot.dietType.localizedLabel))
+                    .font(.subheadline)
+                    .foregroundStyle(Color.white.opacity(0.78))
+            }
+            .foregroundStyle(.white)
+            .padding(20)
+        }
+        .frame(height: 310)
+        .clipShape(RoundedRectangle(cornerRadius: 28))
+        .shadow(color: NourishTheme.ink.opacity(0.12), radius: 22, y: 10)
     }
 }
 
@@ -1467,7 +1642,7 @@ private struct IllustrativeMealHero: View {
 
     var body: some View {
         ZStack(alignment: .bottomLeading) {
-            heroBackground
+            MealArtwork(recipeID: meal.recipeID, height: 410)
 
             LinearGradient(
                 colors: [Color.black.opacity(0.04), Color.black.opacity(0.16), Color.black.opacity(0.88)],
@@ -1538,29 +1713,36 @@ private struct IllustrativeMealHero: View {
         .shadow(color: NourishTheme.ink.opacity(0.12), radius: 24, y: 12)
         .accessibilityElement(children: .contain)
     }
+}
 
-    @ViewBuilder
-    private var heroBackground: some View {
-        if meal.recipeID == "palak-paneer", let mealImage {
+private struct MealArtwork: View {
+    let recipeID: String
+    let height: CGFloat
+
+    var body: some View {
+        Group {
+            if recipeID == "palak-paneer", let mealImage {
             Image(uiImage: mealImage)
                 .resizable()
                 .scaledToFill()
                 .frame(maxWidth: .infinity)
-                .frame(height: 410)
+                    .frame(height: height)
                 .clipped()
-        } else {
-            ZStack {
-                LinearGradient(
-                    colors: [NourishTheme.forest, NourishTheme.forest.opacity(0.72)],
-                    startPoint: .topLeading,
-                    endPoint: .bottomTrailing
-                )
-                Image(systemName: "fork.knife")
-                    .font(.system(size: 112, weight: .light))
-                    .foregroundStyle(Color.white.opacity(0.12))
-                    .offset(x: 78, y: -52)
+            } else {
+                ZStack {
+                    LinearGradient(
+                        colors: [NourishTheme.forest, NourishTheme.forest.opacity(0.72)],
+                        startPoint: .topLeading,
+                        endPoint: .bottomTrailing
+                    )
+                    Image(systemName: "fork.knife")
+                        .font(.system(size: min(height * 0.28, 112), weight: .light))
+                        .foregroundStyle(Color.white.opacity(0.12))
+                        .offset(x: height * 0.19, y: -height * 0.13)
+                }
             }
         }
+        .frame(height: height)
     }
 
     private var mealImage: UIImage? {
@@ -2209,21 +2391,13 @@ private struct RecipeDetailSheet: View {
         NavigationStack {
             ScrollView {
                 VStack(alignment: .leading, spacing: 22) {
-                    VStack(alignment: .leading, spacing: 8) {
-                        localizedDemoLabel(meal.slot).textCase(.uppercase).font(.caption.bold()).foregroundStyle(.secondary)
-                        Text(meal.name).font(.largeTitle.bold())
-                        (Text("1 serving · ")
-                            + Text(verbatim: NourishFormatting.durationMinutes(Double(meal.activeMinutes)))
-                            + Text(" active · ")
-                            + Text(verbatim: meal.cuisine))
-                            .foregroundStyle(.secondary)
-                    }
+                    RecipeDetailHero(meal: meal)
 
-                    HStack(spacing: 10) {
-                        nutrient("Calories", "\(meal.calories)")
-                        nutrient("Protein", "\(meal.protein)g")
-                        nutrient("Carbs", "\(meal.carbs)g")
-                        nutrient("Fat", "\(meal.fat)g")
+                    LazyVGrid(columns: [GridItem(.adaptive(minimum: 118), spacing: 10)], spacing: 10) {
+                        RecipeNutrient(label: "Calories", value: NourishFormatting.integer(meal.calories))
+                        RecipeNutrient(label: "Protein", value: NourishFormatting.massGrams(Double(meal.protein)))
+                        RecipeNutrient(label: "Carbs", value: NourishFormatting.massGrams(Double(meal.carbs)))
+                        RecipeNutrient(label: "Fat", value: NourishFormatting.massGrams(Double(meal.fat)))
                     }
 
                     if meal.intentionalLeftover {
@@ -2239,6 +2413,40 @@ private struct RecipeDetailSheet: View {
                             .frame(maxWidth: .infinity, alignment: .leading)
                             .background(NourishTheme.limeSoft, in: RoundedRectangle(cornerRadius: 16))
                     }
+
+                    VStack(alignment: .leading, spacing: 12) {
+                        Label("Meal options", systemImage: "arrow.left.arrow.right")
+                            .font(.headline)
+                            .foregroundStyle(NourishTheme.forest)
+                        Text("Choose a safe replacement or update what happened with this meal.")
+                            .font(.subheadline)
+                            .foregroundStyle(NourishTheme.inkSoft)
+                        Button { showingSwaps = true } label: {
+                            Label("Find another meal", systemImage: "magnifyingglass")
+                                .font(.subheadline.bold())
+                                .frame(maxWidth: .infinity, minHeight: 48)
+                        }
+                        .buttonStyle(.borderedProminent)
+                        .tint(NourishTheme.forest)
+
+                        Menu {
+                            ForEach(DemoMealStatus.allCases) { status in
+                                Button(status.localizedTitle) { store.setStatus(status, for: meal) }
+                            }
+                        } label: {
+                            HStack {
+                                Label("Update meal status", systemImage: "checkmark.circle")
+                                Spacer()
+                                Image(systemName: "chevron.down")
+                                    .font(.caption.bold())
+                            }
+                            .frame(maxWidth: .infinity, minHeight: 46)
+                        }
+                        .buttonStyle(.bordered)
+                        .tint(NourishTheme.forest)
+                    }
+                    .padding(18)
+                    .background(NourishTheme.limeSoft, in: RoundedRectangle(cornerRadius: 22))
 
                     detailSection("Ingredients") {
                         ForEach(meal.ingredients, id: \.self) { Text(verbatim: "• \($0)") }
@@ -2256,40 +2464,31 @@ private struct RecipeDetailSheet: View {
                         }
                     }
 
-                    VStack(alignment: .leading, spacing: 6) {
-                        Text("CONTENT STATUS").font(.caption.bold()).foregroundStyle(.secondary)
-                        (Text("Version ")
-                            + Text(verbatim: NourishFormatting.integer(meal.catalogueVersion))
-                            + Text(verbatim: " · ")
-                            + Text(meal.publicationStatus.localizedLabel)
-                            + Text(verbatim: " · ")
-                            + Text("nutrition review ")
-                            + Text(meal.reviewStatus.localizedLabel))
-                            .font(.subheadline.bold())
-                        Text(meal.nutritionSourceSummary)
-                            .font(.footnote).foregroundStyle(.secondary)
-                        Text("Only an authorized published version with licensed nutrient evidence may enter production plans.")
-                            .font(.footnote).foregroundStyle(.secondary)
+                    DisclosureGroup {
+                        VStack(alignment: .leading, spacing: 8) {
+                            (Text("Version ")
+                                + Text(verbatim: NourishFormatting.integer(meal.catalogueVersion))
+                                + Text(verbatim: " · ")
+                                + Text(meal.publicationStatus.localizedLabel)
+                                + Text(verbatim: " · ")
+                                + Text("nutrition review ")
+                                + Text(meal.reviewStatus.localizedLabel))
+                                .font(.subheadline.bold())
+                            Text(meal.nutritionSourceSummary)
+                                .font(.footnote).foregroundStyle(.secondary)
+                            Text("Only an authorized published version with licensed nutrient evidence may enter production plans.")
+                                .font(.footnote).foregroundStyle(.secondary)
+                        }
+                        .padding(.top, 8)
+                    } label: {
+                        Label("Recipe review & nutrition source", systemImage: "checkmark.seal")
+                            .font(.headline)
                     }
                     .padding(16)
                     .background(NourishTheme.amberSoft, in: RoundedRectangle(cornerRadius: 18))
-
-                    Button { showingSwaps = true } label: {
-                        Label("Find another meal", systemImage: "arrow.triangle.2.circlepath")
-                            .frame(maxWidth: .infinity, minHeight: 44)
-                    }
-                        .buttonStyle(.borderedProminent)
-                        .tint(NourishTheme.forest)
-
-                    Menu("Update meal status") {
-                        ForEach(DemoMealStatus.allCases) { status in
-                            Button(status.localizedTitle) { store.setStatus(status, for: meal) }
-                        }
-                    }
-                    .buttonStyle(.bordered)
-                    .frame(maxWidth: .infinity)
                 }
-                .padding(20)
+                .padding(.horizontal, 18)
+                .padding(.bottom, 28)
             }
             .background(NourishTheme.paper)
             .toolbar {
@@ -2301,15 +2500,59 @@ private struct RecipeDetailSheet: View {
             }
         }
     }
+}
 
-    private func nutrient(_ label: LocalizedStringKey, _ value: String) -> some View {
-        VStack(spacing: 4) {
-            Text(verbatim: value).font(.headline)
-            Text(label).font(.caption).foregroundStyle(.secondary)
+private struct RecipeDetailHero: View {
+    let meal: DemoMeal
+
+    var body: some View {
+        ZStack(alignment: .bottomLeading) {
+            MealArtwork(recipeID: meal.recipeID, height: 310)
+            LinearGradient(
+                colors: [Color.black.opacity(0.02), Color.black.opacity(0.18), Color.black.opacity(0.86)],
+                startPoint: .top,
+                endPoint: .bottom
+            )
+            VStack(alignment: .leading, spacing: 5) {
+                HStack {
+                    localizedDemoLabel(meal.slot)
+                        .textCase(.uppercase)
+                        .font(.caption.bold())
+                        .tracking(1.1)
+                    Spacer()
+                    Label("Vegetarian", systemImage: "leaf.fill")
+                        .font(.caption.bold())
+                }
+                Text(meal.name)
+                    .font(.system(size: 34, weight: .semibold, design: .serif))
+                (Text("1 serving · ")
+                    + Text(verbatim: NourishFormatting.durationMinutes(Double(meal.activeMinutes)))
+                    + Text(" active · ")
+                    + Text(verbatim: meal.cuisine))
+                    .font(.subheadline)
+                    .foregroundStyle(Color.white.opacity(0.78))
+            }
+            .foregroundStyle(.white)
+            .padding(20)
         }
-        .frame(maxWidth: .infinity)
-        .padding(.vertical, 12)
-        .background(NourishTheme.card, in: RoundedRectangle(cornerRadius: 14))
+        .frame(height: 310)
+        .clipShape(RoundedRectangle(cornerRadius: 28))
+        .shadow(color: NourishTheme.ink.opacity(0.12), radius: 22, y: 10)
+    }
+}
+
+private struct RecipeNutrient: View {
+    let label: LocalizedStringKey
+    let value: String
+
+    var body: some View {
+        VStack(alignment: .leading, spacing: 4) {
+            Text(verbatim: value).font(.title3.bold())
+            Text(label).font(.caption).foregroundStyle(NourishTheme.inkSoft)
+        }
+        .frame(maxWidth: .infinity, minHeight: 66, alignment: .leading)
+        .padding(.horizontal, 14)
+        .background(NourishTheme.card, in: RoundedRectangle(cornerRadius: 16))
     }
 }
 
@@ -2322,9 +2565,17 @@ private struct SwapSheet: View {
         NavigationStack {
             ScrollView {
                 VStack(alignment: .leading, spacing: 16) {
-                    Text("Choose a replacement")
-                        .font(.largeTitle.bold())
-                    Label("Every option shown keeps your diet, allergen, exclusion, and weekly variety rules in place.", systemImage: "checkmark.shield.fill")
+                    Text("SAFE REPLACEMENT")
+                        .font(.caption.bold())
+                        .tracking(1.2)
+                        .foregroundStyle(NourishTheme.inkSoft)
+                    Text("Choose another meal.")
+                        .font(.system(.largeTitle, design: .serif, weight: .semibold))
+                        .foregroundStyle(NourishTheme.ink)
+                    (Text("Replacing ") + Text(verbatim: original.name))
+                        .font(.subheadline)
+                        .foregroundStyle(NourishTheme.inkSoft)
+                    Label("Every option keeps your diet, allergen, exclusion, and weekly variety rules in place.", systemImage: "checkmark.shield.fill")
                         .font(.subheadline)
                         .foregroundStyle(NourishTheme.forest)
                         .padding(14)
@@ -2333,13 +2584,24 @@ private struct SwapSheet: View {
 
                     ForEach(store.swapCandidates(for: original)) { candidate in
                         VStack(alignment: .leading, spacing: 10) {
-                            Text(candidate.meal.name).font(.title3.bold())
+                            Label("Fits your plan", systemImage: "checkmark.shield")
+                                .font(.caption.bold())
+                                .foregroundStyle(NourishTheme.forest)
+                            Text(candidate.meal.name)
+                                .font(.system(.title2, design: .serif, weight: .semibold))
+                                .foregroundStyle(NourishTheme.ink)
                             (Text(verbatim: "\(candidate.meal.cuisine) · \(NourishFormatting.durationMinutes(Double(candidate.meal.activeMinutes)))")
                                 + Text(" active"))
                                 .font(.subheadline).foregroundStyle(.secondary)
-                            HStack {
-                                delta(label: "Calories", value: candidate.meal.calories - original.calories, suffix: " kcal")
-                                delta(label: "Protein", value: candidate.meal.protein - original.protein, suffix: "g")
+                            ViewThatFits(in: .horizontal) {
+                                HStack(spacing: 10) {
+                                    delta(label: "Calories", value: candidate.meal.calories - original.calories, suffix: " kcal")
+                                    delta(label: "Protein", value: candidate.meal.protein - original.protein, suffix: "g")
+                                }
+                                VStack(spacing: 10) {
+                                    delta(label: "Calories", value: candidate.meal.calories - original.calories, suffix: " kcal")
+                                    delta(label: "Protein", value: candidate.meal.protein - original.protein, suffix: "g")
+                                }
                             }
                             Button {
                                 store.applySwap(replacing: original, with: candidate)
@@ -2350,9 +2612,11 @@ private struct SwapSheet: View {
                             }
                             .buttonStyle(.borderedProminent)
                             .tint(NourishTheme.forest)
+                            .accessibilityIdentifier("swap.demo.confirm.\(candidate.id)")
                         }
                         .padding(18)
-                        .background(NourishTheme.card, in: RoundedRectangle(cornerRadius: 20))
+                        .background(NourishTheme.card, in: RoundedRectangle(cornerRadius: 22))
+                        .shadow(color: NourishTheme.ink.opacity(0.05), radius: 12, y: 6)
                     }
                 }
                 .padding(20)
@@ -2369,6 +2633,8 @@ private struct SwapSheet: View {
             Text(verbatim: "\(value >= 0 ? "+" : "")\(NourishFormatting.integer(value))\(suffix)").font(.headline)
         }
         .frame(maxWidth: .infinity, alignment: .leading)
+        .padding(12)
+        .background(NourishTheme.limeSoft, in: RoundedRectangle(cornerRadius: 14))
     }
 }
 

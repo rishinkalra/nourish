@@ -1932,6 +1932,36 @@
     "This week has no linked batch-prep tasks." : {
       "localizations" : { "hi" : { "stringUnit" : { "state" : "translated", "value" : "इस सप्ताह कोई जुड़ा हुआ बैच-तैयारी काम नहीं है।" } } }
     },
+    "Meals reviewed for your preferences and this week’s targets." : {
+      "localizations" : { "hi" : { "stringUnit" : { "state" : "translated", "value" : "आपकी पसंद और इस सप्ताह के लक्ष्यों के अनुसार समीक्षित भोजन।" } } }
+    },
+    "Reviewed meals, ready when you are" : {
+      "localizations" : { "hi" : { "stringUnit" : { "state" : "translated", "value" : "समीक्षित भोजन, जब आप चाहें तैयार" } } }
+    },
+    "Reviewed" : {
+      "localizations" : { "hi" : { "stringUnit" : { "state" : "translated", "value" : "समीक्षित" } } }
+    },
+    "Next in your plan" : {
+      "localizations" : { "hi" : { "stringUnit" : { "state" : "translated", "value" : "आपकी योजना में अगला" } } }
+    },
+    "Choose a safe replacement or update what happened with this meal." : {
+      "localizations" : { "hi" : { "stringUnit" : { "state" : "translated", "value" : "सुरक्षित विकल्प चुनें या इस भोजन की स्थिति अपडेट करें।" } } }
+    },
+    "Recipe review & nutrition source" : {
+      "localizations" : { "hi" : { "stringUnit" : { "state" : "translated", "value" : "रेसिपी समीक्षा और पोषण स्रोत" } } }
+    },
+    "SAFE REPLACEMENT" : {
+      "localizations" : { "hi" : { "stringUnit" : { "state" : "translated", "value" : "सुरक्षित विकल्प" } } }
+    },
+    "Choose another meal." : {
+      "localizations" : { "hi" : { "stringUnit" : { "state" : "translated", "value" : "कोई दूसरा भोजन चुनें।" } } }
+    },
+    "Replacing " : {
+      "localizations" : { "hi" : { "stringUnit" : { "state" : "translated", "value" : "इसके बदले: " } } }
+    },
+    "Every option keeps your diet, allergen, exclusion, and weekly variety rules in place." : {
+      "localizations" : { "hi" : { "stringUnit" : { "state" : "translated", "value" : "हर विकल्प आपके आहार, एलर्जी, निषेध और साप्ताहिक विविधता के नियमों को बनाए रखता है।" } } }
+    },
     "Week" : {
       "localizations" : {
         "hi" : { "stringUnit" : { "state" : "translated", "value" : "सप्ताह" } }
