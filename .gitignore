@@ -1,0 +1,30 @@
+.DS_Store
+
+# Local environment and secrets
+.env
+.env.*
+!.env.*.example
+*.pem
+*.key
+*.p12
+*.cer
+*.mobileprovision
+.do/*.rendered.yaml
+nourish-staging.yaml
+
+# JavaScript output
+node_modules/
+coverage/
+npm-debug.log*
+
+# Swift and Xcode output
+.build/
+DerivedData/
+*.xcresult/
+*.xcuserstate
+**/xcuserdata/
+.swiftpm/xcode/package.xcworkspace/xcuserdata/
+
+# Local tooling
+.codex/
+.agents/

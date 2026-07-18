@@ -1,0 +1,287 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="theme-color" content="#f4f2ea" />
+    <meta name="description" content="Nourish private catalogue operations dashboard." />
+    <title>Nourish Control Room</title>
+    <link rel="stylesheet" href="styles.css" />
+    <link rel="stylesheet" href="content.css" />
+    <link rel="stylesheet" href="plans.css" />
+    <link rel="stylesheet" href="subscriptions.css" />
+    <link rel="stylesheet" href="analytics.css" />
+    <link rel="stylesheet" href="support.css" />
+    <link rel="stylesheet" href="flags.css" />
+    <link rel="stylesheet" href="exports.css" />
+    <link rel="stylesheet" href="mobile.css" />
+  </head>
+  <body>
+    <svg class="icon-sprite" aria-hidden="true">
+      <symbol id="i-grid" viewBox="0 0 24 24"><rect x="3" y="3" width="7" height="7" rx="2"/><rect x="14" y="3" width="7" height="7" rx="2"/><rect x="3" y="14" width="7" height="7" rx="2"/><rect x="14" y="14" width="7" height="7" rx="2"/></symbol>
+      <symbol id="i-leaf" viewBox="0 0 24 24"><path d="M20.5 3.5C13 3.5 6.5 6 5 12.5c-1 4.5 2 7.5 5.5 7.5 6 0 9-6.5 10-16.5Z"/><path d="M4 21c3-6 7-9 13-12"/></symbol>
+      <symbol id="i-clock" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l4 2"/></symbol>
+      <symbol id="i-search" viewBox="0 0 24 24"><circle cx="10.5" cy="10.5" r="6.5"/><path d="m15.5 15.5 5 5"/></symbol>
+      <symbol id="i-shield" viewBox="0 0 24 24"><path d="M12 3 20 6v5c0 5-3 8.5-8 10-5-1.5-8-5-8-10V6l8-3Z"/><path d="m8.5 12 2.2 2.2 4.8-5"/></symbol>
+      <symbol id="i-audit" viewBox="0 0 24 24"><path d="M7 3h10v4H7zM5 5H3v16h18V5h-2M7 12h10M7 16h7"/></symbol>
+      <symbol id="i-settings" viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"/><path d="M12 2v3m0 14v3M2 12h3m14 0h3M4.9 4.9 7 7m10 10 2.1 2.1M19.1 4.9 17 7M7 17l-2.1 2.1"/></symbol>
+      <symbol id="i-arrow" viewBox="0 0 24 24"><path d="m9 5 7 7-7 7"/></symbol>
+      <symbol id="i-check" viewBox="0 0 24 24"><path d="m5 12 4.2 4.2L19 6.5"/></symbol>
+      <symbol id="i-x" viewBox="0 0 24 24"><path d="m6 6 12 12M18 6 6 18"/></symbol>
+      <symbol id="i-menu" viewBox="0 0 24 24"><path d="M4 7h16M4 12h16M4 17h16"/></symbol>
+    </svg>
+
+    <section class="access-gate" id="accessGate">
+      <div class="gate-brand"><span class="brand-mark">n</span><span>Nourish</span></div>
+      <div class="gate-card">
+        <span class="gate-icon"><svg><use href="#i-shield"/></svg></span>
+        <p class="eyebrow">PRIVATE OPERATIONS</p>
+        <h1>Enter the control room.</h1>
+        <p class="gate-copy">Review recipe evidence, protect publication quality, and keep every decision accountable.</p>
+        <label>Operator ID<input id="reviewerID" autocomplete="username" placeholder="e.g. rhea.ops" /></label>
+        <label>Development admin key<input id="adminKey" type="password" autocomplete="current-password" placeholder="Not saved in this browser" /></label>
+        <p class="security-copy">The key stays in memory for this tab only. Production access will use identity-provider sign-in, MFA, and persisted roles.</p>
+        <button class="primary-button wide" id="connectButton">Connect securely</button>
+        <button class="quiet-button wide" id="demoButton">Open demo workspace</button>
+        <p class="gate-error" id="gateError" role="alert"></p>
+      </div>
+    </section>
+
+    <div class="dashboard is-hidden" id="dashboard">
+      <aside class="sidebar" id="sidebar">
+        <a class="brand" href="#catalogue"><span class="brand-mark">n</span><span>Nourish</span><small>CONTROL ROOM</small></a>
+        <nav aria-label="Dashboard navigation">
+          <button class="nav-item is-active" data-view="insights"><svg><use href="#i-grid"/></svg><span>Insights</span></button>
+          <button class="nav-item" data-view="support"><svg><use href="#i-search"/></svg><span>User support</span></button>
+          <button class="nav-item" data-view="flags"><svg><use href="#i-settings"/></svg><span>Feature flags</span><b id="navEmergencyFlagCount">0</b></button>
+          <button class="nav-item" data-view="exports"><svg><use href="#i-audit"/></svg><span>Exports</span><b id="navReadyExportCount">0</b></button>
+          <button class="nav-item" data-view="catalogue"><svg><use href="#i-grid"/></svg><span>Catalogue</span><b id="navQueueCount">0</b></button>
+          <button class="nav-item" data-view="sources"><svg><use href="#i-leaf"/></svg><span>Evidence</span></button>
+          <button class="nav-item" data-view="plans"><svg><use href="#i-clock"/></svg><span>Plan runs</span><b id="navPlanIssueCount">0</b></button>
+          <button class="nav-item" data-view="subscriptions"><svg><use href="#i-shield"/></svg><span>Subscriptions</span><b id="navSubscriptionIssueCount">0</b></button>
+          <button class="nav-item" data-view="activity"><svg><use href="#i-audit"/></svg><span>Activity</span></button>
+          <button class="nav-item" data-view="settings"><svg><use href="#i-settings"/></svg><span>Access</span></button>
+        </nav>
+        <div class="sidebar-note"><svg><use href="#i-shield"/></svg><div><strong>Publication guard</strong><span>Author and reviewer identities must differ.</span></div></div>
+        <button class="operator-chip" id="disconnectButton"><span class="avatar" id="operatorAvatar">RO</span><span><strong id="operatorName">Reviewer</strong><small id="operatorMode">Connected</small></span><svg><use href="#i-arrow"/></svg></button>
+      </aside>
+
+      <main>
+        <header class="mobile-header"><button id="menuButton" aria-label="Open navigation"><svg><use href="#i-menu"/></svg></button><div class="gate-brand"><span class="brand-mark">n</span><span>Nourish</span></div><span class="avatar" id="mobileAvatar">RO</span></header>
+
+        <section class="view is-visible" data-view-panel="insights">
+          <div class="page-heading insights-heading"><div><p class="eyebrow">OWNER INSIGHTS</p><h1>Product health, with definitions attached.</h1><p>Aggregated outcomes only—every number carries its formula and freshness evidence.</p></div><div class="freshness-chip"><span>DATA FRESHNESS</span><strong id="analyticsFreshness">Not loaded</strong></div></div>
+          <section class="analytics-filter-card" aria-labelledby="analyticsFilterTitle">
+            <div class="analytics-filter-heading"><div><h2 id="analyticsFilterTitle">Analysis window</h2><p>All dates are interpreted in the selected timezone.</p></div><button class="primary-button" id="applyAnalyticsFilters">Apply filters</button></div>
+            <div class="analytics-filters">
+              <label>Start date<input id="analyticsStartDate" type="date" /></label>
+              <label>End date<input id="analyticsEndDate" type="date" /></label>
+              <label>Timezone<select id="analyticsTimeZone"><option value="Asia/Kolkata">Asia/Kolkata</option><option value="UTC">UTC</option><option value="America/New_York">America/New_York</option><option value="Europe/London">Europe/London</option></select></label>
+              <label>Subscription<select id="analyticsSubscription"><option value="all">All states</option><option value="active">Active</option><option value="trial">Trial</option><option value="graceOrBillingRetry">Grace / billing retry</option><option value="expired">Expired</option><option value="revokedOrRefunded">Revoked / refunded</option><option value="unknown">Unknown</option></select></label>
+              <label>App version<select id="analyticsAppVersion"><option value="all">All versions</option><option value="1.0.0">1.0.0</option><option value="1.1-beta">1.1 beta</option><option value="unknown">Unknown</option></select></label>
+              <label>Acquisition<select id="analyticsAcquisition"><option value="all">All sources</option><option value="organic">Organic</option><option value="app_store_search">App Store search</option><option value="referral">Referral</option><option value="paid_social">Paid social</option><option value="unknown">Unknown</option></select></label>
+              <label>Diet type<select id="analyticsDiet"><option value="all">All diets</option><option value="vegetarian">Vegetarian</option><option value="vegan">Vegan</option><option value="eggetarian">Eggetarian</option><option value="nonVegetarian">Non-vegetarian</option></select></label>
+              <label>Cohort filter<select id="analyticsCohort"><option value="all">All users</option><option value="onboarded">Onboarded</option><option value="plan_adopters">Plan adopters</option><option value="subscribers">Verified subscribers</option></select></label>
+              <label>Cohort grouping<select id="analyticsCohortBy"><option value="registration_week">Registration week</option><option value="first_plan_week">First-plan week</option></select></label>
+            </div>
+          </section>
+          <div class="analytics-privacy" id="analyticsPrivacy"><svg><use href="#i-shield"/></svg><div><strong>Aggregation boundary</strong><span>No email, internal user ID, profile answer, or user-level row is returned. Groups below five are suppressed.</span></div></div>
+          <section class="kpi-grid" id="kpiGrid" aria-label="Key product metrics"></section>
+          <section class="analytics-two-column">
+            <article class="analytics-card funnel-card-large"><div class="analytics-card-heading"><div><p class="eyebrow">ACTIVATION FUNNEL</p><h2>From account to weekly review</h2></div><small id="funnelWindow"></small></div><div class="owner-funnel" id="ownerFunnel"></div></article>
+            <article class="analytics-card cohort-card"><div class="analytics-card-heading"><div><p class="eyebrow">COHORT CONVERSION</p><h2 id="cohortChartTitle">Adoption by registration week</h2></div><div class="view-toggle" role="group" aria-label="Cohort presentation"><button class="is-active" data-cohort-mode="chart">Chart</button><button data-cohort-mode="table">Table</button></div></div><div class="cohort-chart" id="cohortChart"></div><div class="cohort-table-wrap is-hidden" id="cohortTableWrap"><table class="cohort-table"><caption>Accessible cohort conversion table</caption><thead id="cohortTableHead"></thead><tbody id="cohortTableBody"></tbody></table></div></article>
+          </section>
+          <section class="analytics-card metric-definitions"><div class="analytics-card-heading"><div><p class="eyebrow">METRIC CONTRACT</p><h2>Definitions and formulas</h2></div><small>Shown exactly as returned by the operator API</small></div><div class="definition-list" id="metricDefinitions"></div></section>
+        </section>
+
+        <section class="view" data-view-panel="support">
+          <div class="page-heading support-heading"><div><p class="eyebrow">USER SUPPORT</p><h1>Find one account, with a reason.</h1><p>Exact-match operational lookup only. Every attempt is recorded, including searches with no result.</p></div><span class="read-only-chip"><svg><use href="#i-shield"/></svg>Read-only</span></div>
+          <div class="support-boundary"><svg><use href="#i-shield"/></svg><div><strong>No impersonation, browsing, or silent access</strong><span>This view never returns profile answers, meal history, authentication tokens, raw Apple identifiers, or a way to act as the user.</span></div></div>
+          <section class="support-search-card" aria-labelledby="supportLookupTitle">
+            <div class="support-search-copy"><p class="eyebrow">AUDITED LOOKUP</p><h2 id="supportLookupTitle">Enter the identifier from the support ticket</h2><p>Use the verified email or internal ID exactly as supplied. Partial and broad searches are not supported.</p></div>
+            <form id="supportLookupForm">
+              <div class="support-identifier-row">
+                <label>Identifier type<select id="supportLookupType"><option value="verified_email">Verified email</option><option value="internal_id">Internal user ID</option></select></label>
+                <label class="support-identifier-field">Exact identifier<input id="supportLookupValue" type="email" autocomplete="off" required placeholder="user@example.com" /></label>
+              </div>
+              <label>Reason for access <small>12–500 characters · written to the permanent audit</small><textarea id="supportLookupReason" rows="3" minlength="12" maxlength="500" required placeholder="Example: Investigating the account-access issue reported in support ticket NP-1042."></textarea></label>
+              <div class="support-submit-row"><p><svg><use href="#i-audit"/></svg>The reason, operator, result and correlation ID will be recorded.</p><button class="primary-button" id="supportLookupButton" type="submit">Find account</button></div>
+            </form>
+          </section>
+          <section class="support-result is-hidden" id="supportResult" aria-live="polite"></section>
+          <section class="support-empty" id="supportEmpty"><span><svg><use href="#i-search"/></svg></span><h2>No account opened</h2><p>An account summary appears only after an exact, reasoned lookup.</p></section>
+        </section>
+
+        <section class="view" data-view-panel="flags">
+          <div class="page-heading flag-heading"><div><p class="eyebrow">RELEASE CONTROL</p><h1>Controlled rollouts, with a hard stop.</h1><p>Target supported versions and stable user cohorts without shipping a new binary.</p></div><span class="security-admin-chip"><svg><use href="#i-shield"/></svg>Security admin</span></div>
+          <div class="flag-contract"><div><strong>Evaluation order</strong><span>Emergency disable → enabled state → app version → user allowlist → stable percentage bucket</span></div><small>Allowlists never bypass an emergency stop or version boundary.</small></div>
+          <div class="metric-row flag-metrics"><article><span class="metric-icon green"><svg><use href="#i-check"/></svg></span><div><strong id="activeFlagCount">0</strong><small>active flags</small></div><em>Evaluating</em></article><article><span class="metric-icon red"><svg><use href="#i-x"/></svg></span><div><strong id="emergencyFlagCount">0</strong><small>emergency stops</small></div><em>Always off</em></article><article><span class="metric-icon amber"><svg><use href="#i-clock"/></svg></span><div><strong id="averageRollout">0%</strong><small>average rollout</small></div><em>Active flags</em></article><article><span class="metric-icon ink"><svg><use href="#i-shield"/></svg></span><div><strong id="allowlistedUserCount">0</strong><small>allowlist entries</small></div><em>Internal IDs</em></article></div>
+          <div class="flag-workspace">
+            <section class="flag-list-panel">
+              <div class="flag-list-heading"><div><strong>Flag inventory</strong><small id="flagInventoryLabel">0 configured</small></div><button class="primary-button compact" id="newFlagButton">New flag</button></div>
+              <div class="flag-list" id="flagList"></div>
+              <div class="flag-list-empty" id="emptyFlags"><span>+</span><h3>No flags configured</h3><p>Create the first inactive flag before preparing a rollout.</p></div>
+            </section>
+            <section class="flag-editor-panel">
+              <div class="flag-editor-empty" id="flagEditorEmpty"><span><svg><use href="#i-settings"/></svg></span><h2>Select or create a flag</h2><p>Targeting, value, emergency state, and version history will appear here.</p></div>
+              <form class="flag-form is-hidden" id="flagForm">
+                <div class="flag-form-heading"><div><p class="eyebrow">VERSIONED CONFIGURATION</p><h2 id="flagFormTitle">New feature flag</h2><p id="flagFormMeta">Start inactive and document the intended behavior.</p></div><span class="flag-version" id="flagVersion">NEW</span></div>
+                <div class="flag-state-grid">
+                  <label class="flag-toggle-card"><input id="flagEnabled" type="checkbox" /><span><strong>Flag enabled</strong><small>Allows eligible users to enter rollout evaluation.</small></span></label>
+                  <label class="flag-toggle-card emergency"><input id="flagEmergencyDisabled" type="checkbox" /><span><strong>Emergency disable</strong><small>Immediately forces this flag off for every user.</small></span></label>
+                </div>
+                <div class="form-grid two"><label>Stable key<input id="flagKey" required pattern="[a-z][a-z0-9_]{2,63}" placeholder="weekly_insights" /></label><label>Description<input id="flagDescription" required maxlength="240" placeholder="What product behavior does this control?" /></label></div>
+                <section class="flag-form-section"><div class="section-heading"><h3>Percentage rollout</h3><small>Stable per flag key + internal user ID</small></div><div class="rollout-control"><input id="flagRolloutRange" type="range" min="0" max="100" step="1" value="0" /><label><input id="flagRollout" type="number" min="0" max="100" step="1" value="0" required /><span>%</span></label></div></section>
+                <section class="flag-form-section"><div class="section-heading"><h3>App-version boundary</h3><small>Semantic versions; either limit may be blank</small></div><div class="form-grid two"><label>Minimum version<input id="flagMinimumVersion" placeholder="1.4.0" /></label><label>Maximum version<input id="flagMaximumVersion" placeholder="2.0.0" /></label></div></section>
+                <section class="flag-form-section"><div class="section-heading"><h3>User allowlist</h3><small>Internal IDs only · one per line or comma separated</small></div><textarea id="flagAllowlist" rows="3" placeholder="internal-user-id"></textarea><p class="flag-help">Allowlisted users bypass the percentage only after the emergency and app-version checks pass.</p></section>
+                <section class="flag-form-section"><div class="section-heading"><h3>JSON value</h3><small>Returned only when this flag evaluates on</small></div><textarea class="flag-json" id="flagValue" rows="5" spellcheck="false">null</textarea></section>
+                <label class="flag-reason">Reason for change <small>12–500 characters · stored in append-only audit</small><textarea id="flagReason" rows="3" minlength="12" maxlength="500" required placeholder="Explain the evidence and intended rollout or emergency action."></textarea></label>
+                <div class="flag-save-row"><p><svg><use href="#i-audit"/></svg>Saving creates a new immutable version and audit receipt.</p><button class="primary-button" id="saveFlagButton" type="submit">Save new flag</button></div>
+              </form>
+            </section>
+          </div>
+          <section class="flag-audit-card"><div class="section-heading"><div><p class="eyebrow">CHANGE HISTORY</p><h2>Feature-flag audit</h2></div><small>Latest 100 permanent receipts</small></div><div class="flag-audit-list" id="flagAuditList"></div></section>
+        </section>
+
+        <section class="view" data-view-panel="exports">
+          <div class="page-heading export-heading"><div><p class="eyebrow">CONTROLLED DELIVERY</p><h1>Authorized data exports.</h1><p>Aggregated tables are convenient; account-level data remains exceptional, reasoned, and audited.</p></div><span class="export-retention"><svg><use href="#i-clock"/></svg><strong>24-hour expiry</strong></span></div>
+          <div class="export-boundary"><svg><use href="#i-shield"/></svg><div><strong>Private storage boundary</strong><span>Files are never placed in browser storage. Account exports contain only the minimized support summary and require a fresh reason again at download.</span></div></div>
+          <div class="export-grid">
+            <form class="export-create-card" id="exportForm">
+              <div><p class="eyebrow">NEW EXPORT</p><h2>Choose the smallest useful dataset</h2></div>
+              <label>Export type<select id="exportType"><option value="kpis">KPI summary</option><option value="cohorts">Cohort table</option><option value="support_account">Support account summary</option></select></label>
+              <div class="export-scope-copy" id="exportScopeCopy"></div>
+              <div class="export-user-fields is-hidden" id="exportUserFields">
+                <label>Exact identifier type<select id="exportIdentifierType"><option value="verifiedEmail">Verified email</option><option value="internalUserID">Internal user ID</option></select></label>
+                <label>Exact identifier<input id="exportIdentifierValue" autocomplete="off" placeholder="person@example.com" /></label>
+                <label>Creation reason <small>12–500 characters</small><textarea id="exportReason" rows="4" maxlength="500" placeholder="Reference the approved support case and why an export is necessary."></textarea></label>
+              </div>
+              <p class="form-error" id="exportFormError" role="alert"></p>
+              <button class="primary-button wide" id="createExportButton" type="submit">Create protected export</button>
+            </form>
+            <section class="export-history-card">
+              <div class="export-history-heading"><div><p class="eyebrow">DELIVERY HISTORY</p><h2>Recent authorized exports</h2></div><button class="secondary-button" id="refreshExportsButton" type="button">Refresh</button></div>
+              <div class="export-list" id="exportList"></div>
+              <div class="export-empty" id="exportEmpty"><span><svg><use href="#i-audit"/></svg></span><h3>No exports yet</h3><p>Create an aggregate KPI or cohort export to begin.</p></div>
+            </section>
+          </div>
+        </section>
+
+        <section class="view" data-view-panel="catalogue">
+          <div class="page-heading"><div><p class="eyebrow">CATALOGUE OPERATIONS</p><h1>Publication work queue</h1><p>Review the evidence, not just the recipe.</p></div><div class="heading-actions"><button class="secondary-button" id="refreshButton">Refresh queue</button><button class="primary-button" id="addContentButton">Add reviewed content</button></div></div>
+          <div class="metric-row">
+            <article><span class="metric-icon amber"><svg><use href="#i-clock"/></svg></span><div><strong id="reviewCount">0</strong><small>awaiting review</small></div><em>Needs action</em></article>
+            <article><span class="metric-icon green"><svg><use href="#i-check"/></svg></span><div><strong id="readyCount">0</strong><small>validation-ready</small></div><em>All gates passed</em></article>
+            <article><span class="metric-icon red"><svg><use href="#i-x"/></svg></span><div><strong id="issueCount">0</strong><small>with issues</small></div><em>Return to author</em></article>
+            <article><span class="metric-icon ink"><svg><use href="#i-shield"/></svg></span><div><strong id="sourceCount">0</strong><small>evidence records</small></div><em>Traceable sources</em></article>
+          </div>
+
+          <div class="workspace">
+            <section class="queue-panel">
+              <div class="queue-tools"><label class="search-box"><svg><use href="#i-search"/></svg><input id="queueSearch" placeholder="Search recipe or author" /></label><select id="stateFilter" aria-label="Filter workflow state"><option value="all">All open work</option><option value="inReview">In review</option><option value="draft">Draft</option><option value="rejected">Rejected</option></select></div>
+              <div class="queue-header"><span id="queueLabel">Open work</span><small>Oldest review first</small></div>
+              <div class="queue-list" id="queueList"></div>
+              <div class="empty-state is-hidden" id="emptyQueue"><span>✓</span><h3>Queue is clear</h3><p>No catalogue items match this filter.</p></div>
+            </section>
+
+            <section class="detail-panel" id="detailPanel">
+              <div class="detail-empty" id="detailEmpty"><span>←</span><h2>Select a recipe to review</h2><p>Its content, nutrition evidence, safety checks, and decision history will appear here.</p></div>
+              <div class="detail-content is-hidden" id="detailContent">
+                <div class="detail-heading"><div><span class="state-pill" id="detailState">IN REVIEW</span><h2 id="detailName"></h2><p id="detailMeta"></p></div><button class="icon-button" id="closeDetail" aria-label="Close detail"><svg><use href="#i-x"/></svg></button></div>
+                <div class="author-strip"><div><span class="avatar" id="authorAvatar">AK</span><p><small>AUTHORED BY</small><strong id="authorName"></strong></p></div><div><small>SUBMITTED</small><strong id="submittedAt"></strong></div><div><small>VERSION</small><strong id="versionNumber"></strong></div></div>
+                <div class="validation-banner" id="validationBanner"></div>
+
+                <div class="detail-tabs" role="tablist"><button class="is-active" data-detail-tab="content">Recipe</button><button data-detail-tab="evidence">Evidence <b id="evidenceCount">0</b></button><button data-detail-tab="checks">Checks <b id="checksCount">0</b></button></div>
+                <div class="detail-tab is-visible" data-detail-panel="content">
+                  <div class="facts-grid" id="recipeFacts"></div>
+                  <section class="detail-section"><div class="section-heading"><h3>Ingredients</h3><small>Household quantity and canonical grams</small></div><div class="ingredient-table" id="ingredientTable"></div></section>
+                  <section class="detail-section"><div class="section-heading"><h3>Method</h3><small>Ordered author instructions</small></div><ol class="method-list" id="methodList"></ol></section>
+                </div>
+                <div class="detail-tab" data-detail-panel="evidence"><div id="evidenceList" class="evidence-list"></div></div>
+                <div class="detail-tab" data-detail-panel="checks"><div id="checkList" class="check-list"></div></div>
+                <footer class="decision-bar"><p id="decisionHint"></p><div><button class="reject-button" id="rejectButton">Reject with reason</button><button class="approve-button" id="approveButton"><svg><use href="#i-check"/></svg>Approve & publish</button></div></footer>
+              </div>
+            </section>
+          </div>
+        </section>
+
+        <section class="view" data-view-panel="sources"><div class="page-heading"><div><p class="eyebrow">NUTRITION EVIDENCE</p><h1>Ingredient and source library</h1><p>Every published nutrient value needs traceable, current, production-approved evidence.</p></div><button class="primary-button" id="addEvidenceButton">Add reviewed content</button></div><div class="inventory-summary"><article><strong id="ingredientCount">0</strong><span>verified ingredients</span></article><article><strong id="nutrientCount">0</strong><span>nutrient records</span></article><article><strong id="approvedSourceCount">0</strong><span>production-approved</span></article></div><section class="inventory-section"><div class="section-heading"><h2>Verified ingredients</h2><small>Canonical identity and household conversions</small></div><div class="ingredient-grid" id="ingredientGrid"></div></section><section class="inventory-section"><div class="section-heading"><h2>Nutrient evidence</h2><small>Immutable per-100 g records and provenance</small></div><div class="source-grid" id="sourceGrid"></div></section></section>
+        <section class="view" data-view-panel="plans">
+          <div class="page-heading"><div><p class="eyebrow">PLANNER OPERATIONS</p><h1>Plan-run diagnostics</h1><p>Trace every generation outcome without exposing profile answers or raw deterministic seeds.</p></div><button class="secondary-button" id="refreshPlanRunsButton">Refresh runs</button></div>
+          <div class="metric-row plan-metrics"><article><span class="metric-icon ink"><svg><use href="#i-clock"/></svg></span><div><strong id="planRunCount">0</strong><small>recent runs</small></div><em>Latest 200</em></article><article><span class="metric-icon green"><svg><use href="#i-check"/></svg></span><div><strong id="planSucceededCount">0</strong><small>succeeded</small></div><em>Materialized</em></article><article><span class="metric-icon red"><svg><use href="#i-x"/></svg></span><div><strong id="planFailedCount">0</strong><small>rejected or failed</small></div><em>Needs review</em></article><article><span class="metric-icon amber"><svg><use href="#i-clock"/></svg></span><div><strong id="planActiveCount">0</strong><small>queued or generating</small></div><em>In flight</em></article></div>
+          <div class="plan-workspace">
+            <section class="plan-run-panel">
+              <div class="queue-tools"><label class="search-box"><svg><use href="#i-search"/></svg><input id="planRunSearch" placeholder="Search run, user, correlation, or error" /></label><select id="planRunState" aria-label="Filter plan-run state"><option value="all">All states</option><option value="queued">Queued</option><option value="generating">Generating</option><option value="succeeded">Succeeded</option><option value="rejected">Rejected</option><option value="failed">Failed</option></select></div>
+              <div class="queue-header"><span id="planRunLabel">Recent runs</span><small>Newest first</small></div>
+              <div class="plan-run-list" id="planRunList"></div>
+              <div class="empty-state is-hidden" id="emptyPlanRuns"><span>✓</span><h3>No matching runs</h3><p>Adjust the search or state filter.</p></div>
+            </section>
+            <section class="plan-run-detail" id="planRunDetail"><div class="detail-empty"><span>→</span><h2>Select a plan run</h2><p>Versions, candidate funnel, outcome, correlation, and retry evidence will appear here.</p></div></section>
+          </div>
+        </section>
+        <section class="view" data-view-panel="subscriptions">
+          <div class="page-heading"><div><p class="eyebrow">SUBSCRIPTION OPERATIONS</p><h1>Reconciliation cases</h1><p>Compare verified Apple evidence with Nourish state while preserving the last legitimate access decision.</p></div><button class="secondary-button" id="refreshSubscriptionsButton">Refresh cases</button></div>
+          <div class="metric-row subscription-metrics"><article><span class="metric-icon ink"><svg><use href="#i-shield"/></svg></span><div><strong id="subscriptionCount">0</strong><small>linked subscriptions</small></div><em>Latest 200</em></article><article><span class="metric-icon red"><svg><use href="#i-x"/></svg></span><div><strong id="subscriptionMismatchCount">0</strong><small>identity mismatches</small></div><em>Needs action</em></article><article><span class="metric-icon amber"><svg><use href="#i-clock"/></svg></span><div><strong id="subscriptionDelayedCount">0</strong><small>delayed checks</small></div><em>Retry protected</em></article><article><span class="metric-icon green"><svg><use href="#i-check"/></svg></span><div><strong id="subscriptionCurrentCount">0</strong><small>current</small></div><em>Apple verified</em></article></div>
+          <div class="subscription-workspace">
+            <section class="subscription-list-panel">
+              <div class="queue-tools"><label class="search-box"><svg><use href="#i-search"/></svg><input id="subscriptionSearch" placeholder="Search user, product, environment, or error" /></label><select id="subscriptionStatus" aria-label="Filter reconciliation status"><option value="all">All cases</option><option value="attention">Needs attention</option><option value="mismatch">Mismatch</option><option value="delayed">Delayed</option><option value="pending">Pending</option><option value="current">Current</option></select></div>
+              <div class="queue-header"><span id="subscriptionLabel">Subscription cases</span><small>Recently updated first</small></div>
+              <div class="subscription-list" id="subscriptionList"></div>
+              <div class="empty-state is-hidden" id="emptySubscriptions"><span>✓</span><h3>No matching cases</h3><p>Adjust the search or reconciliation filter.</p></div>
+            </section>
+            <section class="subscription-detail" id="subscriptionDetail"><div class="detail-empty"><span>→</span><h2>Select a subscription case</h2><p>Access policy, Apple and server timelines, retry evidence, and safe operator actions will appear here.</p></div></section>
+          </div>
+        </section>
+        <section class="view" data-view-panel="activity"><div class="page-heading"><div><p class="eyebrow">ACCOUNTABILITY</p><h1>Catalogue activity</h1><p>A chronological record of ingestion, submission, rejection, and publication decisions.</p></div><button class="secondary-button" id="refreshAuditButton">Refresh activity</button></div><div class="activity-card"><div class="activity-head"><span>Event</span><span>Operator</span><span>Entity</span><span>When</span></div><div id="activityList"></div></div></section>
+        <section class="view" data-view-panel="settings"><div class="page-heading"><div><p class="eyebrow">ACCESS BOUNDARY</p><h1>Control Room session</h1><p>Development access is intentionally narrow while production identity is being configured.</p></div></div><div class="access-grid"><article><span class="metric-icon green"><svg><use href="#i-shield"/></svg></span><h3>Current operator</h3><strong id="settingsOperator"></strong><p>Server-owned roles control support, catalogue, planning, subscription, and insight access.</p></article><article><h3>Production gate</h3><ul><li>Identity-provider sign-in</li><li>Mandatory MFA</li><li>Persisted role grants</li><li>Session and access audit</li><li>No user impersonation</li></ul></article><article class="warning-card"><h3>Development key</h3><p>This tab holds the key only in memory. Closing or disconnecting clears it.</p><button class="reject-button" id="settingsDisconnect">End session</button></article></div></section>
+      </main>
+    </div>
+
+    <div class="modal-backdrop" id="rejectModal" aria-hidden="true"><section class="modal" role="dialog" aria-modal="true" aria-labelledby="rejectTitle"><button class="icon-button modal-close" data-close-modal aria-label="Close"><svg><use href="#i-x"/></svg></button><p class="eyebrow">RETURN TO AUTHOR</p><h2 id="rejectTitle">Why is this recipe not ready?</h2><p>Use a specific reason. It becomes part of the permanent catalogue audit.</p><label>Rejection reason<textarea id="rejectionReason" rows="4" placeholder="Example: Nutrient evidence for paneer is outside its effective date."></textarea></label><div class="modal-actions"><button class="secondary-button" data-close-modal>Cancel</button><button class="reject-button" id="confirmReject">Reject recipe</button></div></section></div>
+    <div class="modal-backdrop" id="contentModal" aria-hidden="true">
+      <section class="modal content-modal" role="dialog" aria-modal="true" aria-labelledby="contentTitle">
+        <button class="icon-button modal-close" data-close-modal aria-label="Close"><svg><use href="#i-x"/></svg></button>
+        <p class="eyebrow">REVIEWED CONTENT</p>
+        <h2 id="contentTitle">Add catalogue evidence</h2>
+        <p>Create the verified ingredient first, then attach an immutable per-100 g nutrient record from a traceable source.</p>
+        <div class="content-form-tabs" role="tablist" aria-label="Content type">
+          <button type="button" class="is-active" data-content-tab="ingredient">1 · Ingredient & conversions</button>
+          <button type="button" data-content-tab="nutrient">2 · Nutrient evidence</button>
+        </div>
+        <div class="content-form-panel is-visible" data-content-panel="ingredient">
+          <div class="import-row"><div><strong>Import ingredient JSON</strong><span>Prefills this form for review; it does not bypass validation.</span></div><label class="secondary-button file-button">Choose JSON<input id="ingredientImport" type="file" accept="application/json,.json" /></label></div>
+          <form id="ingredientForm">
+            <div class="form-grid two"><label>Stable ingredient ID<input id="ingredientID" required pattern="[a-z0-9][a-z0-9-]*" placeholder="e.g. red-lentils" /></label><label>Canonical name<input id="ingredientName" required placeholder="e.g. Red lentils" /></label></div>
+            <div class="form-grid two"><label>Category<input id="ingredientCategory" required list="ingredientCategories" placeholder="e.g. pulses" /><datalist id="ingredientCategories"><option value="produce"><option value="protein"><option value="dairy"><option value="grains"><option value="pulses"><option value="pantry"><option value="spices"><option value="other"></datalist></label><label>Aliases <small>comma separated</small><input id="ingredientAliases" placeholder="masoor dal, split red lentils" /></label></div>
+            <fieldset><legend>Compatible diets</legend><div class="check-options"><label><input type="checkbox" name="compatibleDiet" value="vegan" />Vegan</label><label><input type="checkbox" name="compatibleDiet" value="vegetarian" />Vegetarian</label><label><input type="checkbox" name="compatibleDiet" value="eggetarian" />Eggetarian</label><label><input type="checkbox" name="compatibleDiet" value="nonVegetarian" />Non-vegetarian</label></div></fieldset>
+            <label>Allergen IDs <small>comma separated; leave blank only when reviewed as none</small><input id="ingredientAllergens" placeholder="milk, tree-nuts" /></label>
+            <div class="conversion-heading"><div><strong>Household conversions</strong><span>Each quantity must map to canonical grams.</span></div><button class="secondary-button compact" id="addConversionButton" type="button">Add conversion</button></div>
+            <div class="conversion-list" id="conversionList"></div>
+            <label class="review-check"><input id="ingredientReviewed" type="checkbox" required /><span>I reviewed the canonical identity, diets, allergens, and every conversion.</span></label>
+            <div class="form-actions"><button class="secondary-button" type="button" data-close-modal>Cancel</button><button class="primary-button" id="saveIngredientButton" type="submit">Save verified ingredient</button></div>
+          </form>
+        </div>
+        <div class="content-form-panel" data-content-panel="nutrient">
+          <div class="import-row"><div><strong>Import nutrient JSON</strong><span>Prefills provenance and values for human review.</span></div><label class="secondary-button file-button">Choose JSON<input id="nutrientImport" type="file" accept="application/json,.json" /></label></div>
+          <form id="nutrientForm">
+            <div class="form-grid two"><label>Verified ingredient<select id="nutrientIngredient" required><option value="">Choose an ingredient</option></select></label><label>Nutrient record ID<input id="nutrientID" required readonly /></label></div>
+            <div class="form-section-label"><strong>Nutrition per 100 g</strong><span>Non-negative values from the selected source record.</span></div>
+            <div class="form-grid five"><label>Calories<input id="nutrientCalories" type="number" min="0" step="0.01" required /></label><label>Protein (g)<input id="nutrientProtein" type="number" min="0" step="0.01" required /></label><label>Carbs (g)<input id="nutrientCarbs" type="number" min="0" step="0.01" required /></label><label>Fat (g)<input id="nutrientFat" type="number" min="0" step="0.01" required /></label><label>Fibre (g)<input id="nutrientFibre" type="number" min="0" step="0.01" required /></label></div>
+            <div class="form-section-label"><strong>Source provenance</strong><span>Provider, dataset identity, licence, and retrieval evidence are required.</span></div>
+            <div class="form-grid two"><label>Provider<input id="sourceProvider" required placeholder="Licensed data provider" /></label><label>Dataset<input id="sourceDataset" required placeholder="Food composition dataset" /></label><label>Dataset version<input id="sourceVersion" required placeholder="2026.2" /></label><label>Source record ID<input id="sourceRecordID" required placeholder="lentils-cooked-104" /></label><label>Source URL <small>optional</small><input id="sourceURL" type="url" placeholder="https://…" /></label><label>Source UUID<input id="sourceID" required readonly /></label></div>
+            <div class="form-grid three"><label>Licence status<select id="sourceLicense" required><option value="approvedForProduction">Approved for production</option><option value="evaluationOnly">Evaluation only</option><option value="unknown">Unknown</option><option value="expired">Expired</option><option value="prohibited">Prohibited</option></select></label><label>Retrieved on<input id="sourceRetrievedAt" type="date" required /></label><label>Confidence<select id="nutrientConfidence" required><option value="high">High</option><option value="medium">Medium</option><option value="low">Low</option></select></label></div>
+            <div class="form-grid two"><label>Effective from<input id="nutrientEffectiveFrom" type="date" required /></label><label>Effective until <small>optional</small><input id="nutrientEffectiveUntil" type="date" /></label></div>
+            <div class="licence-warning" id="licenceWarning"><strong>Production publication gate</strong><span>Only production-approved, currently effective evidence can support publication.</span></div>
+            <label class="review-check"><input id="nutrientReviewed" type="checkbox" required /><span>I checked the source identity, licence rights, effective dates, and all nutrient values.</span></label>
+            <div class="form-actions"><button class="secondary-button" type="button" data-close-modal>Cancel</button><button class="primary-button" id="saveNutrientButton" type="submit">Save immutable evidence</button></div>
+          </form>
+        </div>
+        <p class="form-error" id="contentFormError" role="alert"></p>
+      </section>
+    </div>
+    <div class="modal-backdrop" id="subscriptionRetryModal" aria-hidden="true"><section class="modal" role="dialog" aria-modal="true" aria-labelledby="subscriptionRetryTitle"><button class="icon-button modal-close" data-close-modal aria-label="Close"><svg><use href="#i-x"/></svg></button><p class="eyebrow">ACCOUNTABLE RETRY</p><h2 id="subscriptionRetryTitle">Queue a verified Apple check?</h2><p>This action never grants or revokes access manually. It asks the durable worker to retrieve and verify fresh Apple-signed status.</p><label>Operational reason<textarea id="subscriptionRetryReason" rows="4" maxlength="500" placeholder="Example: Reviewed the bound account token and original transaction reference; request a fresh verification."></textarea></label><p class="form-error" id="subscriptionRetryError" role="alert"></p><div class="modal-actions"><button class="secondary-button" data-close-modal>Cancel</button><button class="approve-button" id="confirmSubscriptionRetry">Queue verified check</button></div></section></div>
+    <div class="modal-backdrop" id="exportDownloadModal" aria-hidden="true"><section class="modal" role="dialog" aria-modal="true" aria-labelledby="exportDownloadTitle"><button class="icon-button modal-close" data-close-modal aria-label="Close"><svg><use href="#i-x"/></svg></button><p class="eyebrow">AUDITED DELIVERY</p><h2 id="exportDownloadTitle">Confirm account-export delivery</h2><p>Enter a fresh reason for this download. It is stored separately from the creation approval.</p><label>Delivery reason <small>12–500 characters</small><textarea id="exportDownloadReason" rows="4" maxlength="500" placeholder="Explain who approved this delivery and the support case it serves."></textarea></label><p class="form-error" id="exportDownloadError" role="alert"></p><div class="modal-actions"><button class="secondary-button" data-close-modal>Cancel</button><button class="approve-button" id="confirmExportDownload">Download and audit</button></div></section></div>
+    <div class="toast" id="toast" role="status"></div>
+    <script src="app.js"></script>
+  </body>
+</html>

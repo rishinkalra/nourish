@@ -1,0 +1,1789 @@
+{
+  "sourceLanguage" : "en",
+  "strings" : {
+    "A general-wellness plan is suitable for me" : {
+      "localizations" : {
+        "hi" : { "stringUnit" : { "state" : "translated", "value" : "सामान्य स्वास्थ्य योजना मेरे लिए उपयुक्त है" } }
+      }
+    },
+    "Back" : {
+      "localizations" : {
+        "hi" : { "stringUnit" : { "state" : "translated", "value" : "वापस" } }
+      }
+    },
+    "Build my week" : {
+      "localizations" : {
+        "hi" : { "stringUnit" : { "state" : "translated", "value" : "मेरा सप्ताह बनाएँ" } }
+      }
+    },
+    "Continue" : {
+      "localizations" : {
+        "hi" : { "stringUnit" : { "state" : "translated", "value" : "आगे बढ़ें" } }
+      }
+    },
+    "Create or review a weekly plan" : {
+      "localizations" : {
+        "hi" : { "stringUnit" : { "state" : "translated", "value" : "साप्ताहिक योजना बनाएँ या देखें" } }
+      }
+    },
+    "Delete account" : {
+      "localizations" : {
+        "hi" : { "stringUnit" : { "state" : "translated", "value" : "खाता हटाएँ" } }
+      }
+    },
+    "First, a quick safety check." : {
+      "localizations" : {
+        "hi" : { "stringUnit" : { "state" : "translated", "value" : "पहले, एक छोटी सुरक्षा जाँच।" } }
+      }
+    },
+    "Groceries" : {
+      "localizations" : {
+        "hi" : { "stringUnit" : { "state" : "translated", "value" : "किराने की सूची" } }
+      }
+    },
+    "I am 18 years or older" : {
+      "localizations" : {
+        "hi" : { "stringUnit" : { "state" : "translated", "value" : "मेरी आयु 18 वर्ष या अधिक है" } }
+      }
+    },
+    "Let’s begin" : {
+      "localizations" : {
+        "hi" : { "stringUnit" : { "state" : "translated", "value" : "शुरू करें" } }
+      }
+    },
+    "My week" : {
+      "localizations" : {
+        "hi" : { "stringUnit" : { "state" : "translated", "value" : "मेरा सप्ताह" } }
+      }
+    },
+    "Nourish supports general wellness and meal organization—not clinical diets." : {
+      "localizations" : {
+        "hi" : { "stringUnit" : { "state" : "translated", "value" : "Nourish सामान्य स्वास्थ्य और भोजन व्यवस्था में मदद करता है—चिकित्सकीय आहार में नहीं।" } }
+      }
+    },
+    "Off by default. When enabled, Nourish records only named product events with bounded properties. It does not include email, profile answers, meal history, free text, advertising identifiers, or device fingerprints." : {
+      "localizations" : {
+        "hi" : { "stringUnit" : { "state" : "translated", "value" : "यह डिफ़ॉल्ट रूप से बंद है। चालू करने पर Nourish केवल सीमित उत्पाद-उपयोग घटनाएँ दर्ज करता है; ईमेल, प्रोफ़ाइल उत्तर, भोजन इतिहास, मुक्त पाठ, विज्ञापन पहचानकर्ता या डिवाइस फ़िंगरप्रिंट नहीं।" } }
+      }
+    },
+    "Onboarding progress" : {
+      "localizations" : {
+        "hi" : { "stringUnit" : { "state" : "translated", "value" : "शुरुआती सेटअप की प्रगति" } }
+      }
+    },
+    "Open profile and settings" : {
+      "localizations" : {
+        "hi" : { "stringUnit" : { "state" : "translated", "value" : "प्रोफ़ाइल और सेटिंग्स खोलें" } }
+      }
+    },
+    "Permanently delete account" : {
+      "localizations" : {
+        "hi" : { "stringUnit" : { "state" : "translated", "value" : "खाता स्थायी रूप से हटाएँ" } }
+      }
+    },
+    "Prep" : {
+      "localizations" : {
+        "hi" : { "stringUnit" : { "state" : "translated", "value" : "तैयारी" } }
+      }
+    },
+    "Profile & settings" : {
+      "localizations" : {
+        "hi" : { "stringUnit" : { "state" : "translated", "value" : "प्रोफ़ाइल और सेटिंग्स" } }
+      }
+    },
+    "Seven days. Far fewer decisions." : {
+      "localizations" : {
+        "hi" : { "stringUnit" : { "state" : "translated", "value" : "सात दिन। बहुत कम फैसले।" } }
+      }
+    },
+    "Share first-party product usage" : {
+      "localizations" : {
+        "hi" : { "stringUnit" : { "state" : "translated", "value" : "उत्पाद उपयोग साझा करें" } }
+      }
+    },
+    "Today" : {
+      "localizations" : {
+        "hi" : { "stringUnit" : { "state" : "translated", "value" : "आज" } }
+      }
+    },
+    "Type DELETE to continue." : {
+      "localizations" : {
+        "hi" : { "stringUnit" : { "state" : "translated", "value" : "आगे बढ़ने के लिए DELETE लिखें।" } }
+      }
+    },
+    "We’ll turn your preferences, budget, and cooking rhythm into practical meals, groceries, and prep." : {
+      "localizations" : {
+        "hi" : { "stringUnit" : { "state" : "translated", "value" : "हम आपकी पसंद, बजट और खाना पकाने की दिनचर्या को व्यावहारिक भोजन, किराने की सूची और तैयारी में बदलेंगे।" } }
+      }
+    },
+    "Add the approved App Store product identifiers before testing purchases." : {
+      "localizations" : {
+        "hi" : { "stringUnit" : { "state" : "translated", "value" : "खरीदारी जाँचने से पहले स्वीकृत App Store उत्पाद पहचानकर्ता जोड़ें।" } }
+      }
+    },
+    "Adopt this reviewed week" : {
+      "localizations" : {
+        "hi" : { "stringUnit" : { "state" : "translated", "value" : "इस समीक्षित सप्ताह को अपनाएँ" } }
+      }
+    },
+    "Cancel any time in App Store subscription settings" : {
+      "localizations" : {
+        "hi" : { "stringUnit" : { "state" : "translated", "value" : "App Store सदस्यता सेटिंग में कभी भी रद्द करें" } }
+      }
+    },
+    "Changes are protected on this device and synchronized to your account." : {
+      "localizations" : {
+        "hi" : { "stringUnit" : { "state" : "translated", "value" : "बदलाव इस डिवाइस पर सुरक्षित हैं और आपके खाते से सिंक किए गए हैं।" } }
+      }
+    },
+    "Checking safe swaps…" : {
+      "localizations" : {
+        "hi" : { "stringUnit" : { "state" : "translated", "value" : "सुरक्षित विकल्प जाँचे जा रहे हैं…" } }
+      }
+    },
+    "Choose the plan that fits your routine. Apple shows the final local price, billing period, trial terms, and renewal details before purchase." : {
+      "localizations" : {
+        "hi" : { "stringUnit" : { "state" : "translated", "value" : "अपनी दिनचर्या के अनुरूप योजना चुनें। खरीदने से पहले Apple अंतिम स्थानीय कीमत, बिलिंग अवधि, परीक्षण शर्तें और नवीनीकरण विवरण दिखाता है।" } }
+      }
+    },
+    "Close" : {
+      "localizations" : {
+        "hi" : { "stringUnit" : { "state" : "translated", "value" : "बंद करें" } }
+      }
+    },
+    "Decrease quantity by 50 grams" : {
+      "localizations" : {
+        "hi" : { "stringUnit" : { "state" : "translated", "value" : "मात्रा 50 ग्राम घटाएँ" } }
+      }
+    },
+    "Edit by 50 g" : {
+      "localizations" : {
+        "hi" : { "stringUnit" : { "state" : "translated", "value" : "50 ग्राम बदलें" } }
+      }
+    },
+    "Have it" : {
+      "localizations" : {
+        "hi" : { "stringUnit" : { "state" : "translated", "value" : "मेरे पास है" } }
+      }
+    },
+    "How was this meal?" : {
+      "localizations" : {
+        "hi" : { "stringUnit" : { "state" : "translated", "value" : "यह भोजन कैसा था?" } }
+      }
+    },
+    "In pantry" : {
+      "localizations" : {
+        "hi" : { "stringUnit" : { "state" : "translated", "value" : "पैंट्री में है" } }
+      }
+    },
+    "Increase quantity by 50 grams" : {
+      "localizations" : {
+        "hi" : { "stringUnit" : { "state" : "translated", "value" : "मात्रा 50 ग्राम बढ़ाएँ" } }
+      }
+    },
+    "Ingredients" : {
+      "localizations" : {
+        "hi" : { "stringUnit" : { "state" : "translated", "value" : "सामग्री" } }
+      }
+    },
+    "Loading App Store plans…" : {
+      "localizations" : {
+        "hi" : { "stringUnit" : { "state" : "translated", "value" : "App Store योजनाएँ लोड हो रही हैं…" } }
+      }
+    },
+    "Local preview" : {
+      "localizations" : {
+        "hi" : { "stringUnit" : { "state" : "translated", "value" : "स्थानीय पूर्वावलोकन" } }
+      }
+    },
+    "Mark item as already available" : {
+      "localizations" : {
+        "hi" : { "stringUnit" : { "state" : "translated", "value" : "वस्तु को पहले से उपलब्ध चिह्नित करें" } }
+      }
+    },
+    "Method" : {
+      "localizations" : {
+        "hi" : { "stringUnit" : { "state" : "translated", "value" : "विधि" } }
+      }
+    },
+    "NEW" : {
+      "localizations" : {
+        "hi" : { "stringUnit" : { "state" : "translated", "value" : "नया" } }
+      }
+    },
+    "Next week scheduled" : {
+      "localizations" : {
+        "hi" : { "stringUnit" : { "state" : "translated", "value" : "अगला सप्ताह तय हो गया" } }
+      }
+    },
+    "Nourish membership" : {
+      "localizations" : {
+        "hi" : { "stringUnit" : { "state" : "translated", "value" : "Nourish सदस्यता" } }
+      }
+    },
+    "Normalized from the active reviewed plan. Planned leftovers are counted once." : {
+      "localizations" : {
+        "hi" : { "stringUnit" : { "state" : "translated", "value" : "सक्रिय समीक्षित योजना से तैयार। नियोजित बचे भोजन को केवल एक बार गिना गया है।" } }
+      }
+    },
+    "Opens recipe details and safe swap options" : {
+      "localizations" : {
+        "hi" : { "stringUnit" : { "state" : "translated", "value" : "रेसिपी विवरण और सुरक्षित विकल्प खोलता है" } }
+      }
+    },
+    "Plan Studio" : {
+      "localizations" : {
+        "hi" : { "stringUnit" : { "state" : "translated", "value" : "योजना स्टूडियो" } }
+      }
+    },
+    "Plans" : {
+      "localizations" : {
+        "hi" : { "stringUnit" : { "state" : "translated", "value" : "योजनाएँ" } }
+      }
+    },
+    "Recalculates this meal, the week, groceries, and preparation plan" : {
+      "localizations" : {
+        "hi" : { "stringUnit" : { "state" : "translated", "value" : "इस भोजन, सप्ताह, किराने और तैयारी योजना की फिर से गणना करता है" } }
+      }
+    },
+    "Recipe" : {
+      "localizations" : {
+        "hi" : { "stringUnit" : { "state" : "translated", "value" : "रेसिपी" } }
+      }
+    },
+    "Refreshing your week" : {
+      "localizations" : {
+        "hi" : { "stringUnit" : { "state" : "translated", "value" : "आपका सप्ताह ताज़ा हो रहा है" } }
+      }
+    },
+    "Remove item from pantry" : {
+      "localizations" : {
+        "hi" : { "stringUnit" : { "state" : "translated", "value" : "वस्तु को पैंट्री से हटाएँ" } }
+      }
+    },
+    "Retry" : {
+      "localizations" : {
+        "hi" : { "stringUnit" : { "state" : "translated", "value" : "फिर प्रयास करें" } }
+      }
+    },
+    "Review needed" : {
+      "localizations" : {
+        "hi" : { "stringUnit" : { "state" : "translated", "value" : "समीक्षा आवश्यक" } }
+      }
+    },
+    "Reviewed plan synced" : {
+      "localizations" : {
+        "hi" : { "stringUnit" : { "state" : "translated", "value" : "समीक्षित योजना सिंक हो गई" } }
+      }
+    },
+    "Reviewed recipe snapshots; nutrition remains an estimate for general wellness." : {
+      "localizations" : {
+        "hi" : { "stringUnit" : { "state" : "translated", "value" : "समीक्षित रेसिपी स्नैपशॉट; पोषण सामान्य स्वास्थ्य के लिए अनुमानित है।" } }
+      }
+    },
+    "Reviewed seven-day plan" : {
+      "localizations" : {
+        "hi" : { "stringUnit" : { "state" : "translated", "value" : "समीक्षित सात-दिवसीय योजना" } }
+      }
+    },
+    "Reviewed week activated" : {
+      "localizations" : {
+        "hi" : { "stringUnit" : { "state" : "translated", "value" : "समीक्षित सप्ताह सक्रिय हो गया" } }
+      }
+    },
+    "Saved offline" : {
+      "localizations" : {
+        "hi" : { "stringUnit" : { "state" : "translated", "value" : "ऑफ़लाइन सहेजा गया" } }
+      }
+    },
+    "Show safe swaps" : {
+      "localizations" : {
+        "hi" : { "stringUnit" : { "state" : "translated", "value" : "सुरक्षित विकल्प दिखाएँ" } }
+      }
+    },
+    "Shows only replacements that keep the whole week within your safety and variety rules" : {
+      "localizations" : {
+        "hi" : { "stringUnit" : { "state" : "translated", "value" : "केवल वे विकल्प दिखाता है जो पूरे सप्ताह को आपकी सुरक्षा और विविधता के नियमों में रखते हैं" } }
+      }
+    },
+    "Subscriptions not configured" : {
+      "localizations" : {
+        "hi" : { "stringUnit" : { "state" : "translated", "value" : "सदस्यताएँ कॉन्फ़िगर नहीं हैं" } }
+      }
+    },
+    "Today, Week, Groceries, and Prep now use this immutable reviewed plan." : {
+      "localizations" : {
+        "hi" : { "stringUnit" : { "state" : "translated", "value" : "आज, सप्ताह, किराने और तैयारी अब इस अपरिवर्तनीय समीक्षित योजना का उपयोग करते हैं।" } }
+      }
+    },
+    "UPDATED" : {
+      "localizations" : {
+        "hi" : { "stringUnit" : { "state" : "translated", "value" : "अपडेट किया गया" } }
+      }
+    },
+    "Update meal status" : {
+      "localizations" : {
+        "hi" : { "stringUnit" : { "state" : "translated", "value" : "भोजन की स्थिति बदलें" } }
+      }
+    },
+    "Use this meal" : {
+      "localizations" : {
+        "hi" : { "stringUnit" : { "state" : "translated", "value" : "यह भोजन चुनें" } }
+      }
+    },
+    "Weekly shop" : {
+      "localizations" : {
+        "hi" : { "stringUnit" : { "state" : "translated", "value" : "साप्ताहिक खरीदारी" } }
+      }
+    },
+    "Your current week stays active. Nourish will switch on the new plan’s local start date." : {
+      "localizations" : {
+        "hi" : { "stringUnit" : { "state" : "translated", "value" : "आपका वर्तमान सप्ताह सक्रिय रहेगा। Nourish नई योजना की स्थानीय शुरुआत की तारीख पर इसे बदल देगा।" } }
+      }
+    },
+    "Your meal history never changes your price" : {
+      "localizations" : {
+        "hi" : { "stringUnit" : { "state" : "translated", "value" : "आपका भोजन इतिहास आपकी कीमत नहीं बदलता" } }
+      }
+    },
+    "Your reviewed day" : {
+      "localizations" : {
+        "hi" : { "stringUnit" : { "state" : "translated", "value" : "आपका समीक्षित दिन" } }
+      }
+    },
+    "A reviewed week was not created" : {
+      "localizations" : {
+        "hi" : { "stringUnit" : { "state" : "translated", "value" : "समीक्षित सप्ताह नहीं बन पाया" } }
+      }
+    },
+    "Account" : {
+      "localizations" : {
+        "hi" : { "stringUnit" : { "state" : "translated", "value" : "खाता" } }
+      }
+    },
+    "Building a safe, varied week…" : {
+      "localizations" : {
+        "hi" : { "stringUnit" : { "state" : "translated", "value" : "सुरक्षित और विविध सप्ताह बनाया जा रहा है…" } }
+      }
+    },
+    "Complete onboarding before creating a reviewed week." : {
+      "localizations" : {
+        "hi" : { "stringUnit" : { "state" : "translated", "value" : "समीक्षित सप्ताह बनाने से पहले शुरुआती सेटअप पूरा करें।" } }
+      }
+    },
+    "Cooking days" : {
+      "localizations" : {
+        "hi" : { "stringUnit" : { "state" : "translated", "value" : "खाना पकाने के दिन" } }
+      }
+    },
+    "Create your first reviewed week" : {
+      "localizations" : {
+        "hi" : { "stringUnit" : { "state" : "translated", "value" : "अपना पहला समीक्षित सप्ताह बनाएँ" } }
+      }
+    },
+    "Daily target" : {
+      "localizations" : {
+        "hi" : { "stringUnit" : { "state" : "translated", "value" : "दैनिक लक्ष्य" } }
+      }
+    },
+    "Diet" : {
+      "localizations" : {
+        "hi" : { "stringUnit" : { "state" : "translated", "value" : "आहार" } }
+      }
+    },
+    "Done" : {
+      "localizations" : {
+        "hi" : { "stringUnit" : { "state" : "translated", "value" : "पूर्ण" } }
+      }
+    },
+    "Draft" : {
+      "localizations" : {
+        "hi" : { "stringUnit" : { "state" : "translated", "value" : "मसौदा" } }
+      }
+    },
+    "Edit planning preferences" : {
+      "localizations" : {
+        "hi" : { "stringUnit" : { "state" : "translated", "value" : "योजना प्राथमिकताएँ संपादित करें" } }
+      }
+    },
+    "Generate reviewed week" : {
+      "localizations" : {
+        "hi" : { "stringUnit" : { "state" : "translated", "value" : "समीक्षित सप्ताह बनाएँ" } }
+      }
+    },
+    "Generation never overrides allergens or hard exclusions. Adopting is a separate confirmation." : {
+      "localizations" : {
+        "hi" : { "stringUnit" : { "state" : "translated", "value" : "योजना बनाते समय एलर्जी या अनिवार्य निषेध कभी नहीं बदले जाते। योजना अपनाने की पुष्टि अलग से होती है।" } }
+      }
+    },
+    "Hard diet, allergen, exclusion, review, cooking-time, and variety rules run before preferences." : {
+      "localizations" : {
+        "hi" : { "stringUnit" : { "state" : "translated", "value" : "पसंद से पहले आहार, एलर्जी, निषेध, समीक्षा, खाना पकाने के समय और विविधता के अनिवार्य नियम लागू होते हैं।" } }
+      }
+    },
+    "Include an optional snack" : {
+      "localizations" : {
+        "hi" : { "stringUnit" : { "state" : "translated", "value" : "वैकल्पिक नाश्ता शामिल करें" } }
+      }
+    },
+    "Leftovers" : {
+      "localizations" : {
+        "hi" : { "stringUnit" : { "state" : "translated", "value" : "बचा हुआ भोजन" } }
+      }
+    },
+    "Legal & support" : {
+      "localizations" : {
+        "hi" : { "stringUnit" : { "state" : "translated", "value" : "कानूनी और सहायता" } }
+      }
+    },
+    "Locked meals are rechecked against your current safety rules. Planned leftovers must stay linked to their batch source." : {
+      "localizations" : {
+        "hi" : { "stringUnit" : { "state" : "translated", "value" : "लॉक किए गए भोजन आपके मौजूदा सुरक्षा नियमों के अनुसार फिर जाँचे जाते हैं। नियोजित बचे भोजन का स्रोत जुड़ा रहना चाहिए।" } }
+      }
+    },
+    "Manage reminders" : {
+      "localizations" : {
+        "hi" : { "stringUnit" : { "state" : "translated", "value" : "रिमाइंडर प्रबंधित करें" } }
+      }
+    },
+    "More variety" : {
+      "localizations" : {
+        "hi" : { "stringUnit" : { "state" : "translated", "value" : "अधिक विविधता" } }
+      }
+    },
+    "Nourish will only activate a plan built from published recipes with approved nutrition review." : {
+      "localizations" : {
+        "hi" : { "stringUnit" : { "state" : "translated", "value" : "Nourish केवल प्रकाशित रेसिपी और स्वीकृत पोषण समीक्षा वाली योजना को सक्रिय करेगा।" } }
+      }
+    },
+    "Nutrition methodology" : {
+      "localizations" : {
+        "hi" : { "stringUnit" : { "state" : "translated", "value" : "पोषण पद्धति" } }
+      }
+    },
+    "Plan profile" : {
+      "localizations" : {
+        "hi" : { "stringUnit" : { "state" : "translated", "value" : "योजना प्रोफ़ाइल" } }
+      }
+    },
+    "Plan rhythm & reminders" : {
+      "localizations" : {
+        "hi" : { "stringUnit" : { "state" : "translated", "value" : "योजना की लय और रिमाइंडर" } }
+      }
+    },
+    "Plan starts" : {
+      "localizations" : {
+        "hi" : { "stringUnit" : { "state" : "translated", "value" : "योजना शुरू होती है" } }
+      }
+    },
+    "Planner engine" : {
+      "localizations" : {
+        "hi" : { "stringUnit" : { "state" : "translated", "value" : "योजना इंजन" } }
+      }
+    },
+    "Privacy & measurement" : {
+      "localizations" : {
+        "hi" : { "stringUnit" : { "state" : "translated", "value" : "गोपनीयता और मापन" } }
+      }
+    },
+    "Regenerate unlocked meals" : {
+      "localizations" : {
+        "hi" : { "stringUnit" : { "state" : "translated", "value" : "अनलॉक भोजन फिर बनाएँ" } }
+      }
+    },
+    "Replay onboarding" : {
+      "localizations" : {
+        "hi" : { "stringUnit" : { "state" : "translated", "value" : "शुरुआती सेटअप फिर चलाएँ" } }
+      }
+    },
+    "Review before it becomes your week" : {
+      "localizations" : {
+        "hi" : { "stringUnit" : { "state" : "translated", "value" : "इसे अपना सप्ताह बनाने से पहले समीक्षा करें" } }
+      }
+    },
+    "Scheduled reminders" : {
+      "localizations" : {
+        "hi" : { "stringUnit" : { "state" : "translated", "value" : "तय रिमाइंडर" } }
+      }
+    },
+    "Sign in to generate and adopt a reviewed week." : {
+      "localizations" : {
+        "hi" : { "stringUnit" : { "state" : "translated", "value" : "समीक्षित सप्ताह बनाने और अपनाने के लिए साइन इन करें।" } }
+      }
+    },
+    "Start again" : {
+      "localizations" : {
+        "hi" : { "stringUnit" : { "state" : "translated", "value" : "फिर शुरू करें" } }
+      }
+    },
+    "Subscription" : {
+      "localizations" : {
+        "hi" : { "stringUnit" : { "state" : "translated", "value" : "सदस्यता" } }
+      }
+    },
+    "Want another version?" : {
+      "localizations" : {
+        "hi" : { "stringUnit" : { "state" : "translated", "value" : "दूसरा संस्करण चाहिए?" } }
+      }
+    },
+    "Allowed" : {
+      "localizations" : {
+        "hi" : { "stringUnit" : { "state" : "translated", "value" : "अनुमति है" } }
+      }
+    },
+    "Allergens, comma separated" : {
+      "localizations" : {
+        "hi" : { "stringUnit" : { "state" : "translated", "value" : "एलर्जी कारक, कॉमा से अलग" } }
+      }
+    },
+    "Avoid" : {
+      "localizations" : {
+        "hi" : { "stringUnit" : { "state" : "translated", "value" : "बचें" } }
+      }
+    },
+    "Batch prep" : {
+      "localizations" : {
+        "hi" : { "stringUnit" : { "state" : "translated", "value" : "बैच तैयारी" } }
+      }
+    },
+    "Budget" : {
+      "localizations" : {
+        "hi" : { "stringUnit" : { "state" : "translated", "value" : "बजट" } }
+      }
+    },
+    "Cancel" : {
+      "localizations" : {
+        "hi" : { "stringUnit" : { "state" : "translated", "value" : "रद्द करें" } }
+      }
+    },
+    "Checking" : {
+      "localizations" : {
+        "hi" : { "stringUnit" : { "state" : "translated", "value" : "जाँच हो रही है" } }
+      }
+    },
+    "Choose at least one cooking day." : {
+      "localizations" : {
+        "hi" : { "stringUnit" : { "state" : "translated", "value" : "कम से कम एक खाना पकाने का दिन चुनें।" } }
+      }
+    },
+    "Choose at least one meal slot." : {
+      "localizations" : {
+        "hi" : { "stringUnit" : { "state" : "translated", "value" : "कम से कम एक भोजन समय चुनें।" } }
+      }
+    },
+    "Cooking rhythm" : {
+      "localizations" : {
+        "hi" : { "stringUnit" : { "state" : "translated", "value" : "खाना पकाने की दिनचर्या" } }
+      }
+    },
+    "Country/region code" : {
+      "localizations" : {
+        "hi" : { "stringUnit" : { "state" : "translated", "value" : "देश/क्षेत्र कोड" } }
+      }
+    },
+    "Create support request" : {
+      "localizations" : {
+        "hi" : { "stringUnit" : { "state" : "translated", "value" : "सहायता अनुरोध बनाएँ" } }
+      }
+    },
+    "Current and future plans" : {
+      "localizations" : {
+        "hi" : { "stringUnit" : { "state" : "translated", "value" : "वर्तमान और भविष्य की योजनाएँ" } }
+      }
+    },
+    "Day" : {
+      "localizations" : {
+        "hi" : { "stringUnit" : { "state" : "translated", "value" : "दिन" } }
+      }
+    },
+    "Describe the issue in your preferred mail or messaging app. Do not include passwords, sign-in links, health records, or payment details." : {
+      "localizations" : {
+        "hi" : { "stringUnit" : { "state" : "translated", "value" : "अपनी पसंद के मेल या संदेश ऐप में समस्या बताएँ। पासवर्ड, साइन-इन लिंक, स्वास्थ्य रिकॉर्ड या भुगतान विवरण शामिल न करें।" } }
+      }
+    },
+    "Diagnostic context" : {
+      "localizations" : {
+        "hi" : { "stringUnit" : { "state" : "translated", "value" : "नैदानिक संदर्भ" } }
+      }
+    },
+    "Diagnostics contain only app version, operating-system version, and build channel. They never include email, internal user ID, meal history, profile answers, or authentication tokens." : {
+      "localizations" : {
+        "hi" : { "stringUnit" : { "state" : "translated", "value" : "नैदानिक जानकारी में केवल ऐप संस्करण, ऑपरेटिंग सिस्टम संस्करण और बिल्ड चैनल होते हैं। इसमें ईमेल, आंतरिक उपयोगकर्ता आईडी, भोजन इतिहास, प्रोफ़ाइल उत्तर या प्रमाणीकरण टोकन कभी शामिल नहीं होते।" } }
+      }
+    },
+    "Disabled in iOS" : {
+      "localizations" : {
+        "hi" : { "stringUnit" : { "state" : "translated", "value" : "iOS में बंद" } }
+      }
+    },
+    "Disliked foods" : {
+      "localizations" : {
+        "hi" : { "stringUnit" : { "state" : "translated", "value" : "नापसंद भोजन" } }
+      }
+    },
+    "Eggetarian" : {
+      "localizations" : {
+        "hi" : { "stringUnit" : { "state" : "translated", "value" : "अंडा-शाकाहारी" } }
+      }
+    },
+    "Enabled" : {
+      "localizations" : {
+        "hi" : { "stringUnit" : { "state" : "translated", "value" : "चालू" } }
+      }
+    },
+    "Enter a valid timezone such as Asia/Kolkata." : {
+      "localizations" : {
+        "hi" : { "stringUnit" : { "state" : "translated", "value" : "Asia/Kolkata जैसा मान्य समय क्षेत्र दर्ज करें।" } }
+      }
+    },
+    "Flexible" : {
+      "localizations" : {
+        "hi" : { "stringUnit" : { "state" : "translated", "value" : "लचीला" } }
+      }
+    },
+    "Food preferences" : {
+      "localizations" : {
+        "hi" : { "stringUnit" : { "state" : "translated", "value" : "भोजन प्राथमिकताएँ" } }
+      }
+    },
+    "Goal" : {
+      "localizations" : {
+        "hi" : { "stringUnit" : { "state" : "translated", "value" : "लक्ष्य" } }
+      }
+    },
+    "Goal and target" : {
+      "localizations" : {
+        "hi" : { "stringUnit" : { "state" : "translated", "value" : "लक्ष्य और दैनिक मात्रा" } }
+      }
+    },
+    "Gradual gain" : {
+      "localizations" : {
+        "hi" : { "stringUnit" : { "state" : "translated", "value" : "धीरे-धीरे बढ़ाना" } }
+      }
+    },
+    "Gradual loss" : {
+      "localizations" : {
+        "hi" : { "stringUnit" : { "state" : "translated", "value" : "धीरे-धीरे घटाना" } }
+      }
+    },
+    "How support works" : {
+      "localizations" : {
+        "hi" : { "stringUnit" : { "state" : "translated", "value" : "सहायता कैसे काम करती है" } }
+      }
+    },
+    "Imperial" : {
+      "localizations" : {
+        "hi" : { "stringUnit" : { "state" : "translated", "value" : "इम्पीरियल" } }
+      }
+    },
+    "Include anonymized app diagnostics" : {
+      "localizations" : {
+        "hi" : { "stringUnit" : { "state" : "translated", "value" : "अनाम ऐप नैदानिक जानकारी शामिल करें" } }
+      }
+    },
+    "Ingredients to avoid" : {
+      "localizations" : {
+        "hi" : { "stringUnit" : { "state" : "translated", "value" : "जिन सामग्रियों से बचना है" } }
+      }
+    },
+    "Legal & wellness" : {
+      "localizations" : {
+        "hi" : { "stringUnit" : { "state" : "translated", "value" : "कानूनी और स्वास्थ्य" } }
+      }
+    },
+    "Maintain" : {
+      "localizations" : {
+        "hi" : { "stringUnit" : { "state" : "translated", "value" : "बनाए रखें" } }
+      }
+    },
+    "Meal reminders" : {
+      "localizations" : {
+        "hi" : { "stringUnit" : { "state" : "translated", "value" : "भोजन रिमाइंडर" } }
+      }
+    },
+    "Medium" : {
+      "localizations" : {
+        "hi" : { "stringUnit" : { "state" : "translated", "value" : "मध्यम" } }
+      }
+    },
+    "Metric" : {
+      "localizations" : {
+        "hi" : { "stringUnit" : { "state" : "translated", "value" : "मेट्रिक" } }
+      }
+    },
+    "My target" : {
+      "localizations" : {
+        "hi" : { "stringUnit" : { "state" : "translated", "value" : "मेरा लक्ष्य" } }
+      }
+    },
+    "New safety and preference rules take effect now. An already adopted plan remains an immutable record; rework it separately in Plan Studio if needed." : {
+      "localizations" : {
+        "hi" : { "stringUnit" : { "state" : "translated", "value" : "नए सुरक्षा और प्राथमिकता नियम अभी लागू होते हैं। अपनाई गई योजना अपरिवर्तनीय रिकॉर्ड रहती है; जरूरत हो तो उसे योजना स्टूडियो में अलग से बदलें।" } }
+      }
+    },
+    "Next plan" : {
+      "localizations" : {
+        "hi" : { "stringUnit" : { "state" : "translated", "value" : "अगली योजना" } }
+      }
+    },
+    "Next plan only" : {
+      "localizations" : {
+        "hi" : { "stringUnit" : { "state" : "translated", "value" : "केवल अगली योजना" } }
+      }
+    },
+    "No diagnostic context will be attached." : {
+      "localizations" : {
+        "hi" : { "stringUnit" : { "state" : "translated", "value" : "कोई नैदानिक संदर्भ संलग्न नहीं होगा।" } }
+      }
+    },
+    "None" : {
+      "localizations" : {
+        "hi" : { "stringUnit" : { "state" : "translated", "value" : "कोई नहीं" } }
+      }
+    },
+    "Not requested" : {
+      "localizations" : {
+        "hi" : { "stringUnit" : { "state" : "translated", "value" : "अनुरोध नहीं किया" } }
+      }
+    },
+    "Notification access" : {
+      "localizations" : {
+        "hi" : { "stringUnit" : { "state" : "translated", "value" : "सूचना अनुमति" } }
+      }
+    },
+    "Nutrition-data methodology" : {
+      "localizations" : {
+        "hi" : { "stringUnit" : { "state" : "translated", "value" : "पोषण डेटा पद्धति" } }
+      }
+    },
+    "Often" : {
+      "localizations" : {
+        "hi" : { "stringUnit" : { "state" : "translated", "value" : "अक्सर" } }
+      }
+    },
+    "Optional" : {
+      "localizations" : {
+        "hi" : { "stringUnit" : { "state" : "translated", "value" : "वैकल्पिक" } }
+      }
+    },
+    "Permission" : {
+      "localizations" : {
+        "hi" : { "stringUnit" : { "state" : "translated", "value" : "अनुमति" } }
+      }
+    },
+    "Plan impact" : {
+      "localizations" : {
+        "hi" : { "stringUnit" : { "state" : "translated", "value" : "योजना पर प्रभाव" } }
+      }
+    },
+    "Plan rhythm" : {
+      "localizations" : {
+        "hi" : { "stringUnit" : { "state" : "translated", "value" : "योजना की लय" } }
+      }
+    },
+    "Planned" : {
+      "localizations" : {
+        "hi" : { "stringUnit" : { "state" : "translated", "value" : "नियोजित" } }
+      }
+    },
+    "Planning preferences" : {
+      "localizations" : {
+        "hi" : { "stringUnit" : { "state" : "translated", "value" : "योजना प्राथमिकताएँ" } }
+      }
+    },
+    "Preferred cuisines" : {
+      "localizations" : {
+        "hi" : { "stringUnit" : { "state" : "translated", "value" : "पसंदीदा व्यंजन" } }
+      }
+    },
+    "Privacy summary" : {
+      "localizations" : {
+        "hi" : { "stringUnit" : { "state" : "translated", "value" : "गोपनीयता सारांश" } }
+      }
+    },
+    "Region and units" : {
+      "localizations" : {
+        "hi" : { "stringUnit" : { "state" : "translated", "value" : "क्षेत्र और इकाइयाँ" } }
+      }
+    },
+    "Reminders" : {
+      "localizations" : {
+        "hi" : { "stringUnit" : { "state" : "translated", "value" : "रिमाइंडर" } }
+      }
+    },
+    "Reviewed estimate" : {
+      "localizations" : {
+        "hi" : { "stringUnit" : { "state" : "translated", "value" : "समीक्षित अनुमान" } }
+      }
+    },
+    "Save" : {
+      "localizations" : {
+        "hi" : { "stringUnit" : { "state" : "translated", "value" : "सहेजें" } }
+      }
+    },
+    "Saving…" : {
+      "localizations" : {
+        "hi" : { "stringUnit" : { "state" : "translated", "value" : "सहेजा जा रहा है…" } }
+      }
+    },
+    "Shopping" : {
+      "localizations" : {
+        "hi" : { "stringUnit" : { "state" : "translated", "value" : "खरीदारी" } }
+      }
+    },
+    "Snacks" : {
+      "localizations" : {
+        "hi" : { "stringUnit" : { "state" : "translated", "value" : "नाश्ते" } }
+      }
+    },
+    "Support" : {
+      "localizations" : {
+        "hi" : { "stringUnit" : { "state" : "translated", "value" : "सहायता" } }
+      }
+    },
+    "Target source" : {
+      "localizations" : {
+        "hi" : { "stringUnit" : { "state" : "translated", "value" : "लक्ष्य स्रोत" } }
+      }
+    },
+    "Terms summary" : {
+      "localizations" : {
+        "hi" : { "stringUnit" : { "state" : "translated", "value" : "शर्तों का सारांश" } }
+      }
+    },
+    "The final launch support address and service-level policy are not configured in this development build." : {
+      "localizations" : {
+        "hi" : { "stringUnit" : { "state" : "translated", "value" : "इस विकास बिल्ड में अंतिम सहायता पता और सेवा-स्तर नीति कॉन्फ़िगर नहीं हैं।" } }
+      }
+    },
+    "Time" : {
+      "localizations" : {
+        "hi" : { "stringUnit" : { "state" : "translated", "value" : "समय" } }
+      }
+    },
+    "Timezone identifier" : {
+      "localizations" : {
+        "hi" : { "stringUnit" : { "state" : "translated", "value" : "समय क्षेत्र पहचानकर्ता" } }
+      }
+    },
+    "Turn off every reminder" : {
+      "localizations" : {
+        "hi" : { "stringUnit" : { "state" : "translated", "value" : "सभी रिमाइंडर बंद करें" } }
+      }
+    },
+    "Unavailable" : {
+      "localizations" : {
+        "hi" : { "stringUnit" : { "state" : "translated", "value" : "अनुपलब्ध" } }
+      }
+    },
+    "Units" : {
+      "localizations" : {
+        "hi" : { "stringUnit" : { "state" : "translated", "value" : "इकाइयाँ" } }
+      }
+    },
+    "Value" : {
+      "localizations" : {
+        "hi" : { "stringUnit" : { "state" : "translated", "value" : "किफायती" } }
+      }
+    },
+    "Vegan" : {
+      "localizations" : {
+        "hi" : { "stringUnit" : { "state" : "translated", "value" : "वीगन" } }
+      }
+    },
+    "Vegetarian" : {
+      "localizations" : {
+        "hi" : { "stringUnit" : { "state" : "translated", "value" : "शाकाहारी" } }
+      }
+    },
+    "Wellness disclaimer" : {
+      "localizations" : {
+        "hi" : { "stringUnit" : { "state" : "translated", "value" : "स्वास्थ्य अस्वीकरण" } }
+      }
+    },
+    "Weekly review" : {
+      "localizations" : {
+        "hi" : { "stringUnit" : { "state" : "translated", "value" : "साप्ताहिक समीक्षा" } }
+      }
+    },
+    "When changes apply" : {
+      "localizations" : {
+        "hi" : { "stringUnit" : { "state" : "translated", "value" : "बदलाव कब लागू हों" } }
+      }
+    },
+    "You confirmed that anonymized diagnostics may be attached." : {
+      "localizations" : {
+        "hi" : { "stringUnit" : { "state" : "translated", "value" : "आपने पुष्टि की है कि अनाम नैदानिक जानकारी संलग्न की जा सकती है।" } }
+      }
+    },
+    ". iOS automatically follows local daylight-saving changes." : {
+      "localizations" : {
+        "hi" : { "stringUnit" : { "state" : "translated", "value" : "। iOS स्थानीय डेलाइट-सेविंग बदलावों का अपने आप पालन करता है।" } }
+      }
+    },
+    "Batch-prep sessions" : {
+      "localizations" : {
+        "hi" : { "stringUnit" : { "state" : "translated", "value" : "बैच तैयारी सत्र" } }
+      }
+    },
+    "Breakfast" : {
+      "localizations" : {
+        "hi" : { "stringUnit" : { "state" : "translated", "value" : "नाश्ता" } }
+      }
+    },
+    "Dinner" : {
+      "localizations" : {
+        "hi" : { "stringUnit" : { "state" : "translated", "value" : "रात का भोजन" } }
+      }
+    },
+    "Final commercial terms, governing law, pricing, trials, and dispute language require approval before release." : {
+      "localizations" : {
+        "hi" : { "stringUnit" : { "state" : "translated", "value" : "अंतिम व्यावसायिक शर्तें, लागू कानून, कीमत, परीक्षण और विवाद संबंधी भाषा को रिलीज़ से पहले स्वीकृति चाहिए।" } }
+      }
+    },
+    "Ingredient quantities retain household units and grams. Nutrients are calculated from versioned per-100g source records, serving multipliers, and immutable recipe snapshots. Production plans require licensed evidence and separate nutrition review." : {
+      "localizations" : {
+        "hi" : { "stringUnit" : { "state" : "translated", "value" : "सामग्री की मात्राएँ घरेलू इकाइयों और ग्राम में रखी जाती हैं। पोषक तत्व संस्करणित प्रति-100 ग्राम स्रोत रिकॉर्ड, सर्विंग गुणक और अपरिवर्तनीय रेसिपी स्नैपशॉट से निकाले जाते हैं। उत्पादन योजनाओं के लिए लाइसेंस प्राप्त प्रमाण और अलग पोषण समीक्षा आवश्यक है।" } }
+      }
+    },
+    "Lunch" : {
+      "localizations" : {
+        "hi" : { "stringUnit" : { "state" : "translated", "value" : "दोपहर का भोजन" } }
+      }
+    },
+    "Maximum active time" : {
+      "localizations" : {
+        "hi" : { "stringUnit" : { "state" : "translated", "value" : "अधिकतम सक्रिय समय" } }
+      }
+    },
+    "Meal notifications open the matching reviewed meal. Slots not enabled in your profile stay unavailable." : {
+      "localizations" : {
+        "hi" : { "stringUnit" : { "state" : "translated", "value" : "भोजन सूचनाएँ संबंधित समीक्षित भोजन खोलती हैं। आपकी प्रोफ़ाइल में चालू न किए गए भोजन समय उपलब्ध नहीं होंगे।" } }
+      }
+    },
+    "Nourish is for adults using meal organization for general wellness. It is not medical advice, diagnosis, or treatment. Users remain responsible for checking ingredients, allergens, food condition, and suitability." : {
+      "localizations" : {
+        "hi" : { "stringUnit" : { "state" : "translated", "value" : "Nourish सामान्य स्वास्थ्य के लिए भोजन व्यवस्था करने वाले वयस्कों के लिए है। यह चिकित्सकीय सलाह, निदान या उपचार नहीं है। सामग्री, एलर्जी, भोजन की स्थिति और उपयुक्तता जाँचना उपयोगकर्ता की जिम्मेदारी है।" } }
+      }
+    },
+    "Nourish stores account identity, planning preferences, adopted plans, grocery and prep state, feedback, subscription state, and security/audit records needed to operate the service. Sensitive tokens stay in Keychain. Export and deletion are available in-app. Nourish does not sell personal data." : {
+      "localizations" : {
+        "hi" : { "stringUnit" : { "state" : "translated", "value" : "Nourish सेवा चलाने के लिए खाता पहचान, योजना प्राथमिकताएँ, अपनाई गई योजनाएँ, किराने और तैयारी की स्थिति, प्रतिक्रिया, सदस्यता स्थिति और सुरक्षा/ऑडिट रिकॉर्ड रखता है। संवेदनशील टोकन Keychain में रहते हैं। निर्यात और हटाने की सुविधा ऐप में उपलब्ध है। Nourish व्यक्तिगत डेटा नहीं बेचता।" } }
+      }
+    },
+    "Notifications are disabled for Nourish. Enable them in the iOS Settings app after saving your choices." : {
+      "localizations" : {
+        "hi" : { "stringUnit" : { "state" : "translated", "value" : "Nourish की सूचनाएँ बंद हैं। अपनी पसंद सहेजने के बाद उन्हें iOS सेटिंग ऐप में चालू करें।" } }
+      }
+    },
+    "Nutrition values and targets are estimates. Do not use Nourish for pregnancy, eating-disorder care, kidney disease, diabetes treatment, therapeutic diets, or another condition requiring individualized clinical advice without a qualified professional." : {
+      "localizations" : {
+        "hi" : { "stringUnit" : { "state" : "translated", "value" : "पोषण मान और लक्ष्य अनुमान हैं। योग्य पेशेवर की सलाह के बिना Nourish का उपयोग गर्भावस्था, भोजन विकार देखभाल, गुर्दे की बीमारी, मधुमेह उपचार, चिकित्सकीय आहार या व्यक्तिगत नैदानिक सलाह वाली किसी अन्य स्थिति के लिए न करें।" } }
+      }
+    },
+    "Opens completion and preference feedback near the end of the week." : {
+      "localizations" : {
+        "hi" : { "stringUnit" : { "state" : "translated", "value" : "सप्ताह के अंत के पास पूर्णता और प्राथमिकता प्रतिक्रिया खोलता है।" } }
+      }
+    },
+    "Opens Plan Studio to generate and adopt the week ahead." : {
+      "localizations" : {
+        "hi" : { "stringUnit" : { "state" : "translated", "value" : "आने वाला सप्ताह बनाने और अपनाने के लिए योजना स्टूडियो खोलता है।" } }
+      }
+    },
+    "Opens preparation tasks and storage notes." : {
+      "localizations" : {
+        "hi" : { "stringUnit" : { "state" : "translated", "value" : "तैयारी कार्य और भंडारण नोट खोलता है।" } }
+      }
+    },
+    "Opens the grocery list before the new plan week." : {
+      "localizations" : {
+        "hi" : { "stringUnit" : { "state" : "translated", "value" : "नई योजना के सप्ताह से पहले किराने की सूची खोलता है।" } }
+      }
+    },
+    "Plan breakfast" : {
+      "localizations" : {
+        "hi" : { "stringUnit" : { "state" : "translated", "value" : "नाश्ते की योजना बनाएँ" } }
+      }
+    },
+    "Plan dinner" : {
+      "localizations" : {
+        "hi" : { "stringUnit" : { "state" : "translated", "value" : "रात के भोजन की योजना बनाएँ" } }
+      }
+    },
+    "Plan lunch" : {
+      "localizations" : {
+        "hi" : { "stringUnit" : { "state" : "translated", "value" : "दोपहर के भोजन की योजना बनाएँ" } }
+      }
+    },
+    "Processor list, retention periods, cross-border basis, grievance contact, and counsel-approved launch policy remain pending business decisions." : {
+      "localizations" : {
+        "hi" : { "stringUnit" : { "state" : "translated", "value" : "प्रोसेसर सूची, डेटा रखने की अवधि, सीमा-पार आधार, शिकायत संपर्क और कानूनी रूप से स्वीकृत लॉन्च नीति अभी व्यावसायिक निर्णय हैं।" } }
+      }
+    },
+    "Reminder times use " : {
+      "localizations" : {
+        "hi" : { "stringUnit" : { "state" : "translated", "value" : "रिमाइंडर का समय इस समय क्षेत्र का उपयोग करता है: " } }
+      }
+    },
+    "The estimator stays unavailable until its formula and guardrails receive qualified nutrition review." : {
+      "localizations" : {
+        "hi" : { "stringUnit" : { "state" : "translated", "value" : "जब तक सूत्र और सुरक्षा सीमाओं की योग्य पोषण समीक्षा नहीं हो जाती, अनुमानक उपलब्ध नहीं रहेगा।" } }
+      }
+    },
+    " estimated" : {
+      "localizations" : {
+        "hi" : { "stringUnit" : { "state" : "translated", "value" : " अनुमानित" } }
+      }
+    },
+    " protein" : {
+      "localizations" : {
+        "hi" : { "stringUnit" : { "state" : "translated", "value" : " प्रोटीन" } }
+      }
+    },
+    " protein · " : {
+      "localizations" : {
+        "hi" : { "stringUnit" : { "state" : "translated", "value" : " प्रोटीन · " } }
+      }
+    },
+    " carbs · " : {
+      "localizations" : {
+        "hi" : { "stringUnit" : { "state" : "translated", "value" : " कार्बोहाइड्रेट · " } }
+      }
+    },
+    " fat estimated" : {
+      "localizations" : {
+        "hi" : { "stringUnit" : { "state" : "translated", "value" : " वसा अनुमानित" } }
+      }
+    },
+    " active" : {
+      "localizations" : {
+        "hi" : { "stringUnit" : { "state" : "translated", "value" : " सक्रिय" } }
+      }
+    },
+    " active · " : {
+      "localizations" : {
+        "hi" : { "stringUnit" : { "state" : "translated", "value" : " सक्रिय · " } }
+      }
+    },
+    "Version " : {
+      "localizations" : {
+        "hi" : { "stringUnit" : { "state" : "translated", "value" : "संस्करण " } }
+      }
+    },
+    " · Published · nutrition review approved" : {
+      "localizations" : {
+        "hi" : { "stringUnit" : { "state" : "translated", "value" : " · प्रकाशित · पोषण समीक्षा स्वीकृत" } }
+      }
+    },
+    "nutrition review " : {
+      "localizations" : {
+        "hi" : { "stringUnit" : { "state" : "translated", "value" : "पोषण समीक्षा " } }
+      }
+    },
+    "Rate " : {
+      "localizations" : {
+        "hi" : { "stringUnit" : { "state" : "translated", "value" : "रेटिंग " } }
+      }
+    },
+    " out of 5" : {
+      "localizations" : {
+        "hi" : { "stringUnit" : { "state" : "translated", "value" : " / 5" } }
+      }
+    },
+    "Uncheck " : {
+      "localizations" : {
+        "hi" : { "stringUnit" : { "state" : "translated", "value" : "अनचेक करें: " } }
+      }
+    },
+    "Check " : {
+      "localizations" : {
+        "hi" : { "stringUnit" : { "state" : "translated", "value" : "चेक करें: " } }
+      }
+    },
+    "Reason: " : {
+      "localizations" : {
+        "hi" : { "stringUnit" : { "state" : "translated", "value" : "कारण: " } }
+      }
+    },
+    " of " : {
+      "localizations" : {
+        "hi" : { "stringUnit" : { "state" : "translated", "value" : " / " } }
+      }
+    },
+    " planned meals completed" : {
+      "localizations" : {
+        "hi" : { "stringUnit" : { "state" : "translated", "value" : " नियोजित भोजन पूरे" } }
+      }
+    },
+    " recipes" : {
+      "localizations" : {
+        "hi" : { "stringUnit" : { "state" : "translated", "value" : " रेसिपी" } }
+      }
+    },
+    " planned leftovers" : {
+      "localizations" : {
+        "hi" : { "stringUnit" : { "state" : "translated", "value" : " नियोजित बचा भोजन" } }
+      }
+    },
+    " planned" : {
+      "localizations" : {
+        "hi" : { "stringUnit" : { "state" : "translated", "value" : " नियोजित" } }
+      }
+    },
+    " accounted for" : {
+      "localizations" : {
+        "hi" : { "stringUnit" : { "state" : "translated", "value" : " का हिसाब हो गया" } }
+      }
+    },
+    "Remove " : {
+      "localizations" : {
+        "hi" : { "stringUnit" : { "state" : "translated", "value" : "हटाएँ: " } }
+      }
+    },
+    " from pantry" : {
+      "localizations" : {
+        "hi" : { "stringUnit" : { "state" : "translated", "value" : " पेंट्री से" } }
+      }
+    },
+    "Mark " : {
+      "localizations" : {
+        "hi" : { "stringUnit" : { "state" : "translated", "value" : "चिह्नित करें: " } }
+      }
+    },
+    " as already available" : {
+      "localizations" : {
+        "hi" : { "stringUnit" : { "state" : "translated", "value" : " पहले से उपलब्ध" } }
+      }
+    },
+    "Not completed" : {
+      "localizations" : {
+        "hi" : { "stringUnit" : { "state" : "translated", "value" : "पूरा नहीं हुआ" } }
+      }
+    },
+    "1 serving · " : {
+      "localizations" : {
+        "hi" : { "stringUnit" : { "state" : "translated", "value" : "1 सर्विंग · " } }
+      }
+    },
+    "Planned leftover from " : {
+      "localizations" : {
+        "hi" : { "stringUnit" : { "state" : "translated", "value" : "नियोजित बचा भोजन, स्रोत: " } }
+      }
+    },
+    "Intentional leftover from " : {
+      "localizations" : {
+        "hi" : { "stringUnit" : { "state" : "translated", "value" : "जानबूझकर बचाया भोजन, स्रोत: " } }
+      }
+    },
+    "an earlier meal" : {
+      "localizations" : {
+        "hi" : { "stringUnit" : { "state" : "translated", "value" : "पहले का भोजन" } }
+      }
+    },
+    "Export " : {
+      "localizations" : {
+        "hi" : { "stringUnit" : { "state" : "translated", "value" : "निर्यात " } }
+      }
+    },
+    "Today’s meals" : {
+      "localizations" : {
+        "hi" : { "stringUnit" : { "state" : "translated", "value" : "आज के भोजन" } }
+      }
+    },
+    "Values are illustrative estimates" : {
+      "localizations" : {
+        "hi" : { "stringUnit" : { "state" : "translated", "value" : "मान केवल उदाहरणात्मक अनुमान हैं" } }
+      }
+    },
+    "Allergens" : {
+      "localizations" : {
+        "hi" : { "stringUnit" : { "state" : "translated", "value" : "एलर्जी कारक" } }
+      }
+    },
+    "Checking for your adopted plan" : {
+      "localizations" : {
+        "hi" : { "stringUnit" : { "state" : "translated", "value" : "आपकी अपनाई गई योजना खोजी जा रही है" } }
+      }
+    },
+    "No adopted reviewed plan yet" : {
+      "localizations" : {
+        "hi" : { "stringUnit" : { "state" : "translated", "value" : "अभी कोई अपनाई गई समीक्षित योजना नहीं है" } }
+      }
+    },
+    "Plan service unavailable" : {
+      "localizations" : {
+        "hi" : { "stringUnit" : { "state" : "translated", "value" : "योजना सेवा उपलब्ध नहीं है" } }
+      }
+    },
+    "Illustrative local preview" : {
+      "localizations" : {
+        "hi" : { "stringUnit" : { "state" : "translated", "value" : "उदाहरणात्मक स्थानीय पूर्वावलोकन" } }
+      }
+    },
+    "Reviewed plan ready" : {
+      "localizations" : {
+        "hi" : { "stringUnit" : { "state" : "translated", "value" : "समीक्षित योजना तैयार है" } }
+      }
+    },
+    "Your saved illustrative week remains visible while Nourish refreshes." : {
+      "localizations" : {
+        "hi" : { "stringUnit" : { "state" : "translated", "value" : "Nourish के रीफ़्रेश होने तक आपका सहेजा हुआ उदाहरणात्मक सप्ताह दिखाई देता रहेगा।" } }
+      }
+    },
+    "Generate and adopt a week after the catalogue has enough licensed, reviewed recipes." : {
+      "localizations" : {
+        "hi" : { "stringUnit" : { "state" : "translated", "value" : "कैटलॉग में पर्याप्त लाइसेंस प्राप्त और समीक्षित रेसिपी होने के बाद सप्ताह बनाएँ और अपनाएँ।" } }
+      }
+    },
+    "This visible week is illustrative; Nourish will never relabel draft meals as production content." : {
+      "localizations" : {
+        "hi" : { "stringUnit" : { "state" : "translated", "value" : "यह दिखाई देने वाला सप्ताह उदाहरणात्मक है; Nourish ड्राफ़्ट भोजन को उत्पादन सामग्री के रूप में कभी नहीं दिखाएगा।" } }
+      }
+    },
+    "Sign in to restore an adopted reviewed plan. These meals and values are development fixtures." : {
+      "localizations" : {
+        "hi" : { "stringUnit" : { "state" : "translated", "value" : "अपनाई गई समीक्षित योजना वापस पाने के लिए साइन इन करें। ये भोजन और मान विकास नमूने हैं।" } }
+      }
+    },
+    "Switching to your reviewed plan." : {
+      "localizations" : {
+        "hi" : { "stringUnit" : { "state" : "translated", "value" : "आपकी समीक्षित योजना पर बदला जा रहा है।" } }
+      }
+    },
+    "Produce" : {
+      "localizations" : {
+        "hi" : { "stringUnit" : { "state" : "translated", "value" : "ताज़ी उपज" } }
+      }
+    },
+    "Dairy" : {
+      "localizations" : {
+        "hi" : { "stringUnit" : { "state" : "translated", "value" : "डेयरी" } }
+      }
+    },
+    "Protein" : {
+      "localizations" : {
+        "hi" : { "stringUnit" : { "state" : "translated", "value" : "प्रोटीन" } }
+      }
+    },
+    "Grains" : {
+      "localizations" : {
+        "hi" : { "stringUnit" : { "state" : "translated", "value" : "अनाज" } }
+      }
+    },
+    "Pantry" : {
+      "localizations" : {
+        "hi" : { "stringUnit" : { "state" : "translated", "value" : "पेंट्री" } }
+      }
+    },
+    "Spices" : {
+      "localizations" : {
+        "hi" : { "stringUnit" : { "state" : "translated", "value" : "मसाले" } }
+      }
+    },
+    "Snack" : {
+      "localizations" : {
+        "hi" : { "stringUnit" : { "state" : "translated", "value" : "स्नैक" } }
+      }
+    },
+    "Other" : {
+      "localizations" : {
+        "hi" : { "stringUnit" : { "state" : "translated", "value" : "अन्य" } }
+      }
+    },
+    "Changed by swap" : {
+      "localizations" : {
+        "hi" : { "stringUnit" : { "state" : "translated", "value" : "बदलाव से संशोधित" } }
+      }
+    },
+    "Taste" : {
+      "localizations" : {
+        "hi" : { "stringUnit" : { "state" : "translated", "value" : "स्वाद" } }
+      }
+    },
+    "Effort" : {
+      "localizations" : {
+        "hi" : { "stringUnit" : { "state" : "translated", "value" : "मेहनत" } }
+      }
+    },
+    "Cost" : {
+      "localizations" : {
+        "hi" : { "stringUnit" : { "state" : "translated", "value" : "लागत" } }
+      }
+    },
+    "Portion" : {
+      "localizations" : {
+        "hi" : { "stringUnit" : { "state" : "translated", "value" : "मात्रा" } }
+      }
+    },
+    "Less effort" : {
+      "localizations" : {
+        "hi" : { "stringUnit" : { "state" : "translated", "value" : "कम मेहनत" } }
+      }
+    },
+    "Lower cost" : {
+      "localizations" : {
+        "hi" : { "stringUnit" : { "state" : "translated", "value" : "कम लागत" } }
+      }
+    },
+    "Different cuisines" : {
+      "localizations" : {
+        "hi" : { "stringUnit" : { "state" : "translated", "value" : "अलग-अलग व्यंजन" } }
+      }
+    },
+    "Adjust portions" : {
+      "localizations" : {
+        "hi" : { "stringUnit" : { "state" : "translated", "value" : "मात्रा बदलें" } }
+      }
+    },
+    "Monday" : {
+      "localizations" : {
+        "hi" : { "stringUnit" : { "state" : "translated", "value" : "सोमवार" } }
+      }
+    },
+    "Tuesday" : {
+      "localizations" : {
+        "hi" : { "stringUnit" : { "state" : "translated", "value" : "मंगलवार" } }
+      }
+    },
+    "Wednesday" : {
+      "localizations" : {
+        "hi" : { "stringUnit" : { "state" : "translated", "value" : "बुधवार" } }
+      }
+    },
+    "Thursday" : {
+      "localizations" : {
+        "hi" : { "stringUnit" : { "state" : "translated", "value" : "गुरुवार" } }
+      }
+    },
+    "Friday" : {
+      "localizations" : {
+        "hi" : { "stringUnit" : { "state" : "translated", "value" : "शुक्रवार" } }
+      }
+    },
+    "Saturday" : {
+      "localizations" : {
+        "hi" : { "stringUnit" : { "state" : "translated", "value" : "शनिवार" } }
+      }
+    },
+    "Sunday" : {
+      "localizations" : {
+        "hi" : { "stringUnit" : { "state" : "translated", "value" : "रविवार" } }
+      }
+    },
+    "Sunday setup" : {
+      "localizations" : {
+        "hi" : { "stringUnit" : { "state" : "translated", "value" : "रविवार की तैयारी" } }
+      }
+    },
+    "Completed" : {
+      "localizations" : {
+        "hi" : { "stringUnit" : { "state" : "translated", "value" : "पूरा हुआ" } }
+      }
+    },
+    "Skipped" : {
+      "localizations" : {
+        "hi" : { "stringUnit" : { "state" : "translated", "value" : "छोड़ा गया" } }
+      }
+    },
+    "Replaced outside app" : {
+      "localizations" : {
+        "hi" : { "stringUnit" : { "state" : "translated", "value" : "ऐप के बाहर बदला गया" } }
+      }
+    },
+    "Moved" : {
+      "localizations" : {
+        "hi" : { "stringUnit" : { "state" : "translated", "value" : "स्थानांतरित" } }
+      }
+    },
+    "Active" : {
+      "localizations" : {
+        "hi" : { "stringUnit" : { "state" : "translated", "value" : "सक्रिय" } }
+      }
+    },
+    "Trial" : {
+      "localizations" : {
+        "hi" : { "stringUnit" : { "state" : "translated", "value" : "परीक्षण अवधि" } }
+      }
+    },
+    "Grace / billing retry" : {
+      "localizations" : {
+        "hi" : { "stringUnit" : { "state" : "translated", "value" : "रियायती अवधि / बिलिंग पुनः प्रयास" } }
+      }
+    },
+    "Expired" : {
+      "localizations" : {
+        "hi" : { "stringUnit" : { "state" : "translated", "value" : "समाप्त" } }
+      }
+    },
+    "Revoked / refunded" : {
+      "localizations" : {
+        "hi" : { "stringUnit" : { "state" : "translated", "value" : "रद्द / धनवापसी" } }
+      }
+    },
+    "Upgraded" : {
+      "localizations" : {
+        "hi" : { "stringUnit" : { "state" : "translated", "value" : "अपग्रेड किया गया" } }
+      }
+    },
+    "Downgraded" : {
+      "localizations" : {
+        "hi" : { "stringUnit" : { "state" : "translated", "value" : "डाउनग्रेड किया गया" } }
+      }
+    },
+    "Unknown" : {
+      "localizations" : {
+        "hi" : { "stringUnit" : { "state" : "translated", "value" : "अज्ञात" } }
+      }
+    },
+    "Step " : {
+      "localizations" : {
+        "hi" : { "stringUnit" : { "state" : "translated", "value" : "चरण " } }
+      }
+    },
+    "Cooking days: " : {
+      "localizations" : {
+        "hi" : { "stringUnit" : { "state" : "translated", "value" : "खाना पकाने के दिन: " } }
+      }
+    },
+    " selected" : {
+      "localizations" : {
+        "hi" : { "stringUnit" : { "state" : "translated", "value" : " चुने गए" } }
+      }
+    },
+    "Link sent to " : {
+      "localizations" : {
+        "hi" : { "stringUnit" : { "state" : "translated", "value" : "लिंक भेजा गया: " } }
+      }
+    },
+    ". In local development, copy it from the backend terminal." : {
+      "localizations" : {
+        "hi" : { "stringUnit" : { "state" : "translated", "value" : "। स्थानीय विकास में इसे बैकएंड टर्मिनल से कॉपी करें।" } }
+      }
+    },
+    "Signed in as " : {
+      "localizations" : {
+        "hi" : { "stringUnit" : { "state" : "translated", "value" : "इस रूप में साइन इन: " } }
+      }
+    },
+    "Nourish user" : {
+      "localizations" : {
+        "hi" : { "stringUnit" : { "state" : "translated", "value" : "Nourish उपयोगकर्ता" } }
+      }
+    },
+    "Day " : {
+      "localizations" : {
+        "hi" : { "stringUnit" : { "state" : "translated", "value" : "दिन " } }
+      }
+    },
+    "Meals" : {
+      "localizations" : {
+        "hi" : { "stringUnit" : { "state" : "translated", "value" : "भोजन" } }
+      }
+    },
+    "Cooking" : {
+      "localizations" : {
+        "hi" : { "stringUnit" : { "state" : "translated", "value" : "खाना पकाना" } }
+      }
+    },
+    "Consent" : {
+      "localizations" : {
+        "hi" : { "stringUnit" : { "state" : "translated", "value" : "सहमति" } }
+      }
+    },
+    "In review" : {
+      "localizations" : { "hi" : { "stringUnit" : { "state" : "translated", "value" : "समीक्षा में" } } }
+    },
+    "Published" : {
+      "localizations" : { "hi" : { "stringUnit" : { "state" : "translated", "value" : "प्रकाशित" } } }
+    },
+    "Archived" : {
+      "localizations" : { "hi" : { "stringUnit" : { "state" : "translated", "value" : "संग्रहित" } } }
+    },
+    "Pending" : {
+      "localizations" : { "hi" : { "stringUnit" : { "state" : "translated", "value" : "लंबित" } } }
+    },
+    "Approved" : {
+      "localizations" : { "hi" : { "stringUnit" : { "state" : "translated", "value" : "स्वीकृत" } } }
+    },
+    "Rejected" : {
+      "localizations" : { "hi" : { "stringUnit" : { "state" : "translated", "value" : "अस्वीकृत" } } }
+    },
+    "Stale" : {
+      "localizations" : { "hi" : { "stringUnit" : { "state" : "translated", "value" : "पुराना" } } }
+    },
+    "Scheduled" : {
+      "localizations" : { "hi" : { "stringUnit" : { "state" : "translated", "value" : "निर्धारित" } } }
+    },
+    "History" : {
+      "localizations" : { "hi" : { "stringUnit" : { "state" : "translated", "value" : "इतिहास" } } }
+    },
+    " · regenerated successor" : {
+      "localizations" : { "hi" : { "stringUnit" : { "state" : "translated", "value" : " · पुनः बनाई गई अगली योजना" } } }
+    },
+    "Current" : {
+      "localizations" : { "hi" : { "stringUnit" : { "state" : "translated", "value" : "वर्तमान" } } }
+    },
+    "Delayed" : {
+      "localizations" : { "hi" : { "stringUnit" : { "state" : "translated", "value" : "विलंबित" } } }
+    },
+    "Mismatch" : {
+      "localizations" : { "hi" : { "stringUnit" : { "state" : "translated", "value" : "मेल नहीं खाता" } } }
+    },
+    " days · " : {
+      "localizations" : { "hi" : { "stringUnit" : { "state" : "translated", "value" : " दिन · " } } }
+    },
+    " preview" : {
+      "localizations" : { "hi" : { "stringUnit" : { "state" : "translated", "value" : " पूर्वावलोकन" } } }
+    },
+    " per week" : {
+      "localizations" : { "hi" : { "stringUnit" : { "state" : "translated", "value" : " प्रति सप्ताह" } } }
+    },
+    " · linked leftover" : {
+      "localizations" : { "hi" : { "stringUnit" : { "state" : "translated", "value" : " · जुड़ा बचा भोजन" } } }
+    },
+    " was replaced. Nutrition, groceries, and prep were recalculated together." : {
+      "localizations" : { "hi" : { "stringUnit" : { "state" : "translated", "value" : " को बदल दिया गया। पोषण, किराना और तैयारी की दोबारा एक साथ गणना की गई।" } } }
+    },
+    "Please try again." : {
+      "localizations" : { "hi" : { "stringUnit" : { "state" : "translated", "value" : "कृपया फिर से प्रयास करें।" } } }
+    },
+    "Your Nourish session is stored in Keychain." : {
+      "localizations" : { "hi" : { "stringUnit" : { "state" : "translated", "value" : "आपका Nourish सत्र Keychain में सुरक्षित है।" } } }
+    },
+    "Deletion could not be confirmed." : {
+      "localizations" : { "hi" : { "stringUnit" : { "state" : "translated", "value" : "हटाने की पुष्टि नहीं हो सकी।" } } }
+    },
+    "Check this step and try again." : {
+      "localizations" : { "hi" : { "stringUnit" : { "state" : "translated", "value" : "इस चरण की जाँच करके फिर प्रयास करें।" } } }
+    },
+    "Not set" : {
+      "localizations" : { "hi" : { "stringUnit" : { "state" : "translated", "value" : "निर्धारित नहीं" } } }
+    },
+    "Local profile storage is unavailable on this device." : {
+      "localizations" : { "hi" : { "stringUnit" : { "state" : "translated", "value" : "इस डिवाइस पर स्थानीय प्रोफ़ाइल संग्रह उपलब्ध नहीं है।" } } }
+    },
+    "Nourish could not restore the local profile." : {
+      "localizations" : { "hi" : { "stringUnit" : { "state" : "translated", "value" : "Nourish स्थानीय प्रोफ़ाइल वापस नहीं ला सका।" } } }
+    },
+    "Check the target, meal slots, cooking days, region, and timezone." : {
+      "localizations" : { "hi" : { "stringUnit" : { "state" : "translated", "value" : "लक्ष्य, भोजन समय, खाना पकाने के दिन, क्षेत्र और समय क्षेत्र जाँचें।" } } }
+    },
+    "Nourish could not save this profile. Please try again." : {
+      "localizations" : { "hi" : { "stringUnit" : { "state" : "translated", "value" : "Nourish इस प्रोफ़ाइल को सहेज नहीं सका। कृपया फिर प्रयास करें।" } } }
+    },
+    "Enter a valid email address." : {
+      "localizations" : { "hi" : { "stringUnit" : { "state" : "translated", "value" : "मान्य ईमेल पता दर्ज करें।" } } }
+    },
+    "The development sign-in service is unavailable. You can continue in local preview." : {
+      "localizations" : { "hi" : { "stringUnit" : { "state" : "translated", "value" : "विकास साइन-इन सेवा उपलब्ध नहीं है। आप स्थानीय पूर्वावलोकन में जारी रख सकते हैं।" } } }
+    },
+    "This sign-in link could not be completed." : {
+      "localizations" : { "hi" : { "stringUnit" : { "state" : "translated", "value" : "यह साइन-इन लिंक पूरा नहीं हो सका।" } } }
+    },
+    "Check the reminder days and times, then try again." : {
+      "localizations" : { "hi" : { "stringUnit" : { "state" : "translated", "value" : "रिमाइंडर के दिन और समय जाँचकर फिर प्रयास करें।" } } }
+    },
+    "Notification permission could not be requested." : {
+      "localizations" : { "hi" : { "stringUnit" : { "state" : "translated", "value" : "सूचना अनुमति का अनुरोध नहीं किया जा सका।" } } }
+    },
+    "Reminders are saved, but notifications are disabled in iOS Settings." : {
+      "localizations" : { "hi" : { "stringUnit" : { "state" : "translated", "value" : "रिमाइंडर सहेजे गए हैं, लेकिन iOS सेटिंग्स में सूचनाएँ बंद हैं।" } } }
+    },
+    "Reminder schedule updated." : {
+      "localizations" : { "hi" : { "stringUnit" : { "state" : "translated", "value" : "रिमाइंडर समय-सारणी अपडेट हो गई।" } } }
+    },
+    "All Nourish reminders are off." : {
+      "localizations" : { "hi" : { "stringUnit" : { "state" : "translated", "value" : "सभी Nourish रिमाइंडर बंद हैं।" } } }
+    },
+    "Your choices were saved, but iOS could not schedule every reminder." : {
+      "localizations" : { "hi" : { "stringUnit" : { "state" : "translated", "value" : "आपकी पसंद सहेजी गई, लेकिन iOS हर रिमाइंडर निर्धारित नहीं कर सका।" } } }
+    },
+    "All Nourish reminders were cancelled." : {
+      "localizations" : { "hi" : { "stringUnit" : { "state" : "translated", "value" : "सभी Nourish रिमाइंडर रद्द कर दिए गए।" } } }
+    },
+    "Sign in before creating a reviewed week." : {
+      "localizations" : { "hi" : { "stringUnit" : { "state" : "translated", "value" : "समीक्षित सप्ताह बनाने से पहले साइन इन करें।" } } }
+    },
+    "Nourish could not determine the next plan start date." : {
+      "localizations" : { "hi" : { "stringUnit" : { "state" : "translated", "value" : "Nourish अगली योजना की शुरुआत की तारीख तय नहीं कर सका।" } } }
+    },
+    "The plan service is unavailable. Your current week is unchanged." : {
+      "localizations" : { "hi" : { "stringUnit" : { "state" : "translated", "value" : "योजना सेवा उपलब्ध नहीं है। आपका वर्तमान सप्ताह नहीं बदला है।" } } }
+    },
+    "This week was not adopted. Your existing plan is unchanged." : {
+      "localizations" : { "hi" : { "stringUnit" : { "state" : "translated", "value" : "यह सप्ताह अपनाया नहीं गया। आपकी मौजूदा योजना नहीं बदली है।" } } }
+    },
+    "Feedback saved" : {
+      "localizations" : { "hi" : { "stringUnit" : { "state" : "translated", "value" : "प्रतिक्रिया सहेजी गई" } } }
+    },
+    "Feedback could not be sent. Please try again." : {
+      "localizations" : { "hi" : { "stringUnit" : { "state" : "translated", "value" : "प्रतिक्रिया भेजी नहीं जा सकी। कृपया फिर प्रयास करें।" } } }
+    },
+    "Weekly review saved" : {
+      "localizations" : { "hi" : { "stringUnit" : { "state" : "translated", "value" : "साप्ताहिक समीक्षा सहेजी गई" } } }
+    },
+    "Weekly review could not be sent. Please try again." : {
+      "localizations" : { "hi" : { "stringUnit" : { "state" : "translated", "value" : "साप्ताहिक समीक्षा भेजी नहीं जा सकी। कृपया फिर प्रयास करें।" } } }
+    },
+    "Generation is still pending. Reopen this screen to check again." : {
+      "localizations" : { "hi" : { "stringUnit" : { "state" : "translated", "value" : "योजना बनना अभी लंबित है। दोबारा जाँचने के लिए यह स्क्रीन फिर खोलें।" } } }
+    },
+    "Generation is taking longer than expected. Reopen this screen to check again." : {
+      "localizations" : { "hi" : { "stringUnit" : { "state" : "translated", "value" : "योजना बनने में अपेक्षा से अधिक समय लग रहा है। दोबारा जाँचने के लिए यह स्क्रीन फिर खोलें।" } } }
+    },
+    "Nourish could not generate this week." : {
+      "localizations" : { "hi" : { "stringUnit" : { "state" : "translated", "value" : "Nourish यह सप्ताह नहीं बना सका।" } } }
+    },
+    "There are not enough licensed, reviewed recipes for this profile yet. Your current week is unchanged." : {
+      "localizations" : { "hi" : { "stringUnit" : { "state" : "translated", "value" : "इस प्रोफ़ाइल के लिए अभी पर्याप्त लाइसेंस प्राप्त, समीक्षित रेसिपी नहीं हैं। आपका वर्तमान सप्ताह नहीं बदला है।" } } }
+    },
+    "Nourish could not build a safe varied week. Try fewer locks or review cooking constraints." : {
+      "localizations" : { "hi" : { "stringUnit" : { "state" : "translated", "value" : "Nourish सुरक्षित और विविध सप्ताह नहीं बना सका। कम भोजन लॉक करें या खाना पकाने की सीमाएँ जाँचें।" } } }
+    },
+    "Complete the required planning preferences before generating a week." : {
+      "localizations" : { "hi" : { "stringUnit" : { "state" : "translated", "value" : "सप्ताह बनाने से पहले आवश्यक योजना प्राथमिकताएँ पूरी करें।" } } }
+    },
+    "Subscription status could not be refreshed. Existing server access is unchanged." : {
+      "localizations" : { "hi" : { "stringUnit" : { "state" : "translated", "value" : "सदस्यता स्थिति रीफ़्रेश नहीं हो सकी। मौजूदा सर्वर पहुँच नहीं बदली है।" } } }
+    },
+    "The export request was not confirmed. You can safely retry." : {
+      "localizations" : { "hi" : { "stringUnit" : { "state" : "translated", "value" : "निर्यात अनुरोध की पुष्टि नहीं हुई। आप सुरक्षित रूप से फिर प्रयास कर सकते हैं।" } } }
+    },
+    "Deletion was not confirmed. Your account remains available; please retry." : {
+      "localizations" : { "hi" : { "stringUnit" : { "state" : "translated", "value" : "हटाने की पुष्टि नहीं हुई। आपका खाता उपलब्ध है; कृपया फिर प्रयास करें।" } } }
+    },
+    "App Store plans could not be loaded. No purchase was started." : {
+      "localizations" : { "hi" : { "stringUnit" : { "state" : "translated", "value" : "App Store योजनाएँ लोड नहीं हो सकीं। कोई खरीद शुरू नहीं हुई।" } } }
+    },
+    "Apple could not verify this transaction. No Nourish access was changed." : {
+      "localizations" : { "hi" : { "stringUnit" : { "state" : "translated", "value" : "Apple इस लेनदेन की पुष्टि नहीं कर सका। Nourish पहुँच नहीं बदली।" } } }
+    },
+    "Purchase verified. Your Nourish access is now linked to this account." : {
+      "localizations" : { "hi" : { "stringUnit" : { "state" : "translated", "value" : "खरीद सत्यापित हुई। आपकी Nourish पहुँच अब इस खाते से जुड़ी है।" } } }
+    },
+    "The purchase is awaiting approval. Access will update after Apple confirms it." : {
+      "localizations" : { "hi" : { "stringUnit" : { "state" : "translated", "value" : "खरीद स्वीकृति की प्रतीक्षा में है। Apple की पुष्टि के बाद पहुँच अपडेट होगी।" } } }
+    },
+    "Purchase cancelled." : {
+      "localizations" : { "hi" : { "stringUnit" : { "state" : "translated", "value" : "खरीद रद्द हुई।" } } }
+    },
+    "The App Store returned an unknown purchase result. No access was changed." : {
+      "localizations" : { "hi" : { "stringUnit" : { "state" : "translated", "value" : "App Store ने अज्ञात खरीद परिणाम दिया। पहुँच नहीं बदली।" } } }
+    },
+    "The purchase could not be verified by the Nourish server. Existing access is unchanged." : {
+      "localizations" : { "hi" : { "stringUnit" : { "state" : "translated", "value" : "Nourish सर्वर खरीद सत्यापित नहीं कर सका। मौजूदा पहुँच नहीं बदली है।" } } }
+    },
+    "The App Store purchase could not be verified for this Nourish account right now. Existing server access is unchanged." : {
+      "localizations" : { "hi" : { "stringUnit" : { "state" : "translated", "value" : "इस Nourish खाते के लिए App Store खरीद अभी सत्यापित नहीं हो सकी। मौजूदा सर्वर पहुँच नहीं बदली है।" } } }
+    },
+    "Purchase history was verified by Apple and linked to this Nourish account." : {
+      "localizations" : { "hi" : { "stringUnit" : { "state" : "translated", "value" : "खरीद इतिहास Apple द्वारा सत्यापित होकर इस Nourish खाते से जुड़ गया।" } } }
+    },
+    "Purchase history synchronized. No current subscription entitlement was found." : {
+      "localizations" : { "hi" : { "stringUnit" : { "state" : "translated", "value" : "खरीद इतिहास सिंक हो गया। कोई वर्तमान सदस्यता अधिकार नहीं मिला।" } } }
+    },
+    "An offline swap needs review before it can be confirmed." : {
+      "localizations" : { "hi" : { "stringUnit" : { "state" : "translated", "value" : "ऑफ़लाइन बदलाव की पुष्टि से पहले समीक्षा आवश्यक है।" } } }
+    },
+    "Please sign in again." : {
+      "localizations" : { "hi" : { "stringUnit" : { "state" : "translated", "value" : "कृपया फिर से साइन इन करें।" } } }
+    },
+    "This sign-in link is invalid or incomplete." : {
+      "localizations" : { "hi" : { "stringUnit" : { "state" : "translated", "value" : "यह साइन-इन लिंक अमान्य या अधूरा है।" } } }
+    },
+    "Your preferences changed elsewhere. Refresh and try again." : {
+      "localizations" : { "hi" : { "stringUnit" : { "state" : "translated", "value" : "आपकी प्राथमिकताएँ कहीं और बदली हैं। रीफ़्रेश करके फिर प्रयास करें।" } } }
+    },
+    "Less cooking" : {
+      "localizations" : { "hi" : { "stringUnit" : { "state" : "translated", "value" : "कम खाना पकाना" } } }
+    },
+    "Lower effort" : {
+      "localizations" : { "hi" : { "stringUnit" : { "state" : "translated", "value" : "कम मेहनत" } } }
+    },
+    "Ingredients unavailable" : {
+      "localizations" : { "hi" : { "stringUnit" : { "state" : "translated", "value" : "सामग्री उपलब्ध नहीं" } } }
+    },
+    "Schedule changed" : {
+      "localizations" : { "hi" : { "stringUnit" : { "state" : "translated", "value" : "समय-सारणी बदल गई" } } }
+    },
+    "completed" : {
+      "localizations" : { "hi" : { "stringUnit" : { "state" : "translated", "value" : "पूरे" } } }
+    },
+    "planned meals" : {
+      "localizations" : { "hi" : { "stringUnit" : { "state" : "translated", "value" : "नियोजित भोजन" } } }
+    },
+    "planned leftovers" : {
+      "localizations" : { "hi" : { "stringUnit" : { "state" : "translated", "value" : "नियोजित बचा भोजन" } } }
+    },
+    "Preview vegetarian" : {
+      "localizations" : { "hi" : { "stringUnit" : { "state" : "translated", "value" : "पूर्वावलोकन शाकाहारी" } } }
+    },
+    "Preview profile" : {
+      "localizations" : { "hi" : { "stringUnit" : { "state" : "translated", "value" : "पूर्वावलोकन प्रोफ़ाइल" } } }
+    },
+    "Available" : {
+      "localizations" : { "hi" : { "stringUnit" : { "state" : "translated", "value" : "उपलब्ध" } } }
+    },
+    "Not verified" : {
+      "localizations" : { "hi" : { "stringUnit" : { "state" : "translated", "value" : "सत्यापित नहीं" } } }
+    },
+    "Use my daily protein target" : {
+      "localizations" : { "hi" : { "stringUnit" : { "state" : "translated", "value" : "मेरा दैनिक प्रोटीन लक्ष्य उपयोग करें" } } }
+    },
+    "Daily protein target" : {
+      "localizations" : { "hi" : { "stringUnit" : { "state" : "translated", "value" : "दैनिक प्रोटीन लक्ष्य" } } }
+    },
+    "This is a target you provide, not a target calculated or recommended by Nourish." : {
+      "localizations" : { "hi" : { "stringUnit" : { "state" : "translated", "value" : "यह आपका दिया हुआ लक्ष्य है; Nourish इसकी गणना या सिफ़ारिश नहीं करता।" } } }
+    },
+    "Available equipment" : {
+      "localizations" : { "hi" : { "stringUnit" : { "state" : "translated", "value" : "उपलब्ध उपकरण" } } }
+    },
+    "Recipes that require equipment you do not have will be excluded." : {
+      "localizations" : { "hi" : { "stringUnit" : { "state" : "translated", "value" : "जिन व्यंजनों के लिए आपके पास न होने वाला उपकरण चाहिए, उन्हें शामिल नहीं किया जाएगा।" } } }
+    },
+    "Equipment" : {
+      "localizations" : { "hi" : { "stringUnit" : { "state" : "translated", "value" : "उपकरण" } } }
+    },
+    "Stovetop" : {
+      "localizations" : { "hi" : { "stringUnit" : { "state" : "translated", "value" : "चूल्हा या कुकटॉप" } } }
+    },
+    "Pan or kadai" : {
+      "localizations" : { "hi" : { "stringUnit" : { "state" : "translated", "value" : "पैन या कड़ाही" } } }
+    },
+    "Pot" : {
+      "localizations" : { "hi" : { "stringUnit" : { "state" : "translated", "value" : "पतीला" } } }
+    },
+    "Pressure cooker" : {
+      "localizations" : { "hi" : { "stringUnit" : { "state" : "translated", "value" : "प्रेशर कुकर" } } }
+    },
+    "Oven" : {
+      "localizations" : { "hi" : { "stringUnit" : { "state" : "translated", "value" : "ओवन" } } }
+    },
+    "Microwave" : {
+      "localizations" : { "hi" : { "stringUnit" : { "state" : "translated", "value" : "माइक्रोवेव" } } }
+    },
+    "Mixer or blender" : {
+      "localizations" : { "hi" : { "stringUnit" : { "state" : "translated", "value" : "मिक्सर या ब्लेंडर" } } }
+    },
+    "Air fryer" : {
+      "localizations" : { "hi" : { "stringUnit" : { "state" : "translated", "value" : "एयर फ्रायर" } } }
+    },
+    "Enter a protein target between 10 and 300 grams, or turn the target off." : {
+      "localizations" : { "hi" : { "stringUnit" : { "state" : "translated", "value" : "10 से 300 ग्राम के बीच प्रोटीन लक्ष्य दर्ज करें, या लक्ष्य बंद करें।" } } }
+    },
+    "Equipment has not been configured for this older profile. Until you choose, Nourish will not exclude recipes by equipment." : {
+      "localizations" : { "hi" : { "stringUnit" : { "state" : "translated", "value" : "इस पुराने प्रोफ़ाइल के लिए उपकरण तय नहीं किए गए हैं। आपके चुनने तक Nourish उपकरण के आधार पर व्यंजनों को बाहर नहीं करेगा।" } } }
+    },
+    "Choose common equipment" : {
+      "localizations" : { "hi" : { "stringUnit" : { "state" : "translated", "value" : "सामान्य उपकरण चुनें" } } }
+    },
+    "Week" : {
+      "localizations" : {
+        "hi" : { "stringUnit" : { "state" : "translated", "value" : "सप्ताह" } }
+      }
+    }
+  },
+  "version" : "1.0"
+}

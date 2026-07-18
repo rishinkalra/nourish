@@ -1,0 +1,33 @@
+name: project-nourish-staging
+
+x-nourish-service: &nourish-service
+  build:
+    context: ./backend
+  image: project-nourish-backend:staging
+  env_file:
+    - ./backend/.env.staging
+  restart: unless-stopped
+
+services:
+  api:
+    <<: *nourish-service
+    command: ["node", "src/index.mjs"]
+    ports:
+      - "${NOURISH_STAGING_PORT:-8080}:8080"
+    healthcheck:
+      test: ["CMD", "node", "-e", "fetch('http://127.0.0.1:8080/readyz').then(r=>{if(!r.ok)process.exit(1)}).catch(()=>process.exit(1))"]
+      interval: 15s
+      timeout: 5s
+      retries: 4
+      start_period: 15s
+
+  worker:
+    <<: *nourish-service
+    command: ["node", "src/worker-cli.mjs"]
+    stop_grace_period: 30s
+
+  migrate:
+    <<: *nourish-service
+    command: ["node", "src/migrate-cli.mjs"]
+    restart: "no"
+    profiles: ["release"]

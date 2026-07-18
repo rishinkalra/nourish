@@ -1,0 +1,214 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="theme-color" content="#f6f4ec" />
+    <meta name="description" content="Nourish — practical weekly meal planning." />
+    <title>Nourish — Your week, well fed</title>
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body>
+    <svg class="icon-sprite" aria-hidden="true">
+      <symbol id="i-home" viewBox="0 0 24 24"><path d="M3 10.8 12 3l9 7.8v9.1a1.1 1.1 0 0 1-1.1 1.1H15v-6H9v6H4.1A1.1 1.1 0 0 1 3 19.9z"/></symbol>
+      <symbol id="i-calendar" viewBox="0 0 24 24"><path d="M6 2v3m12-3v3M3.5 9h17M5 4h14a2 2 0 0 1 2 2v14H3V6a2 2 0 0 1 2-2Zm2.5 9h3v3h-3Z"/></symbol>
+      <symbol id="i-bag" viewBox="0 0 24 24"><path d="M5 8h14l1 13H4L5 8Zm4 2V6a3 3 0 0 1 6 0v4"/></symbol>
+      <symbol id="i-prep" viewBox="0 0 24 24"><path d="M5 3v8m3-8v8M5 7h3m-1.5 4v10M16 3c-2 3-2 7 1 9v9m0-9c3-2 3-7 1-9"/></symbol>
+      <symbol id="i-user" viewBox="0 0 24 24"><circle cx="12" cy="8" r="4"/><path d="M4 21c.5-5 3.2-7 8-7s7.5 2 8 7"/></symbol>
+      <symbol id="i-check" viewBox="0 0 24 24"><path d="m5 12 4.2 4.2L19 6.5"/></symbol>
+      <symbol id="i-spark" viewBox="0 0 24 24"><path d="m12 2 1.8 5.2L19 9l-5.2 1.8L12 16l-1.8-5.2L5 9l5.2-1.8Zm7 13 .8 2.2L22 18l-2.2.8L19 21l-.8-2.2L16 18l2.2-.8Z"/></symbol>
+      <symbol id="i-arrow" viewBox="0 0 24 24"><path d="m9 5 7 7-7 7"/></symbol>
+      <symbol id="i-swap" viewBox="0 0 24 24"><path d="M7 7h12l-3-3m3 3-3 3M17 17H5l3 3m-3-3 3-3"/></symbol>
+      <symbol id="i-close" viewBox="0 0 24 24"><path d="m6 6 12 12M18 6 6 18"/></symbol>
+      <symbol id="i-clock" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></symbol>
+      <symbol id="i-search" viewBox="0 0 24 24"><circle cx="10.8" cy="10.8" r="7.3"/><path d="m16.2 16.2 4.2 4.2"/></symbol>
+    </svg>
+
+    <div class="app-shell">
+      <aside class="sidebar" aria-label="Primary navigation">
+        <a class="brand" href="#today" aria-label="Nourish home">
+          <span class="brand-mark">n</span>
+          <span>Nourish</span>
+        </a>
+
+        <nav class="side-nav">
+          <button class="nav-item is-active" data-view="today"><svg><use href="#i-home"/></svg><span>Today</span></button>
+          <button class="nav-item" data-view="week"><svg><use href="#i-calendar"/></svg><span>My week</span></button>
+          <button class="nav-item" data-view="groceries"><svg><use href="#i-bag"/></svg><span>Groceries</span></button>
+          <button class="nav-item" data-view="prep"><svg><use href="#i-prep"/></svg><span>Prep plan</span></button>
+        </nav>
+
+        <div class="sidebar-card">
+          <div class="mini-ring"><span>72%</span></div>
+          <div>
+            <strong>Week on track</strong>
+            <span>13 of 18 meals</span>
+          </div>
+        </div>
+
+        <button class="profile-chip" id="profileButton">
+          <span class="avatar">RM</span>
+          <span><strong>Rhea</strong><small>1,850 kcal plan</small></span>
+          <svg><use href="#i-arrow"/></svg>
+        </button>
+      </aside>
+
+      <main class="main-content">
+        <header class="mobile-header">
+          <a class="brand" href="#today"><span class="brand-mark">n</span><span>Nourish</span></a>
+          <button class="avatar avatar-button" id="mobileProfileButton" aria-label="Open profile">RM</button>
+        </header>
+
+        <section class="view is-visible" id="view-today" data-view-panel="today">
+          <div class="page-heading">
+            <div>
+              <p class="eyebrow">Monday, 13 July</p>
+              <h1>Good morning, Rhea.</h1>
+              <p class="subhead">A calm start to a well-fed week.</p>
+            </div>
+            <button class="secondary-button" id="tunePlanButton"><svg><use href="#i-spark"/></svg>Tune my plan</button>
+          </div>
+
+          <div class="today-layout">
+            <div class="primary-column">
+              <article class="hero-meal">
+                <img src="assets/palak-paneer-meal.png" alt="Palak paneer with rice, dal and kachumber" />
+                <div class="hero-overlay"></div>
+                <div class="hero-label"><span>DINNER · 7:30 PM</span><span class="veg-dot" aria-label="Vegetarian"></span></div>
+                <div class="hero-copy">
+                  <p>Tonight</p>
+                  <h2>Palak paneer plate</h2>
+                  <div class="meal-meta"><span>620 kcal</span><span>32g protein</span><span>35 min</span></div>
+                  <div class="hero-actions">
+                    <button class="light-button" data-open-meal>View recipe</button>
+                    <button class="glass-button" data-swap="Palak paneer plate"><svg><use href="#i-swap"/></svg>Swap</button>
+                  </div>
+                </div>
+              </article>
+
+              <section class="section-block">
+                <div class="section-title-row">
+                  <div><p class="eyebrow">TODAY'S PLAN</p><h2>Three meals, one snack</h2></div>
+                  <button class="text-button" data-go="week">See full week <svg><use href="#i-arrow"/></svg></button>
+                </div>
+                <div class="meal-list" id="todayMealList"></div>
+              </section>
+            </div>
+
+            <aside class="insight-column">
+              <section class="target-card">
+                <div class="section-title-row"><div><p class="eyebrow">DAILY TARGET</p><h2>Nicely balanced</h2></div><span class="status-pill">On track</span></div>
+                <div class="energy-summary">
+                  <div class="energy-ring"><span><strong>1,760</strong><small>of 1,850 kcal</small></span></div>
+                  <div class="macro-list">
+                    <div><span>Protein</span><strong>98g</strong><i style="--fill: 82%"></i></div>
+                    <div><span>Carbs</span><strong>211g</strong><i style="--fill: 72%"></i></div>
+                    <div><span>Fat</span><strong>54g</strong><i style="--fill: 66%"></i></div>
+                  </div>
+                </div>
+                <p class="fine-print">Nutrition values are estimates based on reviewed recipe data.</p>
+              </section>
+
+              <section class="gentle-card">
+                <div class="gentle-icon"><svg><use href="#i-spark"/></svg></div>
+                <div><p class="eyebrow">A GENTLE NUDGE</p><h3>Cook once, coast twice.</h3><p>Make two extra rotis tonight. They return in Wednesday's lunch and save 20 minutes.</p></div>
+              </section>
+
+              <section class="shopping-card">
+                <div><p class="eyebrow">SHOPPING</p><h3>8 items left</h3><p>Your list is grouped and ready.</p></div>
+                <button class="round-arrow" data-go="groceries" aria-label="Open groceries"><svg><use href="#i-arrow"/></svg></button>
+              </section>
+            </aside>
+          </div>
+        </section>
+
+        <section class="view" id="view-week" data-view-panel="week">
+          <div class="page-heading compact">
+            <div><p class="eyebrow">13–19 JULY</p><h1>Your week, at a glance.</h1><p class="subhead">Built around four cooking days and a medium budget.</p></div>
+            <button class="secondary-button" id="regenerateButton"><svg><use href="#i-spark"/></svg>Regenerate</button>
+          </div>
+          <div class="week-summary">
+            <div><span class="summary-icon">7</span><p><strong>days planned</strong><small>18 meals + 6 snacks</small></p></div>
+            <div><span class="summary-icon">±3%</span><p><strong>weekly target</strong><small>calorie variation</small></p></div>
+            <div><span class="summary-icon">4</span><p><strong>cook days</strong><small>leftovers do the rest</small></p></div>
+          </div>
+          <div class="day-strip" id="dayStrip"></div>
+          <div class="week-grid">
+            <section class="day-plan-card">
+              <div class="section-title-row"><div><p class="eyebrow" id="selectedDayEyebrow">MONDAY</p><h2 id="selectedDayTitle">1,760 kcal · 98g protein</h2></div><span class="status-pill">Balanced</span></div>
+              <div class="timeline" id="weekMealList"></div>
+            </section>
+            <aside>
+              <section class="reuse-card"><span class="reuse-art">↻</span><p class="eyebrow">SMART REUSE</p><h3>Nothing goes to waste.</h3><p>Today's tomato masala becomes the base for Wednesday's chana.</p><div class="ingredient-pills"><span>Tomatoes</span><span>Onions</span><span>Coriander</span></div></section>
+              <section class="variety-card"><div class="variety-heading"><div><p class="eyebrow">VARIETY GUARD</p><h3>No accidental repeats.</h3></div><span class="status-pill">Passed</span></div><div class="variety-stats"><div><strong id="exactRepeatCount">0</strong><span>exact repeats</span></div><div><strong id="leftoverReuseCount">2</strong><span>planned leftovers</span></div><div><strong id="dominantIngredientPeak">3×</strong><span>top ingredient</span></div></div><p>Leftovers are deliberate. Exact recipes and dominant ingredients are limited across this week and recent plans.</p></section>
+              <section class="plan-note"><strong>Why this plan fits</strong><p>Vegetarian · North & South Indian · no peanuts · 35-minute weeknights · medium budget</p></section>
+            </aside>
+          </div>
+        </section>
+
+        <section class="view" id="view-groceries" data-view-panel="groceries">
+          <div class="page-heading compact"><div><p class="eyebrow">FOR 13–19 JULY</p><h1>Your grocery list.</h1><p class="subhead">Consolidated for the week, with pantry items separated.</p></div><button class="secondary-button" id="searchListButton"><svg><use href="#i-search"/></svg>Find item</button></div>
+          <section class="grocery-progress-card">
+            <div><p class="eyebrow">WEEKLY SHOP</p><h2><span id="groceryDone">7</span> of <span id="groceryTotal">15</span> collected</h2><div class="progress-track"><span id="groceryProgress"></span></div></div>
+            <div class="budget-estimate"><small>ESTIMATED BAND</small><strong>₹1,600–₹2,000</strong><span>Exact prices vary by store</span></div>
+          </section>
+          <div class="grocery-layout"><div id="groceryGroups"></div><aside><section class="pantry-card"><p class="eyebrow">CHECK YOUR PANTRY</p><h3>Likely already home</h3><div class="pantry-pills"><span>Turmeric</span><span>Cumin</span><span>Cooking oil</span><span>Salt</span><span>Garam masala</span></div></section><section class="safety-note"><strong>Allergy reminder</strong><p>Always check labels and cross-contamination notes when buying packaged ingredients.</p></section></aside></div>
+        </section>
+
+        <section class="view" id="view-prep" data-view-panel="prep">
+          <div class="page-heading compact"><div><p class="eyebrow">SUNDAY PREP</p><h1>Set up an easier week.</h1><p class="subhead">58 active minutes now saves about 2 hours later.</p></div><span class="time-badge"><svg><use href="#i-clock"/></svg>1 hr 20 total</span></div>
+          <div class="prep-layout">
+            <section class="prep-steps-card"><div class="section-title-row"><div><p class="eyebrow">YOUR PREP FLOW</p><h2>Six small wins</h2></div><span class="status-pill" id="prepStatus">0 of 6</span></div><div id="prepSteps"></div></section>
+            <aside><section class="prep-focus"><div class="focus-visual"><span>20</span><small>min</small></div><p class="eyebrow">START HERE</p><h3>Cook the base masala</h3><p>It unlocks three meals and keeps safely for four days when chilled promptly.</p><button class="primary-button" id="startPrepButton">Start guided prep</button></section><section class="plan-note"><strong>Storage matters</strong><p>Cool cooked food quickly, refrigerate in clean containers, and follow each recipe's storage guidance.</p></section></aside>
+          </div>
+        </section>
+      </main>
+
+      <nav class="bottom-nav" aria-label="Primary navigation">
+        <button class="nav-item is-active" data-view="today"><svg><use href="#i-home"/></svg><span>Today</span></button>
+        <button class="nav-item" data-view="week"><svg><use href="#i-calendar"/></svg><span>Week</span></button>
+        <button class="nav-item" data-view="groceries"><svg><use href="#i-bag"/></svg><span>Groceries</span></button>
+        <button class="nav-item" data-view="prep"><svg><use href="#i-prep"/></svg><span>Prep</span></button>
+      </nav>
+    </div>
+
+    <div class="modal-backdrop" id="swapModal" aria-hidden="true">
+      <section class="modal-sheet" role="dialog" aria-modal="true" aria-labelledby="swapTitle">
+        <button class="close-button" data-close-modal aria-label="Close"><svg><use href="#i-close"/></svg></button>
+        <p class="eyebrow">SAFE SWAP</p><h2 id="swapTitle">Swap your dinner</h2><p class="modal-intro">All options match your vegetarian preference, avoid peanuts, and stay close to today's target.</p>
+        <div class="swap-options" id="swapOptions"></div>
+      </section>
+    </div>
+
+    <div class="modal-backdrop" id="profileModal" aria-hidden="true">
+      <section class="modal-sheet profile-sheet" role="dialog" aria-modal="true" aria-labelledby="profileTitle">
+        <button class="close-button" data-close-modal aria-label="Close"><svg><use href="#i-close"/></svg></button>
+        <p class="eyebrow">PLAN PREFERENCES</p><h2 id="profileTitle">Make the week fit you.</h2><p class="modal-intro">These choices shape your next plan. Allergies and exclusions are always hard constraints.</p>
+        <form id="profileForm">
+          <label>Daily calorie target<input type="number" value="1850" min="1200" max="3500" /></label>
+          <fieldset><legend>Diet</legend><div class="choice-row"><label><input type="radio" name="diet" checked /> Vegetarian</label><label><input type="radio" name="diet" /> Eggetarian</label><label><input type="radio" name="diet" /> Vegan</label></div></fieldset>
+          <fieldset><legend>Cooking rhythm</legend><div class="choice-row"><label><input type="radio" name="cook" /> 3 days</label><label><input type="radio" name="cook" checked /> 4 days</label><label><input type="radio" name="cook" /> 5+ days</label></div></fieldset>
+          <fieldset><legend>Variety preference</legend><div class="choice-row"><label><input type="radio" name="variety" /> Familiar repeats</label><label><input type="radio" name="variety" checked /> Balanced</label><label><input type="radio" name="variety" /> Maximum variety</label></div></fieldset>
+          <button class="primary-button full" type="submit">Save for next plan</button>
+          <button class="text-button replay-onboarding" id="replayOnboardingButton" type="button">Preview onboarding from the start <svg><use href="#i-arrow"/></svg></button>
+        </form>
+      </section>
+    </div>
+
+    <section class="onboarding-shell" id="onboarding" aria-hidden="true" aria-label="Nourish onboarding">
+      <aside class="onboarding-story">
+        <a class="brand onboarding-brand" href="#today"><span class="brand-mark">n</span><span>Nourish</span></a>
+        <div class="story-copy"><p class="eyebrow">YOUR WEEK, WELL FED</p><h2>Practical meals that fit real life.</h2><p>Tell us what matters once. We’ll turn it into seven days of meals, portions, groceries, and prep.</p></div>
+        <div class="story-proof"><span>✓ Reviewed recipe data</span><span>✓ Hard allergy exclusions</span><span>✓ Plans built around your cooking days</span></div>
+      </aside>
+      <div class="onboarding-panel">
+        <header class="onboarding-header"><div><span id="onboardingStepLabel">Step 1 of 7</span><div class="onboarding-progress"><i id="onboardingProgress"></i></div></div><button id="exitOnboardingButton" aria-label="Exit onboarding"><svg><use href="#i-close"/></svg></button></header>
+        <main class="onboarding-content" id="onboardingContent"></main>
+        <footer class="onboarding-footer"><button class="onboarding-back" id="onboardingBackButton">Back</button><button class="primary-button onboarding-next" id="onboardingNextButton">Continue</button></footer>
+      </div>
+    </section>
+    <div class="toast" id="toast" role="status"></div>
+    <script src="planner.js"></script>
+    <script src="app.js"></script>
+  </body>
+</html>

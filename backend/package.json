@@ -1,0 +1,24 @@
+{
+  "name": "project-nourish-backend",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "start": "node src/index.mjs",
+    "test": "node --test",
+    "config:check": "node src/config-check-cli.mjs",
+    "db:migrate": "node src/migrate-cli.mjs",
+    "admin:provision": "node src/admin-provision-cli.mjs",
+    "worker": "node src/worker-cli.mjs",
+    "staging:smoke": "node src/staging-smoke-cli.mjs",
+    "digitalocean:preflight": "node src/digitalocean-preflight-cli.mjs"
+  },
+  "dependencies": {
+    "@apple/app-store-server-library": "3.1.0",
+    "@aws-sdk/client-s3": "3.1090.0",
+    "pg": "8.22.0"
+  },
+  "engines": {
+    "node": ">=24"
+  }
+}

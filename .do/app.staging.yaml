@@ -1,0 +1,222 @@
+# Template only: render and validate every placeholder before submitting this spec.
+# This file creates billable resources when submitted to DigitalOcean.
+name: project-nourish-staging
+region: blr
+
+alerts:
+  - rule: DEPLOYMENT_FAILED
+  - rule: DOMAIN_FAILED
+
+ingress:
+  rules:
+    - component:
+        name: nourish-api
+      match:
+        path:
+          prefix: /
+
+envs:
+  - key: NODE_ENV
+    value: production
+    scope: RUN_TIME
+    type: GENERAL
+  - key: HOST
+    value: 0.0.0.0
+    scope: RUN_TIME
+    type: GENERAL
+  - key: DATABASE_URL
+    value: ${nourish-postgres.DATABASE_PRIVATE_URL}
+    scope: RUN_TIME
+    type: SECRET
+  - key: DATABASE_REQUIRE_TLS
+    value: "true"
+    scope: RUN_TIME
+    type: GENERAL
+  - key: DATABASE_AUTO_MIGRATE
+    value: "false"
+    scope: RUN_TIME
+    type: GENERAL
+  - key: NOURISH_PRIVATE_OBJECT_STORE
+    value: s3
+    scope: RUN_TIME
+    type: GENERAL
+  - key: NOURISH_PRIVATE_OBJECT_BUCKET
+    value: CHANGE_ME_PRIVATE_SPACE_NAME
+    scope: RUN_TIME
+    type: GENERAL
+  - key: NOURISH_PRIVATE_OBJECT_REGION
+    value: us-east-1
+    scope: RUN_TIME
+    type: GENERAL
+  - key: NOURISH_PRIVATE_OBJECT_ENDPOINT
+    value: https://blr1.digitaloceanspaces.com
+    scope: RUN_TIME
+    type: GENERAL
+  - key: NOURISH_PRIVATE_OBJECT_PREFIX
+    value: nourish/staging
+    scope: RUN_TIME
+    type: GENERAL
+  - key: NOURISH_PRIVATE_OBJECT_SSE
+    value: none
+    scope: RUN_TIME
+    type: GENERAL
+  - key: NOURISH_PRIVATE_OBJECT_FORCE_PATH_STYLE
+    value: "false"
+    scope: RUN_TIME
+    type: GENERAL
+  - key: NOURISH_ANALYTICS_RETENTION_DAYS
+    value: "90"
+    scope: RUN_TIME
+    type: GENERAL
+  - key: NOURISH_PLANNER_ELIGIBLE_LOCALES
+    value: en-IN
+    scope: RUN_TIME
+    type: GENERAL
+  - key: NOURISH_PLANNER_NUTRITION_CALCULATION_VERSIONS
+    value: CHANGE_ME_REVIEWED_VERSION
+    scope: RUN_TIME
+    type: GENERAL
+  - key: NOURISH_APP_STORE_INGRESS_ENABLED
+    value: "false"
+    scope: RUN_TIME
+    type: GENERAL
+  - key: NOURISH_APP_STORE_RECONCILIATION_ENABLED
+    value: "false"
+    scope: RUN_TIME
+    type: GENERAL
+
+services:
+  - name: nourish-api
+    github:
+      repo: CHANGE_ME_GITHUB_REPOSITORY
+      branch: main
+      deploy_on_push: false
+    source_dir: backend
+    dockerfile_path: backend/Dockerfile
+    run_command: node src/index.mjs
+    http_port: 8080
+    instance_size_slug: apps-s-1vcpu-1gb-fixed
+    instance_count: 1
+    health_check:
+      http_path: /readyz
+      initial_delay_seconds: 15
+      period_seconds: 15
+      timeout_seconds: 5
+      success_threshold: 1
+      failure_threshold: 4
+    liveness_health_check:
+      http_path: /healthz
+      port: 8080
+      initial_delay_seconds: 15
+      period_seconds: 30
+      timeout_seconds: 5
+      failure_threshold: 3
+    termination:
+      drain_seconds: 15
+      grace_period_seconds: 45
+    alerts:
+      - rule: RESTART_COUNT
+        operator: GREATER_THAN
+        value: 2
+        window: TEN_MINUTES
+      - rule: MEM_UTILIZATION
+        operator: GREATER_THAN
+        value: 85
+        window: TEN_MINUTES
+    envs:
+      - key: DATABASE_POOL_MAX
+        value: "10"
+        scope: RUN_TIME
+        type: GENERAL
+      - key: NOURISH_ADMIN_ORIGIN
+        value: CHANGE_ME_CONTROL_ROOM_ORIGIN
+        scope: RUN_TIME
+        type: GENERAL
+      - key: NOURISH_PRIVATE_OBJECT_ENCRYPTION_ACTIVE_KEY_ID
+        value: CHANGE_ME_ENCRYPTION_ACTIVE_KEY_ID
+        scope: RUN_TIME
+        type: GENERAL
+      - key: NOURISH_PRIVATE_OBJECT_ENCRYPTION_KEYS
+        value: CHANGE_ME_JSON_ENCRYPTION_KEYRING
+        scope: RUN_TIME
+        type: SECRET
+      - key: AWS_ACCESS_KEY_ID
+        value: CHANGE_ME_SPACES_READ_ACCESS_KEY
+        scope: RUN_TIME
+        type: SECRET
+      - key: AWS_SECRET_ACCESS_KEY
+        value: CHANGE_ME_SPACES_READ_SECRET_KEY
+        scope: RUN_TIME
+        type: SECRET
+
+workers:
+  - name: nourish-worker
+    github:
+      repo: CHANGE_ME_GITHUB_REPOSITORY
+      branch: main
+      deploy_on_push: false
+    source_dir: backend
+    dockerfile_path: backend/Dockerfile
+    run_command: node src/worker-cli.mjs
+    instance_size_slug: apps-s-1vcpu-0.5gb
+    instance_count: 1
+    termination:
+      grace_period_seconds: 45
+    alerts:
+      - rule: RESTART_COUNT
+        operator: GREATER_THAN
+        value: 2
+        window: TEN_MINUTES
+      - rule: MEM_UTILIZATION
+        operator: GREATER_THAN
+        value: 85
+        window: TEN_MINUTES
+    envs:
+      - key: DATABASE_POOL_MAX
+        value: "5"
+        scope: RUN_TIME
+        type: GENERAL
+      - key: NOURISH_PRIVATE_OBJECT_ENCRYPTION_ACTIVE_KEY_ID
+        value: CHANGE_ME_ENCRYPTION_ACTIVE_KEY_ID
+        scope: RUN_TIME
+        type: GENERAL
+      - key: NOURISH_PRIVATE_OBJECT_ENCRYPTION_KEYS
+        value: CHANGE_ME_JSON_ENCRYPTION_KEYRING
+        scope: RUN_TIME
+        type: SECRET
+      - key: AWS_ACCESS_KEY_ID
+        value: CHANGE_ME_SPACES_WRITE_DELETE_ACCESS_KEY
+        scope: RUN_TIME
+        type: SECRET
+      - key: AWS_SECRET_ACCESS_KEY
+        value: CHANGE_ME_SPACES_WRITE_DELETE_SECRET_KEY
+        scope: RUN_TIME
+        type: SECRET
+
+jobs:
+  - name: nourish-migrate
+    kind: PRE_DEPLOY
+    github:
+      repo: CHANGE_ME_GITHUB_REPOSITORY
+      branch: main
+      deploy_on_push: false
+    source_dir: backend
+    dockerfile_path: backend/Dockerfile
+    run_command: node src/migrate-cli.mjs
+    instance_size_slug: apps-s-1vcpu-0.5gb
+    instance_count: 1
+    envs:
+      - key: NOURISH_PROCESS_TYPE
+        value: migration
+        scope: RUN_TIME
+        type: GENERAL
+      - key: DATABASE_POOL_MAX
+        value: "2"
+        scope: RUN_TIME
+        type: GENERAL
+
+databases:
+  - name: nourish-postgres
+    engine: PG
+    production: true
+    cluster_name: CHANGE_ME_EXISTING_MANAGED_POSTGRES_CLUSTER

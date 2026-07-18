@@ -1,0 +1,58 @@
+import SwiftUI
+import NourishAPI
+import NourishUI
+import UIKit
+
+private enum NourishAppConfiguration {
+    static let apiBaseURL: URL = {
+        let configuredValue = Bundle.main.object(forInfoDictionaryKey: "NourishAPIBaseURL") as? String
+        #if DEBUG
+        let allowsLocalHTTP = true
+        #else
+        let allowsLocalHTTP = false
+        #endif
+        do {
+            return try APIBaseURLPolicy.validated(
+                rawValue: configuredValue,
+                allowsLocalHTTP: allowsLocalHTTP
+            )
+        } catch {
+            fatalError("NourishAPIBaseURL is missing or unsafe for this build configuration.")
+        }
+    }()
+}
+
+final class NourishAppDelegate: NSObject, UIApplicationDelegate {
+    func application(
+        _ application: UIApplication,
+        didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]? = nil
+    ) -> Bool {
+        BackgroundSyncCoordinator.shared.register()
+        return true
+    }
+}
+
+@main
+struct NourishApp: App {
+    @UIApplicationDelegateAdaptor(NourishAppDelegate.self) private var appDelegate
+
+    private static let prepareLaunchDefaults: Void = {
+        #if DEBUG
+        let arguments = ProcessInfo.processInfo.arguments
+        if arguments.contains("-NourishUITestOnboarding") || arguments.contains("-NourishUITestMain") {
+            UserDefaults.standard.set(0, forKey: "nourish.selected.tab")
+            UserDefaults.standard.set(false, forKey: "nourish.analytics.measurement-enabled")
+        }
+        #endif
+    }()
+
+    init() {
+        _ = Self.prepareLaunchDefaults
+    }
+
+    var body: some Scene {
+        WindowGroup {
+            AppRootView(baseURL: NourishAppConfiguration.apiBaseURL)
+        }
+    }
+}

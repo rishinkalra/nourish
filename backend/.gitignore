@@ -1,0 +1,4 @@
+.env.staging
+node_modules/
+coverage/
+.DS_Store

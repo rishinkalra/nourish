@@ -1,0 +1,83 @@
+.support-heading { align-items: center; }
+.read-only-chip { display: inline-flex; align-items: center; gap: 7px; flex: none; padding: 9px 12px; border-radius: 999px; background: var(--green-bg); color: var(--forest); font-size: 9px; font-weight: 900; text-transform: uppercase; letter-spacing: .08em; }
+.read-only-chip svg { width: 16px; height: 16px; }
+.support-boundary { display: flex; align-items: flex-start; gap: 12px; padding: 14px 16px; border: 1px solid #cdddcf; border-radius: 12px; background: #edf5eb; color: var(--forest); }
+.support-boundary svg { flex: none; margin-top: 1px; }
+.support-boundary strong,
+.support-boundary span { display: block; }
+.support-boundary strong { font-size: 11px; }
+.support-boundary span { margin-top: 4px; font-size: 9px; line-height: 1.5; }
+
+.support-search-card { display: grid; grid-template-columns: minmax(230px, .7fr) minmax(480px, 1.3fr); gap: 28px; margin-top: 14px; padding: 23px; border: 1px solid var(--line); border-radius: 15px; background: var(--paper); }
+.support-search-copy h2 { margin: 0; font-family: Georgia, serif; font-size: 23px; font-weight: 500; }
+.support-search-copy > p:last-child { margin: 9px 0 0; color: var(--muted); font-size: 10px; line-height: 1.55; }
+.support-search-card form,
+.support-search-card label { display: grid; }
+.support-search-card form { gap: 13px; }
+.support-search-card label { gap: 7px; color: #415148; font-size: 9px; font-weight: 800; }
+.support-search-card label small { color: var(--muted); font-size: 8px; font-weight: 500; }
+.support-search-card input,
+.support-search-card select,
+.support-search-card textarea { width: 100%; min-width: 0; padding: 11px 12px; border: 1px solid var(--line); border-radius: 9px; background: white; color: var(--ink); outline: none; resize: vertical; }
+.support-search-card input:focus,
+.support-search-card select:focus,
+.support-search-card textarea:focus { border-color: var(--forest-2); box-shadow: 0 0 0 3px rgba(47,103,83,.1); }
+.support-identifier-row { display: grid; grid-template-columns: 155px 1fr; gap: 10px; }
+.support-submit-row { display: flex; align-items: center; justify-content: space-between; gap: 18px; }
+.support-submit-row p { display: flex; align-items: center; gap: 7px; margin: 0; color: var(--muted); font-size: 8px; line-height: 1.4; }
+.support-submit-row svg { flex: none; width: 16px; height: 16px; }
+
+.support-empty { display: grid; place-items: center; padding: 70px 20px; text-align: center; color: var(--muted); }
+.support-empty > span { display: grid; place-items: center; width: 48px; height: 48px; border-radius: 50%; background: #e9eee9; color: var(--forest); }
+.support-empty h2 { margin: 14px 0 5px; color: var(--ink); font-family: Georgia, serif; font-weight: 500; }
+.support-empty p { margin: 0; font-size: 10px; }
+.support-result { display: grid; gap: 13px; margin-top: 14px; }
+.support-result-heading { display: flex; align-items: center; justify-content: space-between; gap: 18px; padding: 19px 21px; border: 1px solid var(--line); border-radius: 14px; background: var(--paper); }
+.support-result-heading h2 { margin: 4px 0 3px; font-family: Georgia, serif; font-size: 25px; font-weight: 500; }
+.support-result-heading p { margin: 0; color: var(--muted); font-size: 9px; }
+.support-account-status { padding: 7px 10px; border-radius: 999px; background: var(--green-bg); color: var(--forest); font-size: 8px; font-weight: 900; text-transform: uppercase; }
+.support-account-status.disabled { background: var(--red-bg); color: var(--red); }
+.support-facts { display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px; }
+.support-facts article,
+.support-detail-card { padding: 17px; border: 1px solid var(--line); border-radius: 13px; background: var(--paper); }
+.support-facts small,
+.support-facts strong { display: block; }
+.support-facts small { color: var(--muted); font-size: 7px; font-weight: 800; text-transform: uppercase; letter-spacing: .06em; }
+.support-facts strong { margin-top: 7px; font-size: 12px; overflow-wrap: anywhere; }
+.support-detail-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; }
+.support-detail-card h3 { margin: 0 0 13px; font-family: Georgia, serif; font-size: 18px; font-weight: 500; }
+.support-detail-card dl { display: grid; gap: 10px; margin: 0; }
+.support-detail-card dl > div { display: flex; align-items: baseline; justify-content: space-between; gap: 12px; padding-bottom: 8px; border-bottom: 1px solid #ecebe4; }
+.support-detail-card dl > div:last-child { padding-bottom: 0; border-bottom: 0; }
+.support-detail-card dt { color: var(--muted); font-size: 8px; }
+.support-detail-card dd { margin: 0; font-size: 9px; font-weight: 800; text-align: right; overflow-wrap: anywhere; }
+.support-audit-receipt { display: grid; grid-template-columns:auto 1fr auto; align-items: center; gap: 13px; padding: 16px 18px; border: 1px solid #d7d5c8; border-radius: 13px; background: #f7f5ec; }
+.support-audit-receipt > svg { color: var(--forest); }
+.support-audit-receipt strong,
+.support-audit-receipt span { display: block; }
+.support-audit-receipt strong { font-size: 10px; }
+.support-audit-receipt span { margin-top: 3px; color: var(--muted); font-size: 8px; }
+.support-audit-receipt code { color: var(--forest); font-size: 8px; overflow-wrap: anywhere; }
+
+@media (max-width: 1050px) {
+  .support-search-card { grid-template-columns: 1fr; }
+  .support-facts { grid-template-columns: repeat(2, 1fr); }
+  .support-detail-grid { grid-template-columns: 1fr 1fr; }
+}
+
+@media (max-width: 650px) {
+  .support-heading { align-items: flex-start; }
+  .read-only-chip { margin-top: 14px; }
+  .support-search-card { padding: 18px; }
+  .support-identifier-row,
+  .support-detail-grid { grid-template-columns: 1fr; }
+  .support-submit-row { align-items: stretch; flex-direction: column; }
+  .support-submit-row button { width: 100%; }
+  .support-result-heading { align-items: flex-start; flex-direction: column; }
+  .support-audit-receipt { grid-template-columns: auto 1fr; }
+  .support-audit-receipt code { grid-column: 2; }
+}
+
+@media (max-width: 430px) {
+  .support-facts { grid-template-columns: 1fr; }
+}
