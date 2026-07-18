@@ -1809,6 +1809,54 @@
     "Every option shown keeps your diet, allergen, exclusion, and weekly variety rules in place." : {
       "localizations" : { "hi" : { "stringUnit" : { "state" : "translated", "value" : "दिखाया गया हर विकल्प आपके आहार, एलर्जी, परहेज़ और साप्ताहिक विविधता के नियमों को बनाए रखता है।" } } }
     },
+    "YOUR WEEK, WELL FED" : {
+      "localizations" : { "hi" : { "stringUnit" : { "state" : "translated", "value" : "आपका सप्ताह, भरपूर पोषण" } } }
+    },
+    "Reviewed recipe data" : {
+      "localizations" : { "hi" : { "stringUnit" : { "state" : "translated", "value" : "समीक्षित रेसिपी डेटा" } } }
+    },
+    "Hard allergy exclusions" : {
+      "localizations" : { "hi" : { "stringUnit" : { "state" : "translated", "value" : "एलर्जी के सख्त परहेज़" } } }
+    },
+    "Plans built around your cooking days" : {
+      "localizations" : { "hi" : { "stringUnit" : { "state" : "translated", "value" : "आपके खाना पकाने के दिनों के अनुसार योजनाएँ" } } }
+    },
+    "Today’s plan" : {
+      "localizations" : { "hi" : { "stringUnit" : { "state" : "translated", "value" : "आज की योजना" } } }
+    },
+    "Practical meals, ready when you are" : {
+      "localizations" : { "hi" : { "stringUnit" : { "state" : "translated", "value" : "व्यावहारिक भोजन, जब आप चाहें तैयार" } } }
+    },
+    "Tonight" : {
+      "localizations" : { "hi" : { "stringUnit" : { "state" : "translated", "value" : "आज रात" } } }
+    },
+    "View recipe" : {
+      "localizations" : { "hi" : { "stringUnit" : { "state" : "translated", "value" : "रेसिपी देखें" } } }
+    },
+    "Meal options" : {
+      "localizations" : { "hi" : { "stringUnit" : { "state" : "translated", "value" : "भोजन विकल्प" } } }
+    },
+    "Refreshing your plan" : {
+      "localizations" : { "hi" : { "stringUnit" : { "state" : "translated", "value" : "आपकी योजना ताज़ा हो रही है" } } }
+    },
+    "Preview plan" : {
+      "localizations" : { "hi" : { "stringUnit" : { "state" : "translated", "value" : "पूर्वावलोकन योजना" } } }
+    },
+    "Showing your saved preview" : {
+      "localizations" : { "hi" : { "stringUnit" : { "state" : "translated", "value" : "आपका सहेजा पूर्वावलोकन दिखाया जा रहा है" } } }
+    },
+    "Your saved week stays visible while Nourish refreshes." : {
+      "localizations" : { "hi" : { "stringUnit" : { "state" : "translated", "value" : "Nourish के ताज़ा होने तक आपका सहेजा सप्ताह दिखाई देता रहेगा।" } } }
+    },
+    "Explore the experience with sample meals, then create and adopt your own reviewed week." : {
+      "localizations" : { "hi" : { "stringUnit" : { "state" : "translated", "value" : "नमूना भोजन के साथ अनुभव देखें, फिर अपना समीक्षित सप्ताह बनाएँ और अपनाएँ।" } } }
+    },
+    "Your sample week remains available while the planning service reconnects." : {
+      "localizations" : { "hi" : { "stringUnit" : { "state" : "translated", "value" : "योजना सेवा के दोबारा जुड़ने तक आपका नमूना सप्ताह उपलब्ध रहेगा।" } } }
+    },
+    "Explore with sample meals. Sign in later to restore your own reviewed week." : {
+      "localizations" : { "hi" : { "stringUnit" : { "state" : "translated", "value" : "नमूना भोजन के साथ देखें। अपना समीक्षित सप्ताह वापस पाने के लिए बाद में साइन इन करें।" } } }
+    },
     "Week" : {
       "localizations" : {
         "hi" : { "stringUnit" : { "state" : "translated", "value" : "सप्ताह" } }

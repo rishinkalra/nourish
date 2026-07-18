@@ -120,7 +120,7 @@ final class NourishAppUITests: XCTestCase {
             "-NourishUITestMain", "-NourishSeedProfile",
         ])
 
-        XCTAssertTrue(app.staticTexts["उदाहरणात्मक स्थानीय पूर्वावलोकन"].waitForExistence(timeout: 5))
+        XCTAssertTrue(app.staticTexts["पूर्वावलोकन योजना"].waitForExistence(timeout: 5))
         XCTAssertTrue(app.staticTexts.matching(NSPredicate(
             format: "label CONTAINS %@", "प्रोटीन"
         )).firstMatch.waitForExistence(timeout: 3))

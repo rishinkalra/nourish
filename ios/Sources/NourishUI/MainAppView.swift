@@ -1,5 +1,6 @@
 import SwiftUI
 import StoreKit
+import UIKit
 import NourishAPI
 import NourishCore
 
@@ -271,11 +272,13 @@ private struct ActiveTodayScreen: View {
             if let plan = store.snapshot?.plan,
                let day = activeDay(in: plan) {
                 VStack(alignment: .leading, spacing: 18) {
-                    ActiveSyncBanner()
                     Text(activeDate(day.localDate).uppercased())
-                        .font(.caption.bold()).foregroundStyle(.secondary)
+                        .font(.caption.bold())
+                        .tracking(1.2)
+                        .foregroundStyle(NourishTheme.inkSoft)
                     Text("Your reviewed day")
-                        .font(.largeTitle.bold())
+                        .font(.system(.largeTitle, design: .serif, weight: .semibold))
+                        .foregroundStyle(NourishTheme.ink)
                         .accessibilityAddTraits(.isHeader)
                     ActiveNutritionSummary(day: day, target: plan.targetSnapshot.dailyCalories)
                     ForEach(day.items, id: \.id) { item in
@@ -286,6 +289,7 @@ private struct ActiveTodayScreen: View {
                         .accessibilityIdentifier("active.meal.\(item.id)")
                         .accessibilityHint("Opens recipe details and safe swap options")
                     }
+                    ActiveSyncBanner()
                 }
                 .padding(18)
                 .padding(.bottom, 28)
@@ -1342,6 +1346,8 @@ private struct TodayScreen: View {
     @State private var selectedMeal: DemoMeal?
 
     private var day: DemoDay { store.days[0] }
+    private var featuredMeal: DemoMeal? { day.meals.last }
+    private var supportingMeals: [DemoMeal] { Array(day.meals.dropLast()) }
 
     var body: some View {
         ScrollView {
@@ -1349,16 +1355,20 @@ private struct TodayScreen: View {
                 VStack(alignment: .leading, spacing: 6) {
                     Text(verbatim: illustrativeDate(day, abbreviated: false).uppercased())
                         .font(.caption.bold())
-                        .foregroundStyle(.secondary)
+                        .tracking(1.2)
+                        .foregroundStyle(NourishTheme.inkSoft)
                     Text("Good morning, Rhea.")
-                        .font(.largeTitle.weight(.semibold))
+                        .font(.system(.largeTitle, design: .serif, weight: .semibold))
+                        .foregroundStyle(NourishTheme.ink)
                     Text("A calm start to a well-fed week.")
-                        .foregroundStyle(.secondary)
+                        .foregroundStyle(NourishTheme.inkSoft)
                 }
 
-                IllustrativePlanBanner()
-
-                NutritionSummary(day: day)
+                if let featuredMeal {
+                    IllustrativeMealHero(meal: featuredMeal) {
+                        selectedMeal = featuredMeal
+                    }
+                }
 
                 if let mealName = store.lastSwappedMealName {
                     HStack(alignment: .top, spacing: 10) {
@@ -1375,14 +1385,16 @@ private struct TodayScreen: View {
                     .background(NourishTheme.limeSoft, in: RoundedRectangle(cornerRadius: 18))
                 }
 
-                sectionTitle("Today’s meals", subtitle: "Values are illustrative estimates")
-                ForEach(day.meals) { meal in
+                sectionTitle("Today’s plan", subtitle: "Practical meals, ready when you are")
+                ForEach(supportingMeals) { meal in
                     MealCard(meal: meal, status: store.status(for: meal)) {
                         selectedMeal = meal
                     }
                 }
 
+                NutritionSummary(day: day)
                 VarietyCard()
+                IllustrativePlanBanner()
             }
             .padding(.horizontal, 18)
             .padding(.top, 12)
@@ -1395,6 +1407,116 @@ private struct TodayScreen: View {
             RecipeDetailSheet(meal: meal)
                 .environmentObject(store)
         }
+    }
+}
+
+private struct IllustrativeMealHero: View {
+    let meal: DemoMeal
+    let openMeal: () -> Void
+
+    var body: some View {
+        ZStack(alignment: .bottomLeading) {
+            heroBackground
+
+            LinearGradient(
+                colors: [Color.black.opacity(0.04), Color.black.opacity(0.16), Color.black.opacity(0.88)],
+                startPoint: .top,
+                endPoint: .bottom
+            )
+
+            VStack(alignment: .leading, spacing: 0) {
+                HStack {
+                    Text(verbatim: meal.slot.uppercased())
+                        .font(.caption.bold())
+                        .tracking(1.2)
+                    Spacer()
+                    Label("Vegetarian", systemImage: "leaf.fill")
+                        .font(.caption.bold())
+                }
+                .foregroundStyle(Color.white.opacity(0.90))
+
+                Spacer()
+
+                Text("Tonight")
+                    .font(.subheadline)
+                    .foregroundStyle(Color.white.opacity(0.78))
+                Text(meal.name)
+                    .font(.system(size: 34, weight: .semibold, design: .serif))
+                    .foregroundStyle(.white)
+                    .padding(.top, 3)
+                nutritionAndTimeSummary(
+                    calories: Double(meal.calories),
+                    proteinGrams: Double(meal.protein),
+                    activeMinutes: meal.activeMinutes
+                )
+                .font(.subheadline.weight(.medium))
+                .foregroundStyle(Color.white.opacity(0.86))
+                .padding(.top, 8)
+
+                HStack(spacing: 10) {
+                    Button(action: openMeal) {
+                        Label("View recipe", systemImage: "book.closed")
+                            .font(.subheadline.bold())
+                            .foregroundStyle(NourishTheme.ink)
+                            .padding(.horizontal, 15)
+                            .frame(minHeight: 46)
+                            .background(.white, in: RoundedRectangle(cornerRadius: 14))
+                    }
+                    .buttonStyle(.plain)
+
+                    Button(action: openMeal) {
+                        Label("Meal options", systemImage: "arrow.left.arrow.right")
+                            .font(.subheadline.bold())
+                            .foregroundStyle(.white)
+                            .padding(.horizontal, 15)
+                            .frame(minHeight: 46)
+                            .background(Color.white.opacity(0.16), in: RoundedRectangle(cornerRadius: 14))
+                            .overlay {
+                                RoundedRectangle(cornerRadius: 14)
+                                    .stroke(Color.white.opacity(0.34), lineWidth: 1)
+                            }
+                    }
+                    .buttonStyle(.plain)
+                }
+                .padding(.top, 18)
+            }
+            .padding(20)
+        }
+        .frame(height: 410)
+        .clipShape(RoundedRectangle(cornerRadius: 28))
+        .shadow(color: NourishTheme.ink.opacity(0.12), radius: 24, y: 12)
+        .accessibilityElement(children: .contain)
+    }
+
+    @ViewBuilder
+    private var heroBackground: some View {
+        if meal.recipeID == "palak-paneer", let mealImage {
+            Image(uiImage: mealImage)
+                .resizable()
+                .scaledToFill()
+                .frame(maxWidth: .infinity)
+                .frame(height: 410)
+                .clipped()
+        } else {
+            ZStack {
+                LinearGradient(
+                    colors: [NourishTheme.forest, NourishTheme.forest.opacity(0.72)],
+                    startPoint: .topLeading,
+                    endPoint: .bottomTrailing
+                )
+                Image(systemName: "fork.knife")
+                    .font(.system(size: 112, weight: .light))
+                    .foregroundStyle(Color.white.opacity(0.12))
+                    .offset(x: 78, y: -52)
+            }
+        }
+    }
+
+    private var mealImage: UIImage? {
+        guard let url = Bundle.main.url(forResource: "palak-paneer-meal", withExtension: "png") else {
+            return nil
+        }
+        return UIImage(contentsOfFile: url.path)
     }
 }
 
@@ -1475,20 +1597,20 @@ private struct IllustrativePlanBanner: View {
 
     private var title: LocalizedStringKey {
         switch activeStore.state {
-        case .loading: "Checking for your adopted plan"
-        case .noActivePlan: "No adopted reviewed plan yet"
-        case .pending, .conflict: "Plan service unavailable"
-        case .signedOut: "Illustrative local preview"
+        case .loading: "Refreshing your plan"
+        case .noActivePlan: "Preview plan"
+        case .pending, .conflict: "Showing your saved preview"
+        case .signedOut: "Preview plan"
         case .synced: "Reviewed plan ready"
         }
     }
 
     private var detail: LocalizedStringKey {
         switch activeStore.state {
-        case .loading: "Your saved illustrative week remains visible while Nourish refreshes."
-        case .noActivePlan: "Generate and adopt a week after the catalogue has enough licensed, reviewed recipes."
-        case .pending, .conflict: "This visible week is illustrative; Nourish will never relabel draft meals as production content."
-        case .signedOut: "Sign in to restore an adopted reviewed plan. These meals and values are development fixtures."
+        case .loading: "Your saved week stays visible while Nourish refreshes."
+        case .noActivePlan: "Explore the experience with sample meals, then create and adopt your own reviewed week."
+        case .pending, .conflict: "Your sample week remains available while the planning service reconnects."
+        case .signedOut: "Explore with sample meals. Sign in later to restore your own reviewed week."
         case .synced: "Switching to your reviewed plan."
         }
     }

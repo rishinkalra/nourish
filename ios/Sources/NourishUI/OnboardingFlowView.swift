@@ -80,7 +80,7 @@ public struct OnboardingFlowView: View {
     @ViewBuilder private var stepContent: some View {
         switch step {
         case .valueProposition:
-            heading("Seven days. Far fewer decisions.", "We’ll turn your preferences, budget, and cooking rhythm into practical meals, groceries, and prep.")
+            onboardingWelcome
         case .wellnessEligibility:
             heading("First, a quick safety check.", "Nourish supports general wellness and meal organization—not clinical diets.")
             Toggle("I am 18 years or older", isOn: $draft.confirmsAdult)
@@ -411,11 +411,88 @@ public struct OnboardingFlowView: View {
     private func heading(_ title: LocalizedStringKey, _ subtitle: LocalizedStringKey) -> some View {
         VStack(alignment: .leading, spacing: 10) {
             Text(title)
-                .font(.largeTitle.weight(.semibold))
+                .font(.system(.largeTitle, design: .serif, weight: .semibold))
+                .foregroundStyle(NourishTheme.ink)
                 .accessibilityAddTraits(.isHeader)
                 .accessibilityFocused($headingIsFocused)
-            Text(subtitle).foregroundStyle(.secondary)
+            Text(subtitle)
+                .foregroundStyle(NourishTheme.inkSoft)
+                .lineSpacing(3)
         }
+    }
+
+    private var onboardingWelcome: some View {
+        VStack(alignment: .leading, spacing: 20) {
+            ZStack(alignment: .bottomLeading) {
+                RoundedRectangle(cornerRadius: 30)
+                    .fill(
+                        LinearGradient(
+                            colors: [NourishTheme.ink, NourishTheme.forest, Color(red: 0.18, green: 0.40, blue: 0.30)],
+                            startPoint: .topLeading,
+                            endPoint: .bottomTrailing
+                        )
+                    )
+                Circle()
+                    .stroke(Color.white.opacity(0.10), lineWidth: 1)
+                    .frame(width: 260, height: 260)
+                    .offset(x: 210, y: 110)
+                Circle()
+                    .fill(NourishTheme.limeSoft.opacity(0.12))
+                    .frame(width: 170, height: 170)
+                    .offset(x: 250, y: 140)
+                VStack(alignment: .leading, spacing: 22) {
+                    HStack(spacing: 10) {
+                        Text(verbatim: "n")
+                            .font(.system(size: 24, weight: .semibold, design: .serif).italic())
+                            .foregroundStyle(NourishTheme.forest)
+                            .frame(width: 38, height: 38)
+                            .background(NourishTheme.limeSoft, in: RoundedRectangle(cornerRadius: 13))
+                        Text(verbatim: "Nourish")
+                            .font(.title3.bold())
+                            .foregroundStyle(.white)
+                    }
+                    Spacer(minLength: 28)
+                    VStack(alignment: .leading, spacing: 10) {
+                        Text("YOUR WEEK, WELL FED")
+                            .font(.caption.bold())
+                            .tracking(1.5)
+                            .foregroundStyle(Color.white.opacity(0.72))
+                        Text("Seven days. Far fewer decisions.")
+                            .font(.system(size: 40, weight: .semibold, design: .serif))
+                            .foregroundStyle(.white)
+                            .accessibilityAddTraits(.isHeader)
+                            .accessibilityFocused($headingIsFocused)
+                    }
+                }
+                .padding(24)
+            }
+            .frame(minHeight: 330)
+            .clipped()
+
+            Text("We’ll turn your preferences, budget, and cooking rhythm into practical meals, groceries, and prep.")
+                .font(.title3)
+                .foregroundStyle(NourishTheme.inkSoft)
+                .lineSpacing(4)
+
+            VStack(alignment: .leading, spacing: 12) {
+                welcomeProof("Reviewed recipe data", systemImage: "checkmark.seal.fill")
+                welcomeProof("Hard allergy exclusions", systemImage: "shield.lefthalf.filled")
+                welcomeProof("Plans built around your cooking days", systemImage: "calendar.badge.checkmark")
+            }
+        }
+    }
+
+    private func welcomeProof(_ title: LocalizedStringKey, systemImage: String) -> some View {
+        Label(title, systemImage: systemImage)
+            .font(.subheadline.weight(.semibold))
+            .foregroundStyle(NourishTheme.forest)
+            .padding(.horizontal, 14)
+            .frame(maxWidth: .infinity, minHeight: 48, alignment: .leading)
+            .background(NourishTheme.card, in: RoundedRectangle(cornerRadius: 15))
+            .overlay {
+                RoundedRectangle(cornerRadius: 15)
+                    .stroke(NourishTheme.forest.opacity(0.10), lineWidth: 1)
+            }
     }
 
     private func summaryRow(_ label: LocalizedStringKey, _ value: Text) -> some View {

@@ -15,6 +15,7 @@
 		A20000000000000000000004 /* NourishAPI in Frameworks */ = {isa = PBXBuildFile; productRef = A20000000000000000000091 /* NourishAPI */; };
 		A20000000000000000000005 /* NourishUI in Frameworks */ = {isa = PBXBuildFile; productRef = A20000000000000000000092 /* NourishUI */; };
 		A30000000000000000000001 /* Localizable.xcstrings in Resources */ = {isa = PBXBuildFile; fileRef = A30000000000000000000002 /* Localizable.xcstrings */; };
+		A30000000000000000000003 /* palak-paneer-meal.png in Resources */ = {isa = PBXBuildFile; fileRef = A30000000000000000000004 /* palak-paneer-meal.png */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -35,6 +36,7 @@
 		A20000000000000000000012 /* NourishAppTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = NourishAppTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		A20000000000000000000013 /* NourishAppUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = NourishAppUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		A30000000000000000000002 /* Localizable.xcstrings */ = {isa = PBXFileReference; lastKnownFileType = text.json.xcstrings; path = Localizable.xcstrings; sourceTree = "<group>"; };
+		A30000000000000000000004 /* palak-paneer-meal.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = palak-paneer-meal.png; path = ../../../assets/palak-paneer-meal.png; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -81,6 +83,7 @@
 			children = (
 				A10000000000000000000002 /* NourishApp.swift */,
 				A30000000000000000000002 /* Localizable.xcstrings */,
+				A30000000000000000000004 /* palak-paneer-meal.png */,
 			);
 			path = NourishApp;
 			sourceTree = "<group>";
@@ -228,6 +231,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				A30000000000000000000001 /* Localizable.xcstrings in Resources */,
+				A30000000000000000000003 /* palak-paneer-meal.png in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

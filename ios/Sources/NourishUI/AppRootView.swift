@@ -312,6 +312,8 @@ struct NourishRGB: Equatable, Sendable {
 }
 
 enum NourishTheme {
+    static let inkRGB = NourishRGB(red: 0.09, green: 0.20, blue: 0.17)
+    static let inkSoftRGB = NourishRGB(red: 0.33, green: 0.39, blue: 0.37)
     static let forestRGB = NourishRGB(red: 0.11, green: 0.29, blue: 0.22)
     static let leafRGB = NourishRGB(red: 0.34, green: 0.49, blue: 0.22)
     static let limeSoftRGB = NourishRGB(red: 0.91, green: 0.96, blue: 0.80)
@@ -319,10 +321,12 @@ enum NourishTheme {
     static let amberSoftRGB = NourishRGB(red: 1.0, green: 0.93, blue: 0.73)
     static let whiteRGB = NourishRGB(red: 1, green: 1, blue: 1)
 
+    static let ink = inkRGB.color
+    static let inkSoft = inkSoftRGB.color
     static let forest = forestRGB.color
     static let leaf = leafRGB.color
     static let limeSoft = limeSoftRGB.color
     static let paper = paperRGB.color
-    static let card = Color.white.opacity(0.82)
+    static let card = Color(red: 1.0, green: 0.99, blue: 0.98)
     static let amberSoft = amberSoftRGB.color
 }
