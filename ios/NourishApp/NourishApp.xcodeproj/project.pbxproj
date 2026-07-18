@@ -394,7 +394,7 @@
 			buildSettings = {
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
-				DEVELOPMENT_TEAM = "";
+				DEVELOPMENT_TEAM = B59NRU7RVT;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = NO;
 				INFOPLIST_FILE = NourishApp/Info.plist;
@@ -422,7 +422,7 @@
 			buildSettings = {
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
-				DEVELOPMENT_TEAM = "";
+				DEVELOPMENT_TEAM = B59NRU7RVT;
 				GENERATE_INFOPLIST_FILE = NO;
 				INFOPLIST_FILE = NourishApp/Info.plist;
 				INFOPLIST_KEY_CFBundleDisplayName = Nourish;
