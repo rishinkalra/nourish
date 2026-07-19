@@ -38,7 +38,7 @@ The application has been compiled, installed, and launched successfully on the i
 
 ## Run the local API
 
-From `backend`, run `npm ci`, then `npm test` or `npm start` for the development service at `127.0.0.1:8080`. Development magic links are printed to that terminal; raw tokens are never returned by the request endpoint. Supplying `DATABASE_URL` enables durable consumer persistence, and a separate leased worker executes plan generation, portable exports and account erasure. See `backend/README.md`, `docs/STAGING_DEPLOYMENT_METHOD.md`, `docs/BACKEND_DURABILITY_METHOD.md`, `docs/DURABLE_PLANNER_METHOD.md`, and `docs/AUTH_CONTRACT_EXTENSION.md` for the runtime boundary and remaining production gaps.
+From `backend`, run `npm ci`, then `npm test` or `npm start` for the development service at `127.0.0.1:8080`. Development magic links are printed to that terminal; raw tokens are never returned by the request endpoint. Supplying `DATABASE_URL` enables durable consumer persistence, and a separate leased worker executes plan generation, portable exports and account erasure. For a production-shaped laptop environment with PostgreSQL, migrations, worker, synthetic catalogue and an automated full-flow check, see `docs/LOCAL_END_TO_END_METHOD.md`. See `backend/README.md`, `docs/STAGING_DEPLOYMENT_METHOD.md`, `docs/BACKEND_DURABILITY_METHOD.md`, `docs/DURABLE_PLANNER_METHOD.md`, and `docs/AUTH_CONTRACT_EXTENSION.md` for the runtime boundary and remaining production gaps.
 
 ## Verify a release candidate
 

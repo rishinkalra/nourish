@@ -28,8 +28,7 @@ public enum APIBaseURLPolicy {
             throw APIBaseURLConfigurationError.invalidOrigin
         }
         if scheme != "https" {
-            let localHosts = Set(["localhost", "127.0.0.1", "::1"])
-            guard scheme == "http", allowsLocalHTTP, localHosts.contains(host) else {
+            guard scheme == "http", allowsLocalHTTP, isPrivateDevelopmentHost(host) else {
                 throw APIBaseURLConfigurationError.insecureRemoteOrigin
             }
         }
@@ -40,5 +39,20 @@ public enum APIBaseURLPolicy {
             throw APIBaseURLConfigurationError.invalidOrigin
         }
         return url
+    }
+
+    private static func isPrivateDevelopmentHost(_ host: String) -> Bool {
+        if ["localhost", "127.0.0.1", "::1"].contains(host) || host.hasSuffix(".local") {
+            return true
+        }
+        let octets = host.split(separator: ".").compactMap { Int($0) }
+        if octets.count == 4, octets.allSatisfy({ (0...255).contains($0) }) {
+            return octets[0] == 10
+                || (octets[0] == 172 && (16...31).contains(octets[1]))
+                || (octets[0] == 192 && octets[1] == 168)
+                || (octets[0] == 169 && octets[1] == 254)
+        }
+        return host.hasPrefix("fc") || host.hasPrefix("fd") || host.hasPrefix("fe8") || host.hasPrefix("fe9")
+            || host.hasPrefix("fea") || host.hasPrefix("feb")
     }
 }

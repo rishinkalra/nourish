@@ -41,6 +41,8 @@
 	<true/>
 	<key>NSAppTransportSecurity</key>
 	<dict>
+		<key>NSAllowsLocalNetworking</key>
+		<true/>
 		<key>NSExceptionDomains</key>
 		<dict>
 			<key>localhost</key>
@@ -52,6 +54,8 @@
 			</dict>
 		</dict>
 	</dict>
+	<key>NSLocalNetworkUsageDescription</key>
+	<string>Nourish connects to your Mac during local app testing.</string>
 	<key>NourishSubscriptionProductIDs</key>
 	<array/>
 	<key>NourishAPIBaseURL</key>

@@ -1,0 +1,44 @@
+#!/bin/sh
+set -eu
+
+ROOT=$(CDPATH= cd -- "$(dirname -- "$0")/.." && pwd)
+COMPOSE_FILE="$ROOT/compose.local.yml"
+
+if command -v docker >/dev/null 2>&1; then
+  DOCKER=docker
+elif [ -x /Applications/Docker.app/Contents/Resources/bin/docker ]; then
+  DOCKER=/Applications/Docker.app/Contents/Resources/bin/docker
+else
+  echo "Docker Desktop is not installed or has not finished starting."
+  exit 1
+fi
+
+command=${1:-up}
+case "$command" in
+  up)
+    "$DOCKER" compose -f "$COMPOSE_FILE" up --build -d db migrate seed api worker web
+    "$DOCKER" compose -f "$COMPOSE_FILE" ps
+    ;;
+  test)
+    "$DOCKER" compose -f "$COMPOSE_FILE" --profile tools build smoke
+    "$DOCKER" compose -f "$COMPOSE_FILE" --profile tools run --rm --no-deps smoke
+    ;;
+  status)
+    "$DOCKER" compose -f "$COMPOSE_FILE" ps
+    ;;
+  logs)
+    "$DOCKER" compose -f "$COMPOSE_FILE" logs --tail=150 api worker
+    ;;
+  down)
+    "$DOCKER" compose -f "$COMPOSE_FILE" down
+    ;;
+  reset)
+    echo "Resetting removes only the local Nourish database and local private test files."
+    "$DOCKER" compose -f "$COMPOSE_FILE" down --volumes
+    "$DOCKER" compose -f "$COMPOSE_FILE" up --build -d db migrate seed api worker web
+    ;;
+  *)
+    echo "Usage: scripts/local-stack {up|test|status|logs|down|reset}"
+    exit 2
+    ;;
+esac

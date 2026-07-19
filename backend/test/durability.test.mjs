@@ -143,6 +143,8 @@ test("PostgreSQL profiles use atomic compare-and-set revisions", async () => {
   const created = await service.update("user-1", { profile, changeScope: "currentAndFuturePlans", expectedRevision: 0 });
   assert.equal(created.revision, 1);
   assert.match(calls[0].text, /ON CONFLICT \(user_id\) DO NOTHING/);
+  assert.match(calls[0].text, /created_at, updated_at[\s\S]*\$4, \$4/);
+  assert.equal(calls[0].values.length, 4);
   await assert.rejects(
     () => service.update("user-1", { profile, changeScope: "nextPlanOnly", expectedRevision: 1 }),
     (error) => error.code === "CONFLICT",

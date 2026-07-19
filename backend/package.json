@@ -9,6 +9,8 @@
     "config:check": "node src/config-check-cli.mjs",
     "db:migrate": "node src/migrate-cli.mjs",
     "admin:provision": "node src/admin-provision-cli.mjs",
+    "local:seed": "node src/local-seed-cli.mjs",
+    "local:e2e": "node src/local-e2e-smoke-cli.mjs",
     "worker": "node src/worker-cli.mjs",
     "staging:smoke": "node src/staging-smoke-cli.mjs",
     "digitalocean:preflight": "node src/digitalocean-preflight-cli.mjs"

@@ -1,0 +1,119 @@
+name: project-nourish-local
+
+x-backend: &backend
+  build:
+    context: ./backend
+  image: project-nourish-backend:local
+  environment: &backend-environment
+    NODE_ENV: development
+    DATABASE_URL: postgres://nourish:nourish-local-only@db:5432/nourish_local
+    DATABASE_REQUIRE_TLS: "false"
+    DATABASE_AUTO_MIGRATE: "false"
+    NOURISH_PRIVATE_OBJECT_STORE: filesystem
+    NOURISH_PRIVATE_OBJECT_ROOT: /var/lib/nourish/private-objects
+    NOURISH_PLANNER_ELIGIBLE_LOCALES: en-IN
+    NOURISH_PLANNER_NUTRITION_CALCULATION_VERSIONS: local-synthetic-v1
+    NOURISH_ADMIN_KEY: local-nourish-admin-only
+    NOURISH_ADMIN_ORIGIN: http://127.0.0.1:4173
+
+services:
+  db:
+    image: postgres:16-bookworm
+    environment:
+      POSTGRES_USER: nourish
+      POSTGRES_PASSWORD: nourish-local-only
+      POSTGRES_DB: nourish_local
+    ports:
+      - "127.0.0.1:5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U nourish -d nourish_local"]
+      interval: 3s
+      timeout: 3s
+      retries: 20
+    restart: unless-stopped
+
+  migrate:
+    <<: *backend
+    command: ["node", "src/migrate-cli.mjs"]
+    environment:
+      <<: *backend-environment
+      NODE_ENV: development
+    depends_on:
+      db:
+        condition: service_healthy
+    restart: "no"
+
+  seed:
+    <<: *backend
+    command: ["node", "src/local-seed-cli.mjs"]
+    environment:
+      <<: *backend-environment
+      NOURISH_ENABLE_LOCAL_SEED: "true"
+    depends_on:
+      migrate:
+        condition: service_completed_successfully
+    restart: "no"
+
+  api:
+    <<: *backend
+    command: ["node", "src/index.mjs"]
+    environment:
+      <<: *backend-environment
+      HOST: 0.0.0.0
+      PORT: "8080"
+    ports:
+      - "8080:8080"
+    volumes:
+      - private_objects:/var/lib/nourish/private-objects
+    depends_on:
+      seed:
+        condition: service_completed_successfully
+    healthcheck:
+      test: ["CMD", "node", "-e", "fetch('http://127.0.0.1:8080/readyz').then(r=>{if(!r.ok)process.exit(1)}).catch(()=>process.exit(1))"]
+      interval: 5s
+      timeout: 3s
+      retries: 20
+      start_period: 5s
+    restart: unless-stopped
+
+  worker:
+    <<: *backend
+    command: ["node", "src/worker-cli.mjs"]
+    environment:
+      <<: *backend-environment
+      NOURISH_WORKER_ID: local-worker
+    volumes:
+      - private_objects:/var/lib/nourish/private-objects
+    depends_on:
+      seed:
+        condition: service_completed_successfully
+    restart: unless-stopped
+
+  web:
+    image: nginx:1.27-alpine
+    ports:
+      - "127.0.0.1:4173:80"
+    volumes:
+      - ./:/usr/share/nginx/html:ro
+    restart: unless-stopped
+
+  smoke:
+    <<: *backend
+    command: ["node", "src/local-e2e-smoke-cli.mjs"]
+    environment:
+      <<: *backend-environment
+      NOURISH_ENABLE_LOCAL_E2E: "true"
+      NOURISH_LOCAL_BASE_URL: http://api:8080
+    depends_on:
+      api:
+        condition: service_healthy
+      worker:
+        condition: service_started
+    profiles: ["tools"]
+    restart: "no"
+
+volumes:
+  postgres_data:
+  private_objects:

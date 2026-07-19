@@ -17,15 +17,14 @@ export class PostgresProfileStore {
   }
 
   async compareAndSet(userID, request, updatedAt) {
-    const values = [userID, JSON.stringify(request.profile), request.changeScope, request.expectedRevision, updatedAt];
     const result = request.expectedRevision === 0
       ? await this.pool.query(
         `INSERT INTO profiles (
             user_id, revision, effective_scope, profile_json, created_at, updated_at
-         ) VALUES ($1, 1, $3, $2::jsonb, $5, $5)
+         ) VALUES ($1, 1, $3, $2::jsonb, $4, $4)
          ON CONFLICT (user_id) DO NOTHING
          RETURNING profile_json, revision, effective_scope, updated_at`,
-        values,
+        [userID, JSON.stringify(request.profile), request.changeScope, updatedAt],
       )
       : await this.pool.query(
         `UPDATE profiles
@@ -35,7 +34,7 @@ export class PostgresProfileStore {
                 updated_at = $5
           WHERE user_id = $1 AND revision = $4
         RETURNING profile_json, revision, effective_scope, updated_at`,
-        values,
+        [userID, JSON.stringify(request.profile), request.changeScope, request.expectedRevision, updatedAt],
       );
     if (!result.rows[0]) {
       throw new ProfileError("CONFLICT", "Your preferences changed elsewhere. Refresh and try again.", 409);
