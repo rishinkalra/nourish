@@ -25,4 +25,4 @@ The end-to-end check uses a fresh synthetic account on every run. It verifies he
 
 ## Phone testing
 
-Keep the Mac and iPhone on the same Wi-Fi network. Build the Debug app with `NOURISH_API_BASE_URL` set to the Mac's private-LAN address, for example `http://192.168.1.20:8080`. No LAN address is committed to source control.
+Keep the Mac and iPhone on the same Wi-Fi network. Read the Mac's Bonjour name with `scutil --get LocalHostName`, then build the Debug app with `NOURISH_API_BASE_URL` set to that `.local` host, for example `http://Nourish-Mac.local:8080`. Using the Bonjour host aligns with iOS Local Network and App Transport Security behavior and avoids an address change after DHCP renewal. No machine-specific host is committed to source control.

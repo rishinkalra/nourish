@@ -22,13 +22,6 @@ final class NourishAppTests: XCTestCase {
         )
         XCTAssertEqual(
             try APIBaseURLPolicy.validated(
-                rawValue: "http://192.168.1.20:8080",
-                allowsLocalHTTP: true
-            ).absoluteString,
-            "http://192.168.1.20:8080"
-        )
-        XCTAssertEqual(
-            try APIBaseURLPolicy.validated(
                 rawValue: "http://nourish-mac.local:8080",
                 allowsLocalHTTP: true
             ).absoluteString,
@@ -37,7 +30,7 @@ final class NourishAppTests: XCTestCase {
         XCTAssertThrowsError(
             try APIBaseURLPolicy.validated(
                 rawValue: "http://192.168.1.20:8080",
-                allowsLocalHTTP: false
+                allowsLocalHTTP: true
             )
         ) { error in
             XCTAssertEqual(error as? APIBaseURLConfigurationError, .insecureRemoteOrigin)
