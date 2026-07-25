@@ -2,7 +2,7 @@
   "IOS-AUTH-001": {
     "status": "partial",
     "evidence": "backend/src/auth-service.mjs; backend/src/postgres-auth-service.mjs; backend/src/email-delivery-service.mjs; backend/src/runtime-configuration.mjs; backend/src/server.mjs; backend/test/auth-profile.test.mjs; backend/test/email-delivery.test.mjs; ios/Sources/NourishAPI/Authentication.swift; ios/Sources/NourishAPI/HTTPClient.swift; ios/Sources/NourishUI/AuthenticationStore.swift; ios/Sources/NourishUI/OnboardingFlowView.swift; docs/EMAIL_DELIVERY_METHOD.md; docs/nourish-ios-authenticated.png",
-    "notes": "Email magic-link request, one-time callback exchange, real URLSession wiring, Keychain persistence, onboarding method selection, fail-closed production provider configuration, privacy-minimized text/HTML delivery, and failed-delivery token cleanup are implemented. Apple capability/verifier configuration plus live sender-domain and inbox delivery validation remain."
+    "notes": "Email magic-link request, one-time callback exchange, real URLSession wiring, Keychain persistence, onboarding method selection, fail-closed Brevo/Postmark configuration, privacy-minimized text/HTML delivery, provider idempotency, and failed-delivery token cleanup are implemented. Apple capability/verifier configuration plus live sender-domain, Brevo tracking/retention settings, and inbox delivery validation remain."
   },
   "IOS-AUTH-002": {
     "status": "partial",

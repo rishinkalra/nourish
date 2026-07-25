@@ -1,6 +1,7 @@
 import { MemoryMagicLinkDelivery } from "./auth-service.mjs";
 
 const POSTMARK_ENDPOINT = "https://api.postmarkapp.com/email";
+const BREVO_ENDPOINT = "https://api.brevo.com/v3/smtp/email";
 const DEFAULT_MAGIC_LINK_PREFIX = "nourish://auth/magic-link?token=";
 
 export class EmailDeliveryError extends Error {
@@ -39,32 +40,20 @@ export class PostmarkMagicLinkDelivery {
   }
 
   async send({ email, token, requestID, expiresAt }) {
-    if (!validMailbox(email) || !/^[A-Za-z0-9_-]{20,200}$/.test(String(token ?? ""))) {
-      throw new EmailDeliveryError();
-    }
-    const link = `${this.magicLinkPrefix}${encodeURIComponent(token)}`;
-    const expiry = new Date(expiresAt);
-    const expiryText = Number.isNaN(expiry.getTime())
-      ? "15 minutes"
-      : expiry.toISOString();
+    const message = magicLinkMessage({
+      email, token, requestID, expiresAt, magicLinkPrefix: this.magicLinkPrefix,
+    });
     const payload = {
       From: this.from,
-      To: email,
-      Subject: "Your Nourish sign-in link",
-      TextBody: [
-        "Sign in to Nourish",
-        "",
-        `Open this secure link: ${link}`,
-        "",
-        `This one-time link expires at ${expiryText}.`,
-        "If you did not request it, you can safely ignore this email.",
-      ].join("\n"),
-      HtmlBody: magicLinkHTML({ link, expiryText }),
+      To: message.email,
+      Subject: message.subject,
+      TextBody: message.text,
+      HtmlBody: message.html,
       MessageStream: "outbound",
       Tag: "magic-link",
       TrackOpens: false,
       TrackLinks: "None",
-      Metadata: { request_id: safeRequestID(requestID) },
+      Metadata: { request_id: message.requestID },
     };
     try {
       const response = await this.fetchImplementation(this.endpoint, {
@@ -90,6 +79,69 @@ export class PostmarkMagicLinkDelivery {
   }
 }
 
+export class BrevoMagicLinkDelivery {
+  constructor({
+    apiKey,
+    from,
+    magicLinkPrefix = DEFAULT_MAGIC_LINK_PREFIX,
+    fetchImplementation = globalThis.fetch,
+    endpoint = BREVO_ENDPOINT,
+    timeoutMilliseconds = 10_000,
+  } = {}) {
+    if (typeof apiKey !== "string" || apiKey.length < 20) {
+      throw new Error("A Brevo API key is required.");
+    }
+    const sender = parseMailbox(from);
+    if (!sender) throw new Error("A valid magic-link sender address is required.");
+    if (!validMagicLinkPrefix(magicLinkPrefix)) throw new Error("The magic-link URL prefix is invalid.");
+    if (typeof fetchImplementation !== "function") throw new Error("A fetch implementation is required.");
+    const endpointURL = new URL(endpoint);
+    if (endpointURL.protocol !== "https:") throw new Error("The email provider endpoint must use HTTPS.");
+    this.apiKey = apiKey;
+    this.sender = sender;
+    this.magicLinkPrefix = magicLinkPrefix;
+    this.fetchImplementation = fetchImplementation;
+    this.endpoint = endpointURL.toString();
+    this.timeoutMilliseconds = timeoutMilliseconds;
+  }
+
+  async send({ email, token, requestID, expiresAt }) {
+    const message = magicLinkMessage({
+      email, token, requestID, expiresAt, magicLinkPrefix: this.magicLinkPrefix,
+    });
+    const payload = {
+      sender: this.sender,
+      to: [{ email: message.email }],
+      subject: message.subject,
+      textContent: message.text,
+      htmlContent: message.html,
+      tags: ["magic-link"],
+      headers: { "Idempotency-Key": message.requestID },
+    };
+    try {
+      const response = await this.fetchImplementation(this.endpoint, {
+        method: "POST",
+        headers: {
+          accept: "application/json",
+          "content-type": "application/json",
+          "api-key": this.apiKey,
+        },
+        body: JSON.stringify(payload),
+        signal: AbortSignal.timeout(this.timeoutMilliseconds),
+      });
+      if (!response.ok) throw new EmailDeliveryError();
+      const result = await response.json();
+      if (typeof result?.messageId !== "string" || !result.messageId) {
+        throw new EmailDeliveryError();
+      }
+      return { provider: "brevo", providerMessageID: result.messageId };
+    } catch (error) {
+      if (error instanceof EmailDeliveryError) throw error;
+      throw new EmailDeliveryError();
+    }
+  }
+}
+
 export function createMagicLinkDelivery(configuration, options = {}) {
   if (!configuration?.production && !configuration?.emailProvider) {
     return new MemoryMagicLinkDelivery();
@@ -102,7 +154,38 @@ export function createMagicLinkDelivery(configuration, options = {}) {
       ...options,
     });
   }
+  if (configuration?.emailProvider === "brevo") {
+    return new BrevoMagicLinkDelivery({
+      apiKey: configuration.brevoAPIKey,
+      from: configuration.emailFrom,
+      magicLinkPrefix: configuration.magicLinkPrefix,
+      ...options,
+    });
+  }
   throw new Error("The configured email provider is unsupported.");
+}
+
+function magicLinkMessage({ email, token, requestID, expiresAt, magicLinkPrefix }) {
+  if (!validMailbox(email) || !/^[A-Za-z0-9_-]{20,200}$/.test(String(token ?? ""))) {
+    throw new EmailDeliveryError();
+  }
+  const link = `${magicLinkPrefix}${encodeURIComponent(token)}`;
+  const expiry = new Date(expiresAt);
+  const expiryText = Number.isNaN(expiry.getTime()) ? "15 minutes" : expiry.toISOString();
+  return {
+    email,
+    requestID: safeRequestID(requestID),
+    subject: "Your Nourish sign-in link",
+    text: [
+      "Sign in to Nourish",
+      "",
+      `Open this secure link: ${link}`,
+      "",
+      `This one-time link expires at ${expiryText}.`,
+      "If you did not request it, you can safely ignore this email.",
+    ].join("\n"),
+    html: magicLinkHTML({ link, expiryText }),
+  };
 }
 
 function magicLinkHTML({ link, expiryText }) {
@@ -127,6 +210,13 @@ function validMailbox(value) {
   if (typeof value !== "string" || value.length > 320) return false;
   const address = "[^<>\\s@]+@[^<>\\s@]+\\.[^<>\\s@]+";
   return new RegExp(`^(?:${address}|[^<>\\r\\n]{1,80}\\s+<${address}>)$`).test(value);
+}
+
+function parseMailbox(value) {
+  if (!validMailbox(value)) return null;
+  const named = value.match(/^([^<>\r\n]{1,80})\s+<([^<>\s@]+@[^<>\s@]+\.[^<>\s@]+)>$/);
+  if (named) return { name: named[1].trim(), email: named[2] };
+  return { email: value };
 }
 
 function validMagicLinkPrefix(value) {

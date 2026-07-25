@@ -21,7 +21,7 @@ Current status: Slices 1–6 provide the native product loop described below. Th
 ### Slice 2 — Accounts and profiles
 
 - Email magic-link exchange, rotating sessions, and revocation are implemented locally and connected to the app.
-- PostgreSQL identity/session and revisioned-profile adapters, privacy-safe distributed authentication rate limiting, and provider-neutral transactional email delivery with a fail-closed Postmark adapter are implemented. Next verify the sender domain and live delivery in staging, provision and validate the managed database, then calibrate limiter thresholds and email deliverability from operational telemetry.
+- PostgreSQL identity/session and revisioned-profile adapters, privacy-safe distributed authentication rate limiting, and provider-neutral transactional email delivery with fail-closed Brevo and Postmark adapters are implemented. Brevo is the preferred initial staging configuration. Next verify its sender domain, anonymous transactional tracking, short provider-log retention, and live inbox delivery; provision and validate the managed database; then calibrate limiter thresholds and email deliverability from operational telemetry.
 - Configure Sign in with Apple capability and server-side identity verification.
 - Authenticated onboarding profile sync through `GET/PATCH /v1/profile`, including offline retry and revision conflicts, is implemented against the local service.
 - Version consent, wellness acknowledgement, target source, and configurable guardrails.

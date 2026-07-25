@@ -86,8 +86,24 @@ test("production email delivery fails closed without complete provider credentia
       ...validProduction,
       NOURISH_EMAIL_PROVIDER: "unknown",
     }),
-    (error) => error.issues.includes("NOURISH_EMAIL_PROVIDER must be postmark"),
+    (error) => error.issues.includes("NOURISH_EMAIL_PROVIDER must be brevo or postmark"),
   );
+  assert.throws(
+    () => validateRuntimeConfiguration({
+      ...validProduction,
+      NOURISH_EMAIL_PROVIDER: "brevo",
+      NOURISH_POSTMARK_SERVER_TOKEN: undefined,
+      NOURISH_BREVO_API_KEY: undefined,
+    }),
+    (error) => error.issues.includes("NOURISH_BREVO_API_KEY is required for Brevo delivery"),
+  );
+  const brevo = validateRuntimeConfiguration({
+    ...validProduction,
+    NOURISH_EMAIL_PROVIDER: "brevo",
+    NOURISH_POSTMARK_SERVER_TOKEN: undefined,
+    NOURISH_BREVO_API_KEY: "brevo-test-api-key-long-enough",
+  });
+  assert.equal(brevo.emailProvider, "brevo");
 });
 
 test("development API remains intentionally usable with in-memory persistence", () => {

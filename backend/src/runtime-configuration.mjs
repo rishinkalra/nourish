@@ -21,6 +21,7 @@ export function validateRuntimeConfiguration(environment = process.env, { proces
   const emailProvider = nonEmpty(environment.NOURISH_EMAIL_PROVIDER);
   const emailFrom = nonEmpty(environment.NOURISH_EMAIL_FROM);
   const postmarkServerToken = nonEmpty(environment.NOURISH_POSTMARK_SERVER_TOKEN);
+  const brevoAPIKey = nonEmpty(environment.NOURISH_BREVO_API_KEY);
   const magicLinkPrefix = nonEmpty(environment.NOURISH_MAGIC_LINK_URL_PREFIX)
     ?? "nourish://auth/magic-link?token=";
   const databaseURL = nonEmpty(environment.DATABASE_URL);
@@ -93,8 +94,14 @@ export function validateRuntimeConfiguration(environment = process.env, { proces
   if (production && processType === "api" && !emailProvider) {
     issues.push("NOURISH_EMAIL_PROVIDER is required in production");
   }
-  if (emailProvider && emailProvider !== "postmark") {
-    issues.push("NOURISH_EMAIL_PROVIDER must be postmark");
+  if (emailProvider && !["brevo", "postmark"].includes(emailProvider)) {
+    issues.push("NOURISH_EMAIL_PROVIDER must be brevo or postmark");
+  }
+  if (emailProvider === "brevo") {
+    if (!validMailbox(emailFrom)) issues.push("NOURISH_EMAIL_FROM must be a valid sender address");
+    if (!brevoAPIKey || brevoAPIKey.length < 20) {
+      issues.push("NOURISH_BREVO_API_KEY is required for Brevo delivery");
+    }
   }
   if (emailProvider === "postmark") {
     if (!validMailbox(emailFrom)) issues.push("NOURISH_EMAIL_FROM must be a valid sender address");
@@ -171,6 +178,7 @@ export function validateRuntimeConfiguration(environment = process.env, { proces
     emailProvider,
     emailFrom,
     postmarkServerToken,
+    brevoAPIKey,
     magicLinkPrefix,
   });
 }

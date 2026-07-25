@@ -145,15 +145,15 @@ services:
         scope: RUN_TIME
         type: SECRET
       - key: NOURISH_EMAIL_PROVIDER
-        value: postmark
+        value: brevo
         scope: RUN_TIME
         type: GENERAL
       - key: NOURISH_EMAIL_FROM
         value: CHANGE_ME_EMAIL_FROM
         scope: RUN_TIME
         type: GENERAL
-      - key: NOURISH_POSTMARK_SERVER_TOKEN
-        value: CHANGE_ME_POSTMARK_SERVER_TOKEN
+      - key: NOURISH_BREVO_API_KEY
+        value: CHANGE_ME_BREVO_API_KEY
         scope: RUN_TIME
         type: SECRET
       - key: NOURISH_MAGIC_LINK_URL_PREFIX

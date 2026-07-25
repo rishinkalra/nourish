@@ -18,7 +18,7 @@ const validEnvironment = Object.freeze({
   NOURISH_DO_CONTROL_ROOM_ORIGIN: "https://control-staging.nourish.example",
   NOURISH_DO_RATE_LIMIT_SECRET: "digitalocean-test-rate-limit-secret-64-characters-long-value",
   NOURISH_DO_EMAIL_FROM: "Nourish <sign-in@nourish.example>",
-  NOURISH_DO_POSTMARK_SERVER_TOKEN: "postmark-test-server-token-long-enough",
+  NOURISH_DO_BREVO_API_KEY: "brevo-test-api-key-long-enough",
   NOURISH_DO_ENCRYPTION_ACTIVE_KEY_ID: "staging-2026-07",
   NOURISH_DO_ENCRYPTION_KEYS: JSON.stringify({
     "staging-2026-06": Buffer.alloc(32, 6).toString("base64"),
