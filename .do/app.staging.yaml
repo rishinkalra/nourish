@@ -144,6 +144,22 @@ services:
         value: CHANGE_ME_RATE_LIMIT_SECRET
         scope: RUN_TIME
         type: SECRET
+      - key: NOURISH_EMAIL_PROVIDER
+        value: postmark
+        scope: RUN_TIME
+        type: GENERAL
+      - key: NOURISH_EMAIL_FROM
+        value: CHANGE_ME_EMAIL_FROM
+        scope: RUN_TIME
+        type: GENERAL
+      - key: NOURISH_POSTMARK_SERVER_TOKEN
+        value: CHANGE_ME_POSTMARK_SERVER_TOKEN
+        scope: RUN_TIME
+        type: SECRET
+      - key: NOURISH_MAGIC_LINK_URL_PREFIX
+        value: "nourish://auth/magic-link?token="
+        scope: RUN_TIME
+        type: GENERAL
       - key: NOURISH_PRIVATE_OBJECT_ENCRYPTION_ACTIVE_KEY_ID
         value: CHANGE_ME_ENCRYPTION_ACTIVE_KEY_ID
         scope: RUN_TIME

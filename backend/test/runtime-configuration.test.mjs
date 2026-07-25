@@ -16,6 +16,9 @@ const validProduction = Object.freeze({
   NOURISH_PLANNER_ELIGIBLE_LOCALES: "en-IN",
   NOURISH_PLANNER_NUTRITION_CALCULATION_VERSIONS: "ifct-2017-v1",
   NOURISH_RATE_LIMIT_SECRET: "test-production-rate-limit-secret-32-bytes",
+  NOURISH_EMAIL_PROVIDER: "postmark",
+  NOURISH_EMAIL_FROM: "Nourish <sign-in@nourish.example>",
+  NOURISH_POSTMARK_SERVER_TOKEN: "test-postmark-server-token-long-enough",
 });
 
 test("production API configuration requires durable TLS persistence and planner allowlists", () => {
@@ -26,6 +29,7 @@ test("production API configuration requires durable TLS persistence and planner 
       && error.issues.includes("DATABASE_REQUIRE_TLS must be true in production")
       && error.issues.includes("NOURISH_PRIVATE_OBJECT_STORE must configure private export storage")
       && error.issues.includes("NOURISH_RATE_LIMIT_SECRET is required in production")
+      && error.issues.includes("NOURISH_EMAIL_PROVIDER is required in production")
       && error.issues.some((issue) => issue.startsWith("NOURISH_PLANNER_ELIGIBLE_LOCALES"))
       && error.issues.some((issue) => issue.startsWith("NOURISH_PLANNER_NUTRITION_CALCULATION_VERSIONS")),
   );
@@ -63,6 +67,27 @@ test("valid production settings are normalized without exposing secrets", () => 
   assert.equal(configuration.privateObjectEncryptionKeys["staging-2026-07"].length, 32);
   assert.equal(configuration.rateLimitSecret, validProduction.NOURISH_RATE_LIMIT_SECRET);
   assert.equal(configuration.trustProxy, false);
+  assert.equal(configuration.emailProvider, "postmark");
+  assert.equal(configuration.emailFrom, validProduction.NOURISH_EMAIL_FROM);
+});
+
+test("production email delivery fails closed without complete provider credentials", () => {
+  assert.throws(
+    () => validateRuntimeConfiguration({
+      ...validProduction,
+      NOURISH_EMAIL_FROM: "not-an-email",
+      NOURISH_POSTMARK_SERVER_TOKEN: "short",
+    }),
+    (error) => error.issues.includes("NOURISH_EMAIL_FROM must be a valid sender address")
+      && error.issues.includes("NOURISH_POSTMARK_SERVER_TOKEN is required for Postmark delivery"),
+  );
+  assert.throws(
+    () => validateRuntimeConfiguration({
+      ...validProduction,
+      NOURISH_EMAIL_PROVIDER: "unknown",
+    }),
+    (error) => error.issues.includes("NOURISH_EMAIL_PROVIDER must be postmark"),
+  );
 });
 
 test("development API remains intentionally usable with in-memory persistence", () => {

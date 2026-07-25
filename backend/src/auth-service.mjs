@@ -80,7 +80,15 @@ export class AuthService {
       consumedAt: null,
     });
     this.store.lastMagicRequestByEmail.set(normalizedEmail, now);
-    await this.delivery.send({ email: normalizedEmail, token, requestID, expiresAt });
+    try {
+      await this.delivery.send({ email: normalizedEmail, token, requestID, expiresAt });
+    } catch (error) {
+      this.store.magicLinksByHash.delete(hashOpaqueToken(token));
+      if (this.store.lastMagicRequestByEmail.get(normalizedEmail) === now) {
+        this.store.lastMagicRequestByEmail.delete(normalizedEmail);
+      }
+      throw error;
+    }
     return { requestID, resendAvailableAt };
   }
 

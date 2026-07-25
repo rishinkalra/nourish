@@ -1,14 +1,14 @@
 import { createNourishServer } from "./server.mjs";
-import { MemoryMagicLinkDelivery } from "./auth-service.mjs";
 import { createPostgresRuntime } from "./postgres-runtime.mjs";
 import { createOfficialAppStoreVerifierFromEnvironment } from "./app-store-server-client.mjs";
 import { createPrivateObjectStore } from "./private-object-store.mjs";
 import { plannerConfigurationFromEnvironment } from "./planner-service.mjs";
 import { validateRuntimeConfiguration } from "./runtime-configuration.mjs";
+import { createMagicLinkDelivery } from "./email-delivery-service.mjs";
 
 const runtimeConfiguration = validateRuntimeConfiguration(process.env, { processType: "api" });
 const { port, host } = runtimeConfiguration;
-const delivery = new MemoryMagicLinkDelivery();
+const delivery = createMagicLinkDelivery(runtimeConfiguration);
 const scoringConfiguration = plannerConfigurationFromEnvironment();
 const privateObjectStore = await createPrivateObjectStore(runtimeConfiguration);
 const postgresRuntime = runtimeConfiguration.databaseURL

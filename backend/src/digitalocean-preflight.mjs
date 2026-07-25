@@ -7,6 +7,8 @@ const INPUTS = Object.freeze({
   CHANGE_ME_REVIEWED_VERSION: "NOURISH_DO_NUTRITION_VERSION",
   CHANGE_ME_CONTROL_ROOM_ORIGIN: "NOURISH_DO_CONTROL_ROOM_ORIGIN",
   CHANGE_ME_RATE_LIMIT_SECRET: "NOURISH_DO_RATE_LIMIT_SECRET",
+  CHANGE_ME_EMAIL_FROM: "NOURISH_DO_EMAIL_FROM",
+  CHANGE_ME_POSTMARK_SERVER_TOKEN: "NOURISH_DO_POSTMARK_SERVER_TOKEN",
   CHANGE_ME_ENCRYPTION_ACTIVE_KEY_ID: "NOURISH_DO_ENCRYPTION_ACTIVE_KEY_ID",
   CHANGE_ME_JSON_ENCRYPTION_KEYRING: "NOURISH_DO_ENCRYPTION_KEYS",
   CHANGE_ME_SPACES_READ_ACCESS_KEY: "NOURISH_DO_API_SPACES_ACCESS_KEY_ID",
@@ -64,6 +66,7 @@ export function renderDigitalOceanStagingSpec({ template, environment = process.
       privateSpaceConfigured: true,
       applicationEncryptionConfigured: true,
       separateSpaceAccessKeys: true,
+      transactionalEmailConfigured: true,
       automaticDeployments: false,
     }),
   });
@@ -80,6 +83,7 @@ function validateTemplateTopology(template, issues) {
     "value: https://blr1.digitaloceanspaces.com",
     "key: NOURISH_PRIVATE_OBJECT_ENCRYPTION_KEYS",
     "key: NOURISH_RATE_LIMIT_SECRET",
+    "key: NOURISH_POSTMARK_SERVER_TOKEN",
     "value: none",
     "production: true",
   ];
@@ -154,6 +158,9 @@ function validateRuntime(processType, values, issues) {
       NOURISH_PLANNER_NUTRITION_CALCULATION_VERSIONS: values.CHANGE_ME_REVIEWED_VERSION,
       NOURISH_RATE_LIMIT_SECRET: values.CHANGE_ME_RATE_LIMIT_SECRET,
       NOURISH_TRUST_PROXY: "true",
+      NOURISH_EMAIL_PROVIDER: "postmark",
+      NOURISH_EMAIL_FROM: values.CHANGE_ME_EMAIL_FROM,
+      NOURISH_POSTMARK_SERVER_TOKEN: values.CHANGE_ME_POSTMARK_SERVER_TOKEN,
     }, { processType });
   } catch (error) {
     for (const issue of error?.issues ?? ["runtime configuration validation failed"]) {

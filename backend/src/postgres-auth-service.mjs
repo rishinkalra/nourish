@@ -55,7 +55,19 @@ export class PostgresAuthService {
        ) VALUES ($1, $2, $3, $4, $5)`,
       [requestID, normalizedEmail, hashOpaqueToken(token), expiresAt, now],
     );
-    await this.delivery.send({ email: normalizedEmail, token, requestID, expiresAt });
+    try {
+      await this.delivery.send({ email: normalizedEmail, token, requestID, expiresAt });
+    } catch (error) {
+      try {
+        await this.pool.query(
+          "DELETE FROM magic_link_tokens WHERE id = $1 AND consumed_at IS NULL",
+          [requestID],
+        );
+      } catch {
+        // Preserve the original delivery failure; the undelivered token still expires after 15 minutes.
+      }
+      throw error;
+    }
     return { requestID, resendAvailableAt };
   }
 

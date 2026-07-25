@@ -19,6 +19,7 @@ import { AdminExportError, AdminExportService } from "./admin-export-service.mjs
 import { MemoryPushRegistrationService, PushRegistrationError } from "./push-notification-service.mjs";
 import { MemoryRateLimitService, RateLimitError } from "./rate-limit-service.mjs";
 import { isIP } from "node:net";
+import { EmailDeliveryError } from "./email-delivery-service.mjs";
 
 export function createNourishServer({ authService, adminAuthService, profileService, catalogueService, planService, planOperationsService, subscriptionOperationsService, analyticsOperationsService, analyticsEventService, userSupportService, featureFlagService, adminExportService, weeklyLoopService, feedbackService, accountService, pushRegistrationService, rateLimitService, appStoreServerClient, delivery, adminKey, adminOrigin, readinessCheck, scoringConfiguration, trustProxy = false } = {}) {
   const resolvedDelivery = delivery ?? new MemoryMagicLinkDelivery();
@@ -604,7 +605,7 @@ export function createNourishServer({ authService, adminAuthService, profileServ
       }
       return sendError(response, 404, "VALIDATION_ERROR", "Route not found.", correlationID, false);
     } catch (error) {
-      if (error instanceof AuthError || error instanceof AdminAuthError || error instanceof ProfileError || error instanceof CatalogueError || error instanceof PlanError || error instanceof FeedbackError || error instanceof AccountError || error instanceof AnalyticsEventError || error instanceof UserSupportError || error instanceof FeatureFlagError || error instanceof AdminExportError || error instanceof PushRegistrationError || error instanceof RateLimitError) {
+      if (error instanceof AuthError || error instanceof AdminAuthError || error instanceof ProfileError || error instanceof CatalogueError || error instanceof PlanError || error instanceof FeedbackError || error instanceof AccountError || error instanceof AnalyticsEventError || error instanceof UserSupportError || error instanceof FeatureFlagError || error instanceof AdminExportError || error instanceof PushRegistrationError || error instanceof RateLimitError || error instanceof EmailDeliveryError) {
         return sendError(response, error.status, error.code, error.message, correlationID, error.retryable ?? error.code === "RATE_LIMITED", error.retryAfterSeconds);
       }
       if (error instanceof AppStoreServerError) {

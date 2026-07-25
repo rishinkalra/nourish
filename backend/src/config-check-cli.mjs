@@ -14,5 +14,6 @@ const summary = {
   privateObjectStorageType: configuration.privateObjectStoreType ?? "none",
   applicationObjectEncryptionConfigured: Boolean(configuration.privateObjectEncryptionActiveKeyID),
   automaticMigrations: configuration.databaseAutoMigrate,
+  transactionalEmailConfigured: Boolean(configuration.emailProvider),
 };
 process.stdout.write(`${JSON.stringify(summary)}\n`);

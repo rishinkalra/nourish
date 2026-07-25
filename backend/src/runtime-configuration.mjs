@@ -18,6 +18,11 @@ export function validateRuntimeConfiguration(environment = process.env, { proces
   const issues = [];
   const rateLimitSecret = nonEmpty(environment.NOURISH_RATE_LIMIT_SECRET)
     ?? (production ? undefined : "nourish-development-rate-limit-secret");
+  const emailProvider = nonEmpty(environment.NOURISH_EMAIL_PROVIDER);
+  const emailFrom = nonEmpty(environment.NOURISH_EMAIL_FROM);
+  const postmarkServerToken = nonEmpty(environment.NOURISH_POSTMARK_SERVER_TOKEN);
+  const magicLinkPrefix = nonEmpty(environment.NOURISH_MAGIC_LINK_URL_PREFIX)
+    ?? "nourish://auth/magic-link?token=";
   const databaseURL = nonEmpty(environment.DATABASE_URL);
   const privateObjectRoot = nonEmpty(environment.NOURISH_PRIVATE_OBJECT_ROOT);
   const privateObjectBucket = nonEmpty(environment.NOURISH_PRIVATE_OBJECT_BUCKET);
@@ -85,6 +90,21 @@ export function validateRuntimeConfiguration(environment = process.env, { proces
   } else if (rateLimitSecret && rateLimitSecret.length < 32) {
     issues.push("NOURISH_RATE_LIMIT_SECRET must contain at least 32 characters");
   }
+  if (production && processType === "api" && !emailProvider) {
+    issues.push("NOURISH_EMAIL_PROVIDER is required in production");
+  }
+  if (emailProvider && emailProvider !== "postmark") {
+    issues.push("NOURISH_EMAIL_PROVIDER must be postmark");
+  }
+  if (emailProvider === "postmark") {
+    if (!validMailbox(emailFrom)) issues.push("NOURISH_EMAIL_FROM must be a valid sender address");
+    if (!postmarkServerToken || postmarkServerToken.length < 20) {
+      issues.push("NOURISH_POSTMARK_SERVER_TOKEN is required for Postmark delivery");
+    }
+  }
+  if (!validMagicLinkPrefix(magicLinkPrefix)) {
+    issues.push("NOURISH_MAGIC_LINK_URL_PREFIX must be a nourish or HTTPS URL ending in token=");
+  }
 
   if (production && (processType === "api" || processType === "worker")) {
     if (!configuredList(environment.NOURISH_PLANNER_ELIGIBLE_LOCALES).length) {
@@ -148,6 +168,10 @@ export function validateRuntimeConfiguration(environment = process.env, { proces
     apnsBundleID,
     rateLimitSecret,
     trustProxy: environment.NOURISH_TRUST_PROXY === "true",
+    emailProvider,
+    emailFrom,
+    postmarkServerToken,
+    magicLinkPrefix,
   });
 }
 
@@ -220,6 +244,21 @@ function encryptionKeyRing(value, issues) {
 
 function validEncryptionKeyID(value) {
   return /^[A-Za-z0-9][A-Za-z0-9._-]{0,63}$/.test(String(value ?? ""));
+}
+
+function validMailbox(value) {
+  if (typeof value !== "string" || value.length > 320) return false;
+  const address = "[^<>\\s@]+@[^<>\\s@]+\\.[^<>\\s@]+";
+  return new RegExp(`^(?:${address}|[^<>\\r\\n]{1,80}\\s+<${address}>)$`).test(value);
+}
+
+function validMagicLinkPrefix(value) {
+  if (typeof value !== "string" || value.length > 500 || !value.endsWith("token=")) return false;
+  try {
+    return ["nourish:", "https:"].includes(new URL(value).protocol);
+  } catch {
+    return false;
+  }
 }
 
 function nonEmpty(value) {
