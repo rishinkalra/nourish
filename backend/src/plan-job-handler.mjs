@@ -189,6 +189,19 @@ async function persistPlan({ pool, job, generated, now }) {
         WHERE id = $1`,
       [job.id, generated.diagnostics.candidatePoolSize, JSON.stringify(generated.diagnostics), now],
     );
+    const notificationJobID = deterministicUUID(`plan-ready-notification|${job.id}`);
+    await client.query(
+      `INSERT INTO background_jobs (
+          id, job_type, user_id, idempotency_key, state, payload_json,
+          max_attempts, available_at, created_at, updated_at
+       ) VALUES ($1, 'notification.plan-ready', $2, $3, 'queued', $4::jsonb,
+                 5, $5, $5, $5)
+       ON CONFLICT (job_type, idempotency_key) DO NOTHING`,
+      [
+        notificationJobID, job.user_id, `plan-ready:${job.id}`,
+        JSON.stringify({ planJobID: job.id }), now,
+      ],
+    );
     return { planJobID: job.id, planID: plan.id, state: "succeeded" };
   });
 }

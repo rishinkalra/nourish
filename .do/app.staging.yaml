@@ -84,6 +84,10 @@ envs:
     value: "false"
     scope: RUN_TIME
     type: GENERAL
+  - key: NOURISH_APNS_BUNDLE_ID
+    value: com.projectnourish.app
+    scope: RUN_TIME
+    type: GENERAL
 
 services:
   - name: nourish-api
@@ -174,6 +178,10 @@ workers:
     envs:
       - key: DATABASE_POOL_MAX
         value: "5"
+        scope: RUN_TIME
+        type: GENERAL
+      - key: NOURISH_APNS_ENABLED
+        value: "false"
         scope: RUN_TIME
         type: GENERAL
       - key: NOURISH_PRIVATE_OBJECT_ENCRYPTION_ACTIVE_KEY_ID

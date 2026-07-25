@@ -25,6 +25,8 @@ The checked-in file remains a secret-free template. `npm run digitalocean:prefli
 7. `NOURISH_DO_API_SPACES_ACCESS_KEY_ID` / `NOURISH_DO_API_SPACES_SECRET_ACCESS_KEY`: bucket-read API identity.
 8. `NOURISH_DO_WORKER_SPACES_ACCESS_KEY_ID` / `NOURISH_DO_WORKER_SPACES_SECRET_ACCESS_KEY`: distinct bucket-read/write/delete worker identity.
 
+The checked-in staging template keeps APNs delivery disabled until Apple configuration is ready. To validate plan-ready delivery, add `NOURISH_APNS_TEAM_ID`, `NOURISH_APNS_KEY_ID`, and the `.p8` value as worker-only secrets, then change the worker's `NOURISH_APNS_ENABLED` to `true`. Keep `NOURISH_APNS_BUNDLE_ID=com.projectnourish.app`. Never attach the APNs signing key to the public API component.
+
 Generate a new 256-bit application key using `openssl rand -base64 32`. Supply a one-line secret such as `{"staging-2026-07":"<base64 value>"}`; never commit the value. The renderer applies the identical key ring and active key ID to the API and worker. By default it validates entirely in memory. When a file is needed for DigitalOcean validation, pass `--output /private/tmp/nourish-staging.yaml`; it refuses to write secret-bearing output inside the project and creates the external file with owner-only permissions. Remove that temporary file immediately after submission.
 
 ## Spaces controls
@@ -63,6 +65,7 @@ Before allowing any billable submission, run `scripts/verify_release_candidate.s
 5. Create a controlled customer export and administrator export; verify stored bytes contain no plaintext, authorized delivery works, and retention cleanup deletes the exact objects.
 6. Run a controlled plan job and confirm terminal state, retry evidence, and Control Room visibility.
 7. Point a non-production iOS build at the staging API and complete authentication, onboarding, plan generation, adoption, swap, groceries, prep, feedback, export, and deletion acceptance journeys.
+8. With APNs enabled, grant notification permission on a physical sandbox device, generate a plan while the app is not foregrounded, verify one collapsed plan-ready alert opens Plan Studio, then sign out and confirm the former account receives no later notification.
 
 ## Rotation and recovery
 

@@ -1,6 +1,7 @@
 import Foundation
 import NourishCore
 import UserNotifications
+import UIKit
 
 struct NourishNotificationOpen: Sendable {
     let url: URL
@@ -91,6 +92,9 @@ final class LifecycleReminderStore: ObservableObject {
             do {
                 let granted = try await center.requestAuthorization(options: [.alert, .badge, .sound])
                 authorizationState = granted ? .authorized : .denied
+                if granted {
+                    UIApplication.shared.registerForRemoteNotifications()
+                }
             } catch {
                 authorizationState = .failed("Notification permission could not be requested.")
             }
@@ -101,6 +105,9 @@ final class LifecycleReminderStore: ObservableObject {
             settings = updated
             await cancelLifecycleRequests()
             return false
+        }
+        if authorizationState == .authorized {
+            UIApplication.shared.registerForRemoteNotifications()
         }
 
         persist(updated)

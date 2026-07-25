@@ -115,6 +115,15 @@ final class NourishAppTests: XCTestCase {
         )
         XCTAssertEqual(ConsumerRoute.updateAnalyticsConsent.descriptor.method, .patch)
         XCTAssertEqual(ConsumerRoute.recordAnalyticsEvent.descriptor.path, "/v1/analytics/events")
+        XCTAssertEqual(ConsumerRoute.registerPushDevice.descriptor.path, "/v1/push-registrations")
+        XCTAssertEqual(ConsumerRoute.unregisterPushDevice.descriptor.method, .delete)
+    }
+
+    func testPushDeviceTokensAreStableAndRedacted() {
+        let token = PushDeviceToken(data: Data([0x00, 0x0f, 0xa1, 0xff]))
+        XCTAssertEqual(token.rawValue, "000fa1ff")
+        XCTAssertEqual(token.description, "<redacted>")
+        XCTAssertEqual(token.debugDescription, "<redacted>")
     }
 
     func testReminderPlanningIncludesOnlyEnabledProfileMeals() {

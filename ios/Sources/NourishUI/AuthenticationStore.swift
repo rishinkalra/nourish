@@ -75,6 +75,12 @@ final class AuthenticationStore: ObservableObject {
     }
 
     func signOut() async {
+        if let token = await PushDeviceTokenCache.shared.current() {
+            try? await makePushRegistrationRemote().unregister(
+                deviceToken: token,
+                environment: pushEnvironment
+            )
+        }
         do {
             try await manager.signOut()
             state = .signedOut
@@ -134,6 +140,29 @@ final class AuthenticationStore: ObservableObject {
         return URLSessionAnalyticsEventRemote(baseURL: baseURL) {
             try await manager.validAccessToken()
         }
+    }
+
+    func synchronizePushRegistration() async {
+        guard identity != nil, let token = await PushDeviceTokenCache.shared.current() else { return }
+        _ = try? await makePushRegistrationRemote().register(
+            deviceToken: token,
+            environment: pushEnvironment
+        )
+    }
+
+    private func makePushRegistrationRemote() -> URLSessionPushRegistrationRemote {
+        let manager = manager
+        return URLSessionPushRegistrationRemote(baseURL: baseURL) {
+            try await manager.validAccessToken()
+        }
+    }
+
+    private var pushEnvironment: PushEnvironment {
+        #if DEBUG
+        .sandbox
+        #else
+        .production
+        #endif
     }
 
     var identity: SessionIdentity? {

@@ -15,6 +15,11 @@ import { cleanupExpiredExportObjects } from "./export-retention.mjs";
 import { deleteExpiredAnalyticsEvents, PostgresAnalyticsEventService } from "./analytics-event-service.mjs";
 import { plannerConfigurationFromEnvironment } from "./planner-service.mjs";
 import { validateRuntimeConfiguration } from "./runtime-configuration.mjs";
+import {
+  PostgresPushRegistrationService,
+  createAPNsPushProviderFromEnvironment,
+  createPlanReadyNotificationHandler,
+} from "./push-notification-service.mjs";
 
 const runtimeConfiguration = validateRuntimeConfiguration(process.env, { processType: "worker" });
 
@@ -43,6 +48,12 @@ const handlers = {
     scoringConfiguration,
   }),
 };
+handlers["notification.plan-ready"] = createPlanReadyNotificationHandler({
+  registrationService: new PostgresPushRegistrationService({
+    pool, appBundleID: runtimeConfiguration.apnsBundleID,
+  }),
+  pushProvider: createAPNsPushProviderFromEnvironment(),
+});
 const reconciliationEnabled = process.env.NOURISH_APP_STORE_RECONCILIATION_ENABLED === "true";
 if (reconciliationEnabled) {
   const appStoreClient = await createOfficialAppStoreSubscriptionClientFromEnvironment();

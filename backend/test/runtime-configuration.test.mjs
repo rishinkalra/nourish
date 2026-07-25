@@ -148,3 +148,15 @@ test("bounded numeric settings fail closed", () => {
     (error) => error.issues.length === 3,
   );
 });
+
+test("APNs delivery is fail-closed when enabled and optional before credentials exist", () => {
+  const disabled = validateRuntimeConfiguration(validProduction);
+  assert.equal(disabled.apnsEnabled, false);
+  assert.equal(disabled.apnsBundleID, "com.projectnourish.app");
+  assert.throws(
+    () => validateRuntimeConfiguration({ ...validProduction, NOURISH_APNS_ENABLED: "true" }),
+    (error) => error.issues.some((issue) => issue.startsWith("NOURISH_APNS_TEAM_ID"))
+      && error.issues.some((issue) => issue.startsWith("NOURISH_APNS_KEY_ID"))
+      && error.issues.some((issue) => issue.startsWith("NOURISH_APNS_PRIVATE_KEY")),
+  );
+});

@@ -96,6 +96,22 @@ export function validateRuntimeConfiguration(environment = process.env, { proces
   const analyticsRetentionDays = integerSetting(environment.NOURISH_ANALYTICS_RETENTION_DAYS, 90, {
     name: "NOURISH_ANALYTICS_RETENTION_DAYS", minimum: 1, maximum: 400, issues,
   });
+  const apnsEnabled = environment.NOURISH_APNS_ENABLED === "true";
+  const apnsBundleID = nonEmpty(environment.NOURISH_APNS_BUNDLE_ID) ?? "com.projectnourish.app";
+  if (!/^[A-Za-z0-9][A-Za-z0-9.-]{2,254}$/.test(apnsBundleID)) {
+    issues.push("NOURISH_APNS_BUNDLE_ID must be a valid application bundle identifier");
+  }
+  if (apnsEnabled) {
+    if (!/^[A-Za-z0-9]{4,64}$/.test(nonEmpty(environment.NOURISH_APNS_TEAM_ID) ?? "")) {
+      issues.push("NOURISH_APNS_TEAM_ID is required when APNs delivery is enabled");
+    }
+    if (!/^[A-Za-z0-9]{4,64}$/.test(nonEmpty(environment.NOURISH_APNS_KEY_ID) ?? "")) {
+      issues.push("NOURISH_APNS_KEY_ID is required when APNs delivery is enabled");
+    }
+    if (!nonEmpty(environment.NOURISH_APNS_PRIVATE_KEY)?.includes("BEGIN PRIVATE KEY")) {
+      issues.push("NOURISH_APNS_PRIVATE_KEY is required when APNs delivery is enabled");
+    }
+  }
 
   if (issues.length) throw new RuntimeConfigurationError(issues);
 
@@ -121,6 +137,8 @@ export function validateRuntimeConfiguration(environment = process.env, { proces
     privateObjectEncryptionKeys,
     privateObjectForcePathStyle: environment.NOURISH_PRIVATE_OBJECT_FORCE_PATH_STYLE === "true",
     analyticsRetentionDays,
+    apnsEnabled,
+    apnsBundleID,
   });
 }
 

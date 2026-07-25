@@ -16,8 +16,9 @@ import { AnalyticsEventError, AnalyticsEventService } from "./analytics-event-se
 import { UserSupportError, UserSupportService } from "./user-support-service.mjs";
 import { FeatureFlagError, FeatureFlagService } from "./feature-flag-service.mjs";
 import { AdminExportError, AdminExportService } from "./admin-export-service.mjs";
+import { MemoryPushRegistrationService, PushRegistrationError } from "./push-notification-service.mjs";
 
-export function createNourishServer({ authService, adminAuthService, profileService, catalogueService, planService, planOperationsService, subscriptionOperationsService, analyticsOperationsService, analyticsEventService, userSupportService, featureFlagService, adminExportService, weeklyLoopService, feedbackService, accountService, appStoreServerClient, delivery, adminKey, adminOrigin, readinessCheck, scoringConfiguration } = {}) {
+export function createNourishServer({ authService, adminAuthService, profileService, catalogueService, planService, planOperationsService, subscriptionOperationsService, analyticsOperationsService, analyticsEventService, userSupportService, featureFlagService, adminExportService, weeklyLoopService, feedbackService, accountService, pushRegistrationService, appStoreServerClient, delivery, adminKey, adminOrigin, readinessCheck, scoringConfiguration } = {}) {
   const resolvedDelivery = delivery ?? new MemoryMagicLinkDelivery();
   const resolvedAuth = authService ?? new AuthService({ delivery: resolvedDelivery });
   const resolvedAdminAuth = adminAuthService ?? new AdminAuthService();
@@ -40,6 +41,7 @@ export function createNourishServer({ authService, adminAuthService, profileServ
   const resolvedAnalyticsOperations = analyticsOperationsService ?? new AnalyticsOperationsService();
   const resolvedUserSupport = userSupportService ?? new UserSupportService();
   const resolvedFeatureFlags = featureFlagService ?? new FeatureFlagService();
+  const resolvedPushRegistrations = pushRegistrationService ?? new MemoryPushRegistrationService();
   const resolvedAdminExports = adminExportService ?? new AdminExportService({
     analyticsService: resolvedAnalyticsOperations,
     userSupportService: resolvedUserSupport,
@@ -149,6 +151,17 @@ export function createNourishServer({ authService, adminAuthService, profileServ
           userID: identity.userID,
           enabled: body.enabled,
         }), correlationID);
+      }
+      if (url.pathname === "/v1/push-registrations" && request.method === "POST") {
+        const identity = await resolvedAuth.authenticate(bearerToken(request));
+        const body = await readJSON(request);
+        return send(response, 200, await resolvedPushRegistrations.register(identity.userID, body), correlationID);
+      }
+      if (url.pathname === "/v1/push-registrations" && request.method === "DELETE") {
+        const identity = await resolvedAuth.authenticate(bearerToken(request));
+        const body = await readJSON(request);
+        await resolvedPushRegistrations.unregister(identity.userID, body);
+        return send(response, 204, null, correlationID);
       }
       if (url.pathname === "/v1/plans" && request.method === "POST") {
         const identity = await resolvedAuth.authenticate(bearerToken(request));
@@ -570,7 +583,7 @@ export function createNourishServer({ authService, adminAuthService, profileServ
       }
       return sendError(response, 404, "VALIDATION_ERROR", "Route not found.", correlationID, false);
     } catch (error) {
-      if (error instanceof AuthError || error instanceof AdminAuthError || error instanceof ProfileError || error instanceof CatalogueError || error instanceof PlanError || error instanceof FeedbackError || error instanceof AccountError || error instanceof AnalyticsEventError || error instanceof UserSupportError || error instanceof FeatureFlagError || error instanceof AdminExportError) {
+      if (error instanceof AuthError || error instanceof AdminAuthError || error instanceof ProfileError || error instanceof CatalogueError || error instanceof PlanError || error instanceof FeedbackError || error instanceof AccountError || error instanceof AnalyticsEventError || error instanceof UserSupportError || error instanceof FeatureFlagError || error instanceof AdminExportError || error instanceof PushRegistrationError) {
         return sendError(response, error.status, error.code, error.message, correlationID, error.retryable ?? error.code === "RATE_LIMITED");
       }
       if (error instanceof AppStoreServerError) {
@@ -591,7 +604,7 @@ export function createNourishServer({ authService, adminAuthService, profileServ
     }
   });
 
-  return { server, authService: resolvedAuth, adminAuthService: resolvedAdminAuth, profileService: resolvedProfiles, catalogueService: resolvedCatalogue, planService: resolvedPlanner, planOperationsService: resolvedPlanOperations, subscriptionOperationsService: resolvedSubscriptionOperations, analyticsOperationsService: resolvedAnalyticsOperations, analyticsEventService: resolvedAnalyticsEvents, userSupportService: resolvedUserSupport, featureFlagService: resolvedFeatureFlags, adminExportService: resolvedAdminExports, weeklyLoopService: resolvedWeeklyLoop, feedbackService: resolvedFeedback, accountService: resolvedAccount, delivery: resolvedDelivery };
+  return { server, authService: resolvedAuth, adminAuthService: resolvedAdminAuth, profileService: resolvedProfiles, catalogueService: resolvedCatalogue, planService: resolvedPlanner, planOperationsService: resolvedPlanOperations, subscriptionOperationsService: resolvedSubscriptionOperations, analyticsOperationsService: resolvedAnalyticsOperations, analyticsEventService: resolvedAnalyticsEvents, userSupportService: resolvedUserSupport, featureFlagService: resolvedFeatureFlags, adminExportService: resolvedAdminExports, weeklyLoopService: resolvedWeeklyLoop, feedbackService: resolvedFeedback, accountService: resolvedAccount, pushRegistrationService: resolvedPushRegistrations, delivery: resolvedDelivery };
 }
 
 async function recordServerAnalytics(service, event) {

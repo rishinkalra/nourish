@@ -22,6 +22,7 @@ import { PostgresWeeklyLoopService } from "./postgres-weekly-loop-service.mjs";
 import { ProfileService } from "./profile-service.mjs";
 import { ConfigurationGatedPrivateObjectStore } from "./private-object-store.mjs";
 import { plannerConfigurationFromEnvironment } from "./planner-service.mjs";
+import { PostgresPushRegistrationService } from "./push-notification-service.mjs";
 
 export async function createPostgresRuntime({
   connectionString,
@@ -34,6 +35,7 @@ export async function createPostgresRuntime({
   adminIdentityVerifier,
   privateObjectStore = new ConfigurationGatedPrivateObjectStore(),
   scoringConfiguration = plannerConfigurationFromEnvironment(),
+  pushAppBundleID = "com.projectnourish.app",
 } = {}) {
   const pool = await createPostgresPool({ connectionString, requireTLS, maximumConnections, applicationName });
   try {
@@ -61,6 +63,9 @@ export async function createPostgresRuntime({
       analyticsEventService,
       userSupportService,
       featureFlagService: new PostgresFeatureFlagService({ pool }),
+      pushRegistrationService: new PostgresPushRegistrationService({
+        pool, appBundleID: pushAppBundleID,
+      }),
       adminExportService: new PostgresAdminExportService({
         pool, analyticsService: analyticsOperationsService, userSupportService, objectStore: privateObjectStore,
       }),

@@ -2,6 +2,7 @@ import SwiftUI
 import NourishAPI
 import NourishUI
 import UIKit
+import UserNotifications
 
 private enum NourishAppConfiguration {
     static let apiBaseURL: URL = {
@@ -28,7 +29,33 @@ final class NourishAppDelegate: NSObject, UIApplicationDelegate {
         didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]? = nil
     ) -> Bool {
         BackgroundSyncCoordinator.shared.register()
+        Task { @MainActor in
+            let settings = await UNUserNotificationCenter.current().notificationSettings()
+            if [.authorized, .provisional, .ephemeral].contains(settings.authorizationStatus) {
+                application.registerForRemoteNotifications()
+            }
+        }
         return true
+    }
+
+    func application(
+        _ application: UIApplication,
+        didRegisterForRemoteNotificationsWithDeviceToken deviceToken: Data
+    ) {
+        let token = PushDeviceToken(data: deviceToken)
+        Task {
+            await PushDeviceTokenCache.shared.store(token)
+            await MainActor.run {
+                NotificationCenter.default.post(name: .nourishPushDeviceTokenUpdated, object: nil)
+            }
+        }
+    }
+
+    func application(
+        _ application: UIApplication,
+        didFailToRegisterForRemoteNotificationsWithError error: Error
+    ) {
+        // APNs registration is retried by iOS on a later authorized launch.
     }
 }
 

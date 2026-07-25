@@ -34,6 +34,8 @@ public enum ConsumerRoute: Equatable, Sendable {
     case updateAnalyticsDimensions
     case updateAnalyticsConsent
     case recordAnalyticsEvent
+    case registerPushDevice
+    case unregisterPushDevice
     case estimateCalories
     case createPlan
     case readActivePlan
@@ -77,6 +79,10 @@ public enum ConsumerRoute: Equatable, Sendable {
             RouteDescriptor(method: .patch, path: "/v1/analytics/consent")
         case .recordAnalyticsEvent:
             RouteDescriptor(method: .post, path: "/v1/analytics/events")
+        case .registerPushDevice:
+            RouteDescriptor(method: .post, path: "/v1/push-registrations")
+        case .unregisterPushDevice:
+            RouteDescriptor(method: .delete, path: "/v1/push-registrations")
         case .estimateCalories:
             RouteDescriptor(method: .post, path: "/v1/calorie-estimates")
         case .createPlan:

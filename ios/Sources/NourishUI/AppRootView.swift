@@ -1,6 +1,7 @@
 import SwiftUI
 import NourishAPI
 import NourishCore
+import UserNotifications
 
 public struct AppRootView: View {
     @Environment(\.scenePhase) private var scenePhase
@@ -62,6 +63,9 @@ public struct AppRootView: View {
                 } else if let url = notification.object as? URL {
                     _ = routeStore.handle(url)
                 }
+            }
+            .onReceive(NotificationCenter.default.publisher(for: .nourishPushDeviceTokenUpdated)) { _ in
+                Task { await synchronizePushRegistrationIfAuthorized() }
             }
             .onChange(of: authenticationStore.state, authenticationStateChanged)
             .onChange(of: profileStore.failureMessage, profileFailureChanged)
@@ -160,6 +164,7 @@ public struct AppRootView: View {
                         remote: authenticationStore.makeAnalyticsEventRemote(),
                         measurementEnabled: analyticsMeasurementEnabled
                     )
+                    await synchronizePushRegistrationIfAuthorized()
                 }
             }
         case .signedOut:
@@ -252,6 +257,12 @@ public struct AppRootView: View {
             remote: authenticationStore.makeWeeklyLoopRemote()
         )
         return !profileStore.needsBackgroundSync && !weeklyLoopStore.needsBackgroundSync
+    }
+
+    private func synchronizePushRegistrationIfAuthorized() async {
+        let settings = await UNUserNotificationCenter.current().notificationSettings()
+        guard [.authorized, .provisional, .ephemeral].contains(settings.authorizationStatus) else { return }
+        await authenticationStore.synchronizePushRegistration()
     }
 
     private func persistOnboardingProfile(_ profile: UserProfile) {

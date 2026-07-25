@@ -21,6 +21,7 @@ const postgresRuntime = runtimeConfiguration.databaseURL
     delivery,
     privateObjectStore,
     scoringConfiguration,
+    pushAppBundleID: runtimeConfiguration.apnsBundleID,
   })
   : {};
 const appStoreServerClient = process.env.NOURISH_APP_STORE_INGRESS_ENABLED === "true"

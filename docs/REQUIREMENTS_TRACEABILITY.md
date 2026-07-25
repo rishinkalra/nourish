@@ -1,6 +1,6 @@
 # Project Nourish requirements traceability
 
-Source: `Project_Nourish_Product_Specification_v1.0.docx` · SHA-256 `f7426a4ad353…` · extracted 2026-07-18T14:59:09.662166+00:00
+Source: `Project_Nourish_Product_Specification_v1.0.docx` · SHA-256 `f7426a4ad353…` · extracted 2026-07-25T06:06:22.258184+00:00
 
 This register is generated from the product specification. Every numbered requirement defaults to `not_started` unless implementation evidence is explicitly recorded in `docs/coverage_overrides.json`.
 
@@ -174,7 +174,7 @@ This register is generated from the product specification. Every numbered requir
 
 | Message | Trigger | Action | Status | Evidence |
 |---|---|---|---|---|
-| Plan ready | After background generation completes | Deep-link to plan preview | not_started | — |
+| Plan ready | After background generation completes | Deep-link to plan preview | partial | backend/src/push-notification-service.mjs; backend/src/plan-job-handler.mjs; backend/src/worker-cli.mjs; backend/src/server.mjs; backend/migrations/023_push_notifications.sql; backend/test/push-notification.test.mjs; ios/Sources/NourishAPI/PushRegistration.swift; ios/Sources/NourishAPI/APIContract.swift; ios/Sources/NourishUI/AuthenticationStore.swift; ios/Sources/NourishUI/AppRootView.swift; ios/Sources/NourishUI/LifecycleReminderStore.swift; ios/NourishApp/NourishApp/NourishApp.swift; ios/NourishApp/NourishApp/NourishApp.Debug.entitlements; ios/NourishApp/NourishApp/NourishApp.Release.entitlements; docs/PUSH_NOTIFICATION_METHOD.md |
 | Shopping reminder | User-selected day/time before plan week | Deep-link to groceries | partial | ios/Sources/NourishCore/LifecycleReminders.swift; ios/Sources/NourishUI/LifecycleReminderStore.swift; ios/Sources/NourishUI/SettingsEditorView.swift; ios/Sources/NourishCoreChecks/main.swift; docs/nourish-ios-reminder-deeplink.png |
 | Prep reminder | Before selected batch-prep session | Deep-link to prep tasks | partial | ios/Sources/NourishCore/LifecycleReminders.swift; ios/Sources/NourishUI/LifecycleReminderStore.swift; ios/Sources/NourishUI/SettingsEditorView.swift; ios/Sources/NourishUI/MainAppView.swift |
 | Meal reminder | Optional per meal slot | Deep-link to meal detail | partial | ios/Sources/NourishCore/LifecycleReminders.swift; ios/Sources/NourishUI/LifecycleReminderStore.swift; ios/Sources/NourishUI/SettingsEditorView.swift; ios/Sources/NourishUI/MainAppView.swift; ios/Sources/NourishCoreChecks/main.swift |
