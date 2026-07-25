@@ -15,6 +15,7 @@ const validProduction = Object.freeze({
   NOURISH_PRIVATE_OBJECT_ENCRYPTION_KEYS: JSON.stringify({ "staging-2026-07": applicationEncryptionKey }),
   NOURISH_PLANNER_ELIGIBLE_LOCALES: "en-IN",
   NOURISH_PLANNER_NUTRITION_CALCULATION_VERSIONS: "ifct-2017-v1",
+  NOURISH_RATE_LIMIT_SECRET: "test-production-rate-limit-secret-32-bytes",
 });
 
 test("production API configuration requires durable TLS persistence and planner allowlists", () => {
@@ -24,6 +25,7 @@ test("production API configuration requires durable TLS persistence and planner 
       && error.issues.includes("DATABASE_URL is required")
       && error.issues.includes("DATABASE_REQUIRE_TLS must be true in production")
       && error.issues.includes("NOURISH_PRIVATE_OBJECT_STORE must configure private export storage")
+      && error.issues.includes("NOURISH_RATE_LIMIT_SECRET is required in production")
       && error.issues.some((issue) => issue.startsWith("NOURISH_PLANNER_ELIGIBLE_LOCALES"))
       && error.issues.some((issue) => issue.startsWith("NOURISH_PLANNER_NUTRITION_CALCULATION_VERSIONS")),
   );
@@ -59,6 +61,8 @@ test("valid production settings are normalized without exposing secrets", () => 
   assert.equal(configuration.privateObjectBucket, "nourish-private-staging");
   assert.equal(configuration.privateObjectEncryptionActiveKeyID, "staging-2026-07");
   assert.equal(configuration.privateObjectEncryptionKeys["staging-2026-07"].length, 32);
+  assert.equal(configuration.rateLimitSecret, validProduction.NOURISH_RATE_LIMIT_SECRET);
+  assert.equal(configuration.trustProxy, false);
 });
 
 test("development API remains intentionally usable with in-memory persistence", () => {
@@ -66,6 +70,22 @@ test("development API remains intentionally usable with in-memory persistence", 
   assert.equal(configuration.production, false);
   assert.equal(configuration.databaseURL, undefined);
   assert.equal(configuration.host, "127.0.0.1");
+  assert.equal(configuration.rateLimitSecret, "nourish-development-rate-limit-secret");
+});
+
+test("production rate limiting requires an independent strong secret and explicit proxy trust", () => {
+  assert.throws(
+    () => validateRuntimeConfiguration({
+      ...validProduction,
+      NOURISH_RATE_LIMIT_SECRET: "too-short",
+    }),
+    (error) => error.issues.includes("NOURISH_RATE_LIMIT_SECRET must contain at least 32 characters"),
+  );
+  const configuration = validateRuntimeConfiguration({
+    ...validProduction,
+    NOURISH_TRUST_PROXY: "true",
+  });
+  assert.equal(configuration.trustProxy, true);
 });
 
 test("workers require database and private export storage in every environment", () => {

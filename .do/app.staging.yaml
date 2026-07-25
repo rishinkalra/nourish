@@ -136,6 +136,14 @@ services:
         value: CHANGE_ME_CONTROL_ROOM_ORIGIN
         scope: RUN_TIME
         type: GENERAL
+      - key: NOURISH_TRUST_PROXY
+        value: "true"
+        scope: RUN_TIME
+        type: GENERAL
+      - key: NOURISH_RATE_LIMIT_SECRET
+        value: CHANGE_ME_RATE_LIMIT_SECRET
+        scope: RUN_TIME
+        type: SECRET
       - key: NOURISH_PRIVATE_OBJECT_ENCRYPTION_ACTIVE_KEY_ID
         value: CHANGE_ME_ENCRYPTION_ACTIVE_KEY_ID
         scope: RUN_TIME

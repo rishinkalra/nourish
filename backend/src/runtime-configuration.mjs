@@ -16,6 +16,8 @@ export function validateRuntimeConfiguration(environment = process.env, { proces
 
   const production = environment.NODE_ENV === "production";
   const issues = [];
+  const rateLimitSecret = nonEmpty(environment.NOURISH_RATE_LIMIT_SECRET)
+    ?? (production ? undefined : "nourish-development-rate-limit-secret");
   const databaseURL = nonEmpty(environment.DATABASE_URL);
   const privateObjectRoot = nonEmpty(environment.NOURISH_PRIVATE_OBJECT_ROOT);
   const privateObjectBucket = nonEmpty(environment.NOURISH_PRIVATE_OBJECT_BUCKET);
@@ -78,6 +80,11 @@ export function validateRuntimeConfiguration(environment = process.env, { proces
   if (production && nonEmpty(environment.NOURISH_ADMIN_KEY)) {
     issues.push("NOURISH_ADMIN_KEY is a development-only credential and must be unset in production");
   }
+  if (production && processType === "api" && !rateLimitSecret) {
+    issues.push("NOURISH_RATE_LIMIT_SECRET is required in production");
+  } else if (rateLimitSecret && rateLimitSecret.length < 32) {
+    issues.push("NOURISH_RATE_LIMIT_SECRET must contain at least 32 characters");
+  }
 
   if (production && (processType === "api" || processType === "worker")) {
     if (!configuredList(environment.NOURISH_PLANNER_ELIGIBLE_LOCALES).length) {
@@ -139,6 +146,8 @@ export function validateRuntimeConfiguration(environment = process.env, { proces
     analyticsRetentionDays,
     apnsEnabled,
     apnsBundleID,
+    rateLimitSecret,
+    trustProxy: environment.NOURISH_TRUST_PROXY === "true",
   });
 }
 

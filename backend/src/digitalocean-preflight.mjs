@@ -6,6 +6,7 @@ const INPUTS = Object.freeze({
   CHANGE_ME_PRIVATE_SPACE_NAME: "NOURISH_DO_SPACE_NAME",
   CHANGE_ME_REVIEWED_VERSION: "NOURISH_DO_NUTRITION_VERSION",
   CHANGE_ME_CONTROL_ROOM_ORIGIN: "NOURISH_DO_CONTROL_ROOM_ORIGIN",
+  CHANGE_ME_RATE_LIMIT_SECRET: "NOURISH_DO_RATE_LIMIT_SECRET",
   CHANGE_ME_ENCRYPTION_ACTIVE_KEY_ID: "NOURISH_DO_ENCRYPTION_ACTIVE_KEY_ID",
   CHANGE_ME_JSON_ENCRYPTION_KEYRING: "NOURISH_DO_ENCRYPTION_KEYS",
   CHANGE_ME_SPACES_READ_ACCESS_KEY: "NOURISH_DO_API_SPACES_ACCESS_KEY_ID",
@@ -78,6 +79,7 @@ function validateTemplateTopology(template, issues) {
     "value: ${nourish-postgres.DATABASE_PRIVATE_URL}",
     "value: https://blr1.digitaloceanspaces.com",
     "key: NOURISH_PRIVATE_OBJECT_ENCRYPTION_KEYS",
+    "key: NOURISH_RATE_LIMIT_SECRET",
     "value: none",
     "production: true",
   ];
@@ -150,6 +152,8 @@ function validateRuntime(processType, values, issues) {
       NOURISH_PRIVATE_OBJECT_ENCRYPTION_KEYS: values.CHANGE_ME_JSON_ENCRYPTION_KEYRING,
       NOURISH_PLANNER_ELIGIBLE_LOCALES: "en-IN",
       NOURISH_PLANNER_NUTRITION_CALCULATION_VERSIONS: values.CHANGE_ME_REVIEWED_VERSION,
+      NOURISH_RATE_LIMIT_SECRET: values.CHANGE_ME_RATE_LIMIT_SECRET,
+      NOURISH_TRUST_PROXY: "true",
     }, { processType });
   } catch (error) {
     for (const issue of error?.issues ?? ["runtime configuration validation failed"]) {

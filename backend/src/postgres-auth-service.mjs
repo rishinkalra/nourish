@@ -37,7 +37,13 @@ export class PostgresAuthService {
       [normalizedEmail],
     );
     if (recent.rows[0] && now.getTime() - new Date(recent.rows[0].created_at).getTime() < 60_000) {
-      throw new AuthError("RATE_LIMITED", "Please wait before requesting another link.", 429);
+      const elapsed = now.getTime() - new Date(recent.rows[0].created_at).getTime();
+      throw new AuthError(
+        "RATE_LIMITED",
+        "Please wait before requesting another link.",
+        429,
+        Math.max(1, Math.ceil((60_000 - elapsed) / 1_000)),
+      );
     }
     const token = this.tokenFactory();
     const requestID = randomUUID();

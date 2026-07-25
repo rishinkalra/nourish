@@ -23,6 +23,7 @@ import { ProfileService } from "./profile-service.mjs";
 import { ConfigurationGatedPrivateObjectStore } from "./private-object-store.mjs";
 import { plannerConfigurationFromEnvironment } from "./planner-service.mjs";
 import { PostgresPushRegistrationService } from "./push-notification-service.mjs";
+import { PostgresRateLimitService } from "./rate-limit-service.mjs";
 
 export async function createPostgresRuntime({
   connectionString,
@@ -36,6 +37,7 @@ export async function createPostgresRuntime({
   privateObjectStore = new ConfigurationGatedPrivateObjectStore(),
   scoringConfiguration = plannerConfigurationFromEnvironment(),
   pushAppBundleID = "com.projectnourish.app",
+  rateLimitSecret = "nourish-development-rate-limit-secret",
 } = {}) {
   const pool = await createPostgresPool({ connectionString, requireTLS, maximumConnections, applicationName });
   try {
@@ -51,6 +53,7 @@ export async function createPostgresRuntime({
     const userSupportService = new PostgresUserSupportService({ pool });
     return {
       authService: new PostgresAuthService({ pool, delivery, appleVerifier }),
+      rateLimitService: new PostgresRateLimitService({ pool, secret: rateLimitSecret }),
       adminAuthService: new PostgresAdminAuthService({ pool, verifier: adminIdentityVerifier }),
       profileService: new ProfileService({ store: new PostgresProfileStore({ pool }) }),
       accountService: new AccountService({

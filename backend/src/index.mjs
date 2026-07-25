@@ -22,6 +22,7 @@ const postgresRuntime = runtimeConfiguration.databaseURL
     privateObjectStore,
     scoringConfiguration,
     pushAppBundleID: runtimeConfiguration.apnsBundleID,
+    rateLimitSecret: runtimeConfiguration.rateLimitSecret,
   })
   : {};
 const appStoreServerClient = process.env.NOURISH_APP_STORE_INGRESS_ENABLED === "true"
@@ -34,6 +35,7 @@ const app = createNourishServer({
   adminKey: process.env.NOURISH_ADMIN_KEY,
   adminOrigin: process.env.NOURISH_ADMIN_ORIGIN ?? "http://127.0.0.1:4173",
   scoringConfiguration,
+  trustProxy: runtimeConfiguration.trustProxy,
 });
 const { server } = app;
 

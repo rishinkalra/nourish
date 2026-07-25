@@ -144,12 +144,14 @@ public struct APIErrorEnvelope: Error, Codable, Equatable, Sendable {
     public var userSafeMessage: String
     public var correlationID: String
     public var retryable: Bool
+    public var retryAfterSeconds: Int?
 
-    public init(code: StructuredAPIErrorCode, userSafeMessage: String, correlationID: String, retryable: Bool) {
+    public init(code: StructuredAPIErrorCode, userSafeMessage: String, correlationID: String, retryable: Bool, retryAfterSeconds: Int? = nil) {
         self.code = code
         self.userSafeMessage = userSafeMessage
         self.correlationID = correlationID
         self.retryable = retryable
+        self.retryAfterSeconds = retryAfterSeconds
     }
 }
 

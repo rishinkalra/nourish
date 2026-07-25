@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-07-25T06:06:22.258184+00:00",
+  "generated_at": "2026-07-25T08:44:47.613122+00:00",
   "source": {
     "name": "Project_Nourish_Product_Specification_v1.0.docx",
     "sha256": "f7426a4ad35323d1ddc984c6d4c0293d1ae0355672b3576c6b8706d105a6f9e1"
@@ -32,8 +32,8 @@
       "requirement": "Authentication tokens MUST be stored in Keychain and refreshed without exposing raw credentials.",
       "source": "Table 19, row 4",
       "status": "partial",
-      "evidence": "backend/src/auth-service.mjs; backend/src/postgres-auth-service.mjs; backend/src/database.mjs; backend/src/postgres-runtime.mjs; backend/migrations/001_auth_profiles.sql; backend/test/auth-profile.test.mjs; backend/test/durability.test.mjs; ios/Sources/NourishAPI/Authentication.swift; ios/Sources/NourishAPI/HTTPClient.swift; ios/Sources/NourishUI/AuthenticationStore.swift; ios/Sources/NourishCoreChecks/main.swift",
-      "notes": "Opaque token hashes, one-time links, transactional refresh rotation, redacted client values, URLSession exchange, and after-first-unlock this-device-only Keychain storage are implemented in memory and PostgreSQL adapters. Live database, production email/rate limiting, and physical-device security testing remain."
+      "evidence": "backend/src/auth-service.mjs; backend/src/postgres-auth-service.mjs; backend/src/rate-limit-service.mjs; backend/src/database.mjs; backend/src/postgres-runtime.mjs; backend/src/server.mjs; backend/migrations/001_auth_profiles.sql; backend/migrations/024_distributed_rate_limits.sql; backend/test/auth-profile.test.mjs; backend/test/durability.test.mjs; backend/test/rate-limit.test.mjs; ios/Sources/NourishAPI/Authentication.swift; ios/Sources/NourishAPI/HTTPClient.swift; ios/Sources/NourishAPI/APIContract.swift; ios/Sources/NourishUI/AuthenticationStore.swift; ios/Sources/NourishCoreChecks/main.swift; docs/RATE_LIMITING_METHOD.md",
+      "notes": "Opaque token hashes, one-time links, transactional refresh rotation, redacted client values, URLSession exchange, after-first-unlock this-device-only Keychain storage, and shared privacy-safe authentication abuse controls are implemented in memory and PostgreSQL adapters. Live database concurrency/failover and threshold calibration, production email, and physical-device security testing remain."
     },
     {
       "id": "IOS-AUTH-004",

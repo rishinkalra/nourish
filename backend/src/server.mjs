@@ -1,7 +1,7 @@
 import { createServer } from "node:http";
 import { createHash, randomUUID } from "node:crypto";
 import { AccountError, AccountService } from "./account-service.mjs";
-import { AuthError, AuthService, MemoryMagicLinkDelivery } from "./auth-service.mjs";
+import { AuthError, AuthService, MemoryMagicLinkDelivery, normalizeEmail } from "./auth-service.mjs";
 import { CatalogueError, CatalogueService } from "./catalogue-service.mjs";
 import { FeedbackError, FeedbackService } from "./feedback-service.mjs";
 import { PlanError, PlannerService } from "./planner-service.mjs";
@@ -17,8 +17,10 @@ import { UserSupportError, UserSupportService } from "./user-support-service.mjs
 import { FeatureFlagError, FeatureFlagService } from "./feature-flag-service.mjs";
 import { AdminExportError, AdminExportService } from "./admin-export-service.mjs";
 import { MemoryPushRegistrationService, PushRegistrationError } from "./push-notification-service.mjs";
+import { MemoryRateLimitService, RateLimitError } from "./rate-limit-service.mjs";
+import { isIP } from "node:net";
 
-export function createNourishServer({ authService, adminAuthService, profileService, catalogueService, planService, planOperationsService, subscriptionOperationsService, analyticsOperationsService, analyticsEventService, userSupportService, featureFlagService, adminExportService, weeklyLoopService, feedbackService, accountService, pushRegistrationService, appStoreServerClient, delivery, adminKey, adminOrigin, readinessCheck, scoringConfiguration } = {}) {
+export function createNourishServer({ authService, adminAuthService, profileService, catalogueService, planService, planOperationsService, subscriptionOperationsService, analyticsOperationsService, analyticsEventService, userSupportService, featureFlagService, adminExportService, weeklyLoopService, feedbackService, accountService, pushRegistrationService, rateLimitService, appStoreServerClient, delivery, adminKey, adminOrigin, readinessCheck, scoringConfiguration, trustProxy = false } = {}) {
   const resolvedDelivery = delivery ?? new MemoryMagicLinkDelivery();
   const resolvedAuth = authService ?? new AuthService({ delivery: resolvedDelivery });
   const resolvedAdminAuth = adminAuthService ?? new AdminAuthService();
@@ -42,6 +44,7 @@ export function createNourishServer({ authService, adminAuthService, profileServ
   const resolvedUserSupport = userSupportService ?? new UserSupportService();
   const resolvedFeatureFlags = featureFlagService ?? new FeatureFlagService();
   const resolvedPushRegistrations = pushRegistrationService ?? new MemoryPushRegistrationService();
+  const resolvedRateLimits = rateLimitService ?? new MemoryRateLimitService();
   const resolvedAdminExports = adminExportService ?? new AdminExportService({
     analyticsService: resolvedAnalyticsOperations,
     userSupportService: resolvedUserSupport,
@@ -56,6 +59,7 @@ export function createNourishServer({ authService, adminAuthService, profileServ
         if (request.method === "OPTIONS") return send(response, 204, null, correlationID);
       }
       if (url.pathname === "/admin/v1/auth/session" && request.method === "POST") {
+        await limitSource(resolvedRateLimits, request, trustProxy, "admin.auth.exchange", 20, 900);
         const body = await readJSON(request);
         return send(response, 200, await resolvedAdminAuth.exchange(body.identityToken, {
           route: url.pathname, correlationID,
@@ -83,20 +87,37 @@ export function createNourishServer({ authService, adminAuthService, profileServ
       }
       if (request.method === "POST" && url.pathname === "/v1/auth/magic-link") {
         const body = await readJSON(request);
-        const receipt = await resolvedAuth.requestMagicLink(body.email);
+        const normalizedEmail = normalizeEmail(body.email);
+        await limitSource(resolvedRateLimits, request, trustProxy, "auth.magic_link.source", 20, 3_600);
+        await resolvedRateLimits.consume({
+          scope: "auth.magic_link.identity.cooldown",
+          identifier: normalizedEmail,
+          limit: 1,
+          windowSeconds: 60,
+        });
+        await resolvedRateLimits.consume({
+          scope: "auth.magic_link.identity.hour",
+          identifier: normalizedEmail,
+          limit: 5,
+          windowSeconds: 3_600,
+        });
+        const receipt = await resolvedAuth.requestMagicLink(normalizedEmail);
         return send(response, 202, receipt, correlationID);
       }
       if (request.method === "POST" && url.pathname === "/v1/auth/magic-link/complete") {
+        await limitSource(resolvedRateLimits, request, trustProxy, "auth.magic_link.complete", 30, 900);
         const body = await readJSON(request);
         const session = await resolvedAuth.completeMagicLink(body.token);
         return send(response, 200, session, correlationID);
       }
       if (request.method === "POST" && url.pathname === "/v1/auth/apple") {
+        await limitSource(resolvedRateLimits, request, trustProxy, "auth.apple", 30, 900);
         const body = await readJSON(request);
         const session = await resolvedAuth.authenticateWithApple(body);
         return send(response, 200, session, correlationID);
       }
       if (request.method === "POST" && url.pathname === "/v1/auth/refresh") {
+        await limitSource(resolvedRateLimits, request, trustProxy, "auth.refresh", 120, 900);
         const body = await readJSON(request);
         const session = await resolvedAuth.refresh(body.refreshToken);
         return send(response, 200, session, correlationID);
@@ -583,8 +604,8 @@ export function createNourishServer({ authService, adminAuthService, profileServ
       }
       return sendError(response, 404, "VALIDATION_ERROR", "Route not found.", correlationID, false);
     } catch (error) {
-      if (error instanceof AuthError || error instanceof AdminAuthError || error instanceof ProfileError || error instanceof CatalogueError || error instanceof PlanError || error instanceof FeedbackError || error instanceof AccountError || error instanceof AnalyticsEventError || error instanceof UserSupportError || error instanceof FeatureFlagError || error instanceof AdminExportError || error instanceof PushRegistrationError) {
-        return sendError(response, error.status, error.code, error.message, correlationID, error.retryable ?? error.code === "RATE_LIMITED");
+      if (error instanceof AuthError || error instanceof AdminAuthError || error instanceof ProfileError || error instanceof CatalogueError || error instanceof PlanError || error instanceof FeedbackError || error instanceof AccountError || error instanceof AnalyticsEventError || error instanceof UserSupportError || error instanceof FeatureFlagError || error instanceof AdminExportError || error instanceof PushRegistrationError || error instanceof RateLimitError) {
+        return sendError(response, error.status, error.code, error.message, correlationID, error.retryable ?? error.code === "RATE_LIMITED", error.retryAfterSeconds);
       }
       if (error instanceof AppStoreServerError) {
         const unavailable = error.retryable || error.code === "APP_STORE_SERVER_NOT_CONFIGURED";
@@ -805,6 +826,40 @@ function sendCSV(response, delivered, correlationID) {
   response.end(delivered.content);
 }
 
-function sendError(response, status, code, userSafeMessage, correlationID, retryable) {
-  return send(response, status, { code, userSafeMessage, correlationID, retryable }, correlationID);
+function sendError(response, status, code, userSafeMessage, correlationID, retryable, retryAfterSeconds) {
+  const boundedRetryAfter = Number.isFinite(retryAfterSeconds)
+    ? Math.max(1, Math.min(86_400, Math.ceil(retryAfterSeconds)))
+    : undefined;
+  if (boundedRetryAfter) response.setHeader("retry-after", String(boundedRetryAfter));
+  return send(response, status, {
+    code, userSafeMessage, correlationID, retryable,
+    ...(boundedRetryAfter ? { retryAfterSeconds: boundedRetryAfter } : {}),
+  }, correlationID);
+}
+
+async function limitSource(service, request, trustProxy, scope, limit, windowSeconds) {
+  return service.consume({
+    scope,
+    identifier: requestSourceAddress(request, { trustProxy }),
+    limit,
+    windowSeconds,
+  });
+}
+
+export function requestSourceAddress(request, { trustProxy = false } = {}) {
+  if (trustProxy) {
+    const forwarded = String(request.headers?.["x-forwarded-for"] ?? "")
+      .split(",")[0]
+      .trim();
+    if (isIP(forwarded)) return normalizeAddress(forwarded);
+  }
+  return normalizeAddress(request.socket?.remoteAddress) ?? "unknown";
+}
+
+function normalizeAddress(value) {
+  const address = String(value ?? "").trim();
+  const normalized = address.startsWith("::ffff:") && isIP(address.slice(7)) === 4
+    ? address.slice(7)
+    : address;
+  return isIP(normalized) ? normalized : undefined;
 }

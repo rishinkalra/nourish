@@ -14,6 +14,7 @@ nourish-staging.yaml
 
 # JavaScript output
 node_modules/
+.pnpm-store/
 coverage/
 npm-debug.log*
 

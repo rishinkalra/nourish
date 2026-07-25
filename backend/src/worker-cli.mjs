@@ -20,6 +20,7 @@ import {
   createAPNsPushProviderFromEnvironment,
   createPlanReadyNotificationHandler,
 } from "./push-notification-service.mjs";
+import { deleteExpiredRateLimitCounters } from "./rate-limit-service.mjs";
 
 const runtimeConfiguration = validateRuntimeConfiguration(process.env, { processType: "worker" });
 
@@ -80,6 +81,7 @@ try {
   let nextReconciliationScanAt = 0;
   let nextExportRetentionScanAt = 0;
   let nextAnalyticsRetentionScanAt = 0;
+  let nextRateLimitRetentionScanAt = 0;
   while (!stopping) {
     if (reconciliationEnabled && Date.now() >= nextReconciliationScanAt) {
       await scheduleDueEntitlementReconciliations({ pool });
@@ -100,6 +102,14 @@ try {
         process.stderr.write(`${JSON.stringify({ event: "analytics_retention_scan_failed", code: error?.code ?? "TEMPORARY_FAILURE" })}\n`);
       }
       nextAnalyticsRetentionScanAt = Date.now() + 60 * 60_000;
+    }
+    if (Date.now() >= nextRateLimitRetentionScanAt) {
+      try {
+        await deleteExpiredRateLimitCounters({ pool });
+      } catch (error) {
+        process.stderr.write(`${JSON.stringify({ event: "rate_limit_retention_scan_failed", code: error?.code ?? "TEMPORARY_FAILURE" })}\n`);
+      }
+      nextRateLimitRetentionScanAt = Date.now() + 60 * 60_000;
     }
     const result = await worker.runOnce();
     if (!result) await new Promise((resolve) => setTimeout(resolve, 1_000));

@@ -4,11 +4,12 @@ export const hashOpaqueToken = (value) => createHash("sha256").update(value, "ut
 export const createOpaqueToken = () => randomBytes(32).toString("base64url");
 
 export class AuthError extends Error {
-  constructor(code, message, status = 400) {
+  constructor(code, message, status = 400, retryAfterSeconds) {
     super(message);
     this.name = "AuthError";
     this.code = code;
     this.status = status;
+    this.retryAfterSeconds = retryAfterSeconds;
   }
 }
 
@@ -64,7 +65,8 @@ export class AuthService {
     const now = this.now();
     const lastRequest = this.store.lastMagicRequestByEmail.get(normalizedEmail);
     if (lastRequest && now.getTime() - lastRequest.getTime() < 60_000) {
-      throw new AuthError("RATE_LIMITED", "Please wait before requesting another link.", 429);
+      const retryAfterSeconds = Math.max(1, Math.ceil((60_000 - (now.getTime() - lastRequest.getTime())) / 1_000));
+      throw new AuthError("RATE_LIMITED", "Please wait before requesting another link.", 429, retryAfterSeconds);
     }
 
     const token = this.tokenFactory();
