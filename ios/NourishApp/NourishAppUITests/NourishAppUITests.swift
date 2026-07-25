@@ -260,6 +260,10 @@ final class NourishAppUITests: XCTestCase {
         XCTAssertTrue(meal.isHittable)
         meal.tap()
         XCTAssertTrue(app.navigationBars["रेसिपी"].waitForExistence(timeout: 3))
+        let favorite = app.buttons["recipe.favorite"]
+        reveal(favorite, in: app)
+        XCTAssertTrue(favorite.isHittable)
+        XCTAssertEqual(favorite.label, "पसंदीदा में जोड़ें")
         let safeSwaps = app.buttons["swap.show-candidates"]
         reveal(safeSwaps, in: app)
         XCTAssertTrue(safeSwaps.isHittable)

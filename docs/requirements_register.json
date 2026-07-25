@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-07-25T14:12:19.401493+00:00",
+  "generated_at": "2026-07-25T15:53:57.166530+00:00",
   "source": {
     "name": "Project_Nourish_Product_Specification_v1.0.docx",
     "sha256": "f7426a4ad35323d1ddc984c6d4c0293d1ae0355672b3576c6b8706d105a6f9e1"
@@ -111,9 +111,9 @@
       "area": "ONB",
       "requirement": "All onboarding answers MUST be editable later and changes MUST declare whether they affect the current or next plan.",
       "source": "Table 20, row 7",
-      "status": "partial",
+      "status": "verified",
       "evidence": "backend/src/profile-service.mjs; backend/src/postgres-profile-store.mjs; backend/src/postgres-runtime.mjs; backend/src/server.mjs; backend/test/auth-profile.test.mjs; backend/test/durability.test.mjs; ios/Sources/NourishCore/ProfileModels.swift; ios/Sources/NourishAPI/ProfileRepository.swift; ios/Sources/NourishAPI/FileProfileRepository.swift; ios/Sources/NourishAPI/ProfileSyncEngine.swift; ios/Sources/NourishAPI/HTTPClient.swift; ios/Sources/NourishUI/AppProfileStore.swift; ios/Sources/NourishUI/SettingsEditorView.swift; ios/Sources/NourishCoreChecks/main.swift; docs/PROFILE_SYNC_VERIFICATION.md; docs/nourish-ios-settings.png",
-      "notes": "Every onboarding answer is editable with declared current-and-future or next-plan-only scope, protected local persistence, and revision-checked sync. The PostgreSQL adapter uses atomic compare-and-set updates; live database integration remains."
+      "notes": "Every onboarding answer is editable with declared current-and-future or next-plan-only scope, protected local persistence, and revision-checked sync. PostgreSQL uses atomic compare-and-set updates, and the real local durable journey verifies profile persistence through the API."
     },
     {
       "id": "IOS-ONB-007",
@@ -141,9 +141,9 @@
       "area": "PLAN",
       "requirement": "Each day MUST display planned calories and macros versus target, with estimated values clearly labelled.",
       "source": "Table 21, row 3",
-      "status": "partial",
-      "evidence": "index.html; ios/Sources/NourishUI/MainAppView.swift; ios/Sources/NourishUI/ActiveWeeklyLoopStore.swift; ios/Sources/NourishAPI/WeeklyLoopRemote.swift",
-      "notes": "Web and native screens show daily calories and protein versus target with estimate labelling. The native active-plan screens use adopted reviewed snapshots; full macro target presentation remains."
+      "status": "verified",
+      "evidence": "index.html; ios/Sources/NourishUI/MainAppView.swift; ios/Sources/NourishUI/ActiveWeeklyLoopStore.swift; ios/Sources/NourishAPI/WeeklyLoopRemote.swift; ios/NourishApp/NourishAppUITests/NourishAppUITests.swift",
+      "notes": "Every adopted-plan day shows planned calories against the snapshotted calorie target plus planned protein, carbohydrate and fat estimates. Protein is also shown against the user's optional protein target when supplied; Nourish does not invent unapproved carbohydrate or fat targets."
     },
     {
       "id": "IOS-PLAN-003",
@@ -161,9 +161,9 @@
       "area": "PLAN",
       "requirement": "A user MUST be able to regenerate an entire future week with a reason and without losing previous plan history.",
       "source": "Table 21, row 5",
-      "status": "partial",
-      "evidence": "ios/Sources/NourishCore/DeterministicPlanner.swift; ios/Sources/NourishAPI/APIContract.swift; ios/Sources/NourishAPI/PlanRemote.swift; ios/Sources/NourishUI/PlanGenerationStore.swift; ios/Sources/NourishUI/MainAppView.swift; ios/Sources/NourishCoreChecks/main.swift; backend/src/planner-service.mjs; backend/src/postgres-plan-service.mjs; backend/src/plan-job-handler.mjs; backend/src/server.mjs; backend/test/auth-profile.test.mjs; backend/test/durability.test.mjs; backend/migrations/003_plan_generation.sql; backend/migrations/005_plan_renewal_feedback.sql; backend/migrations/009_durable_plan_runtime.sql; docs/DURABLE_PLANNER_METHOD.md; docs/nourish-ios-plan-studio.png",
-      "notes": "Regeneration reasons, future-week validation, immutable successor history, idempotent adoption, immediate first activation and scheduled renewal are implemented in memory and PostgreSQL adapters. Live concurrency validation remains."
+      "status": "verified",
+      "evidence": "ios/Sources/NourishCore/DeterministicPlanner.swift; ios/Sources/NourishAPI/APIContract.swift; ios/Sources/NourishAPI/PlanRemote.swift; ios/Sources/NourishUI/PlanGenerationStore.swift; ios/Sources/NourishUI/MainAppView.swift; ios/Sources/NourishCoreChecks/main.swift; backend/src/planner-service.mjs; backend/src/postgres-plan-service.mjs; backend/src/plan-job-handler.mjs; backend/src/local-e2e-smoke-cli.mjs; backend/src/server.mjs; backend/test/auth-profile.test.mjs; backend/test/durability.test.mjs; backend/migrations/003_plan_generation.sql; backend/migrations/005_plan_renewal_feedback.sql; backend/migrations/009_durable_plan_runtime.sql; docs/DURABLE_PLANNER_METHOD.md; docs/nourish-ios-plan-studio.png",
+      "notes": "Regeneration reasons, future-week validation, immutable successor history, idempotent adoption, immediate first activation and scheduled renewal are implemented. The real PostgreSQL local journey submits simultaneous requests with one idempotency key and proves both resolve to one durable regeneration job."
     },
     {
       "id": "IOS-PLAN-005",
@@ -191,9 +191,9 @@
       "area": "PLAN",
       "requirement": "The user SHOULD be able to lock meals before regenerating the remaining plan.",
       "source": "Table 21, row 8",
-      "status": "partial",
-      "evidence": "ios/Sources/NourishCore/DeterministicPlanner.swift; ios/Sources/NourishAPI/APIContract.swift; ios/Sources/NourishAPI/PlanRemote.swift; ios/Sources/NourishUI/PlanGenerationStore.swift; ios/Sources/NourishUI/MainAppView.swift; ios/Sources/NourishCoreChecks/main.swift; backend/src/planner-service.mjs; backend/src/postgres-plan-service.mjs; backend/src/plan-job-handler.mjs; backend/test/auth-profile.test.mjs; backend/test/durability.test.mjs; backend/migrations/003_plan_generation.sql; backend/migrations/009_durable_plan_runtime.sql; docs/DURABLE_PLANNER_METHOD.md; docs/nourish-ios-plan-studio.png",
-      "notes": "Account-owned locks are revalidated against publication, diet, allergens, exclusions, slot, time and leftover linkage. Durable regeneration preserves the snapshot under a new immutable item UUID with locked-from lineage and remapped diagnostics. Live database concurrency testing remains."
+      "status": "verified",
+      "evidence": "ios/Sources/NourishCore/DeterministicPlanner.swift; ios/Sources/NourishAPI/APIContract.swift; ios/Sources/NourishAPI/PlanRemote.swift; ios/Sources/NourishUI/PlanGenerationStore.swift; ios/Sources/NourishUI/MainAppView.swift; ios/Sources/NourishCoreChecks/main.swift; backend/src/planner-service.mjs; backend/src/postgres-plan-service.mjs; backend/src/plan-job-handler.mjs; backend/src/local-e2e-smoke-cli.mjs; backend/test/auth-profile.test.mjs; backend/test/durability.test.mjs; backend/migrations/003_plan_generation.sql; backend/migrations/009_durable_plan_runtime.sql; docs/DURABLE_PLANNER_METHOD.md; docs/nourish-ios-plan-studio.png",
+      "notes": "Account-owned locks are revalidated against publication, diet, allergens, exclusions, slot, time and complete leftover linkage. Durable regeneration preserves immutable recipe identity under new item IDs with locked-from lineage. The real PostgreSQL journey verifies complete batch locking and lineage while duplicate concurrent regeneration requests collapse to one job."
     },
     {
       "id": "IOS-MEAL-001",
@@ -251,9 +251,9 @@
       "area": "MEAL",
       "requirement": "Favorites MUST influence ranking but may not override safety constraints or variety limits.",
       "source": "Table 22, row 7",
-      "status": "partial",
-      "evidence": "ios/Sources/NourishCore/DeterministicPlanner.swift; ios/Sources/NourishCoreChecks/main.swift; backend/src/planner-service.mjs; backend/test/auth-profile.test.mjs",
-      "notes": "Favorites receive a ranking reward only after hard eligibility; an unsafe favorite is rejected in native and HTTP checks. Favorite capture/persistence UI remains."
+      "status": "verified",
+      "evidence": "ios/Sources/NourishCore/DeterministicPlanner.swift; ios/Sources/NourishUI/PlanGenerationStore.swift; ios/Sources/NourishUI/MainAppView.swift; ios/NourishApp/NourishAppTests/NourishAppTests.swift; ios/NourishApp/NourishAppUITests/NourishAppUITests.swift; ios/Sources/NourishCoreChecks/main.swift; backend/src/planner-service.mjs; backend/test/auth-profile.test.mjs",
+      "notes": "Recipe detail provides an accessible favorite toggle. Favorites persist in an account-partitioned local store, are sent with future plan requests, and receive a ranking reward only after hard eligibility and variety checks; unsafe favorites remain rejected."
     },
     {
       "id": "IOS-GROC-001",
@@ -511,9 +511,9 @@
       "area": "005",
       "requirement": "Dashboard must distinguish gross customer price, tax/commission unknowns, and estimated net proceeds.",
       "source": "Table 36, row 6",
-      "status": "not_started",
-      "evidence": "—",
-      "notes": ""
+      "status": "verified",
+      "evidence": "admin/index.html; admin/subscription-economics.css; admin/app.js",
+      "notes": "Subscription operations explicitly separates Apple-localized gross customer price from unknown storefront tax and commission, and labels estimated net proceeds unavailable rather than zero until approved App Store financial-report ingestion exists."
     },
     {
       "id": "SUB-006",
@@ -521,9 +521,9 @@
       "area": "006",
       "requirement": "Paywall copy, product order, and trial messaging must be remotely configurable within App Store rules.",
       "source": "Table 36, row 7",
-      "status": "not_started",
-      "evidence": "—",
-      "notes": ""
+      "status": "verified",
+      "evidence": "backend/src/feature-flag-service.mjs; backend/src/server.mjs; backend/migrations/018_feature_flags.sql; admin/index.html; admin/flags.css; admin/app.js; ios/Sources/NourishAPI/FeatureFlags.swift; ios/Sources/NourishUI/FeatureFlagStore.swift; ios/Sources/NourishUI/SubscriptionPurchaseView.swift; ios/Sources/NourishCoreChecks/main.swift",
+      "notes": "The audited paywall_configuration flag can remotely control bounded headline, disclosure, trial messaging and product order with app-version, rollout and emergency-disable gates. Products, localized prices and Apple purchase terms remain StoreKit-owned, and missing or malformed configuration fails to compiled safe copy and price order."
     },
     {
       "id": "PRIV-001",
@@ -531,9 +531,9 @@
       "area": "001",
       "requirement": "Collect only fields necessary to produce plans, operate accounts, and measure the product.",
       "source": "Table 48, row 2",
-      "status": "not_started",
-      "evidence": "—",
-      "notes": ""
+      "status": "partial",
+      "evidence": "docs/privacy_inventory.json; docs/PRIVACY_GOVERNANCE_METHOD.md; backend/test/privacy-governance.test.mjs; backend/src/analytics-event-service.mjs; ios/Sources/NourishCore/ProfileModels.swift",
+      "notes": "An auditable category/purpose/processor/retention inventory, optional body inputs, bounded typed product schemas, credential-free exports and an executable runtime-dependency gate establish the minimization boundary. Final counsel/DPDP review and reconciliation against the configured production processors remain."
     },
     {
       "id": "PRIV-002",
@@ -551,9 +551,9 @@
       "area": "003",
       "requirement": "Do not sell health, profile, or meal-behavior data or send it to advertising data brokers.",
       "source": "Table 48, row 4",
-      "status": "not_started",
-      "evidence": "—",
-      "notes": ""
+      "status": "partial",
+      "evidence": "docs/privacy_inventory.json; docs/PRIVACY_GOVERNANCE_METHOD.md; backend/test/privacy-governance.test.mjs; backend/src/analytics-event-service.mjs; ios/NourishApp/NourishApp/PrivacyInfo.xcprivacy",
+      "notes": "The product declares tracking and advertising-data sale false, contains no advertising/attribution SDK or advertising-identifier access, and restricts measurement to consented first-party typed events. The public counsel-approved non-sale policy and production processor-contract validation remain."
     },
     {
       "id": "PRIV-004",
@@ -571,9 +571,9 @@
       "area": "005",
       "requirement": "Display and maintain accurate App Store privacy disclosures for all first- and third-party collection.",
       "source": "Table 48, row 6",
-      "status": "not_started",
-      "evidence": "—",
-      "notes": ""
+      "status": "partial",
+      "evidence": "ios/NourishApp/NourishApp/PrivacyInfo.xcprivacy; ios/NourishApp/NourishApp.xcodeproj/project.pbxproj; docs/privacy_inventory.json; docs/PRIVACY_GOVERNANCE_METHOD.md; backend/test/privacy-governance.test.mjs",
+      "notes": "A bundled no-tracking privacy manifest conservatively declares current email, health/profile, user-ID, purchase-history, product-interaction and optional user-content collection plus the UserDefaults required-reason API. The accountable owner must enter and verify matching current production answers and policy URLs in App Store Connect for every submission."
     },
     {
       "id": "PRIV-006",
@@ -581,9 +581,9 @@
       "area": "006",
       "requirement": "Use coarsened or pseudonymous attributes for analytics wherever practical.",
       "source": "Table 48, row 7",
-      "status": "not_started",
-      "evidence": "—",
-      "notes": ""
+      "status": "verified",
+      "evidence": "backend/src/analytics-event-service.mjs; backend/src/analytics-operations-service.mjs; backend/migrations/022_analytics_events.sql; backend/test/analytics-event.test.mjs; docs/ANALYTICS_EVENT_METHOD.md; docs/PRIVACY_GOVERNANCE_METHOD.md",
+      "notes": "Measurement is default-off, account identity is server-derived, dashboards are aggregate-only with small-group suppression, and the typed event boundary rejects email, profile answers, body metrics, allergens, meal history, free text, device/advertising identifiers and fingerprints."
     },
     {
       "id": "PRIV-007",
@@ -591,9 +591,9 @@
       "area": "007",
       "requirement": "Perform a privacy review before adding any SDK, especially analytics, attribution, support, or AI vendors.",
       "source": "Table 48, row 8",
-      "status": "not_started",
-      "evidence": "—",
-      "notes": ""
+      "status": "partial",
+      "evidence": "docs/privacy_inventory.json; docs/PRIVACY_GOVERNANCE_METHOD.md; backend/test/privacy-governance.test.mjs; backend/package.json; backend/package-lock.json; ios/Package.swift",
+      "notes": "The mandatory SDK/processor review method covers purpose, fields, region, retention, deletion, subprocessors, training/advertising use, DPA/security/breach terms, disclosures, ownership, kill switch and regression evidence. Tests reject unreviewed Node runtime dependencies and Swift has no remote dependency; formal owner/legal approvals for selected production vendors remain."
     },
     {
       "id": "NFR-PERF-001",
@@ -601,9 +601,9 @@
       "area": "App cold start to interactive home",
       "requirement": "p95 < 2.5 sec on supported reference device, excluding first authentication",
       "source": "Table 49, row 2",
-      "status": "not_started",
-      "evidence": "—",
-      "notes": ""
+      "status": "partial",
+      "evidence": "ios/NourishApp/NourishAppUITests/NourishAppUITests.swift; docs/SERVICE_LEVEL_AND_PERFORMANCE_METHOD.md",
+      "notes": "The cold-start boundary, exclusion rule, supported-reference-device method, nearest-rank p95 calculation, minimum beta sample and required segmentation are specified. Xcode Organizer/signpost evidence from at least 100 eligible physical-device launches remains."
     },
     {
       "id": "NFR-PERF-002",
@@ -611,9 +611,9 @@
       "area": "Cached plan opening",
       "requirement": "p95 < 1 sec",
       "source": "Table 49, row 3",
-      "status": "not_started",
-      "evidence": "—",
-      "notes": ""
+      "status": "partial",
+      "evidence": "ios/Sources/NourishAPI/FileWeeklyLoopRepository.swift; ios/Sources/NourishUI/ActiveWeeklyLoopStore.swift; backend/src/local-e2e-smoke-cli.mjs; scripts/local-stack; docs/SERVICE_LEVEL_AND_PERFORMANCE_METHOD.md",
+      "notes": "The protected active-plan cache is implemented and the durable local journey now records and gates 20 active-plan API reads at p95 below one second. Native offline tap-to-interactive signposts with at least 100 production-scale cached opens on the reference device remain."
     },
     {
       "id": "NFR-PERF-003",
@@ -621,9 +621,9 @@
       "area": "Plan generation",
       "requirement": "p95 < 8 sec server processing; background completion supported",
       "source": "Table 49, row 4",
-      "status": "not_started",
-      "evidence": "—",
-      "notes": ""
+      "status": "partial",
+      "evidence": "backend/src/job-queue.mjs; backend/src/worker-cli.mjs; backend/src/observability.mjs; backend/src/local-e2e-smoke-cli.mjs; scripts/local-stack; docs/SERVICE_LEVEL_AND_PERFORMANCE_METHOD.md",
+      "notes": "Plan generation runs as a leased background job, emits separate queue-delay and processing duration, and the real local PostgreSQL journey fails if end-to-end worker-backed generation exceeds eight seconds. A production-shaped catalogue/database load sample of at least 100 successful generations is still required for the release p95."
     },
     {
       "id": "NFR-REL-001",
@@ -631,9 +631,9 @@
       "area": "API availability",
       "requirement": "≥ 99.9% monthly target after commercial launch",
       "source": "Table 49, row 5",
-      "status": "not_started",
-      "evidence": "—",
-      "notes": ""
+      "status": "partial",
+      "evidence": "backend/src/observability.mjs; backend/src/staging-smoke.mjs; .do/app.staging.yaml; docs/OBSERVABILITY_METHOD.md; docs/SERVICE_LEVEL_AND_PERFORMANCE_METHOD.md",
+      "notes": "The 99.9% monthly availability definition, independent probe and request-telemetry sources, error-budget alert boundary and live drill requirement are documented on top of existing readiness/smoke telemetry. A deployed monitoring destination and a commercial-launch measurement window remain."
     },
     {
       "id": "NFR-REL-002",
@@ -641,9 +641,9 @@
       "area": "Plan generation success",
       "requirement": "≥ 99% excluding valid no-feasible-plan outcomes",
       "source": "Table 49, row 6",
-      "status": "not_started",
-      "evidence": "—",
-      "notes": ""
+      "status": "partial",
+      "evidence": "backend/src/analytics-operations-service.mjs; backend/src/postgres-plan-service.mjs; backend/src/plan-job-handler.mjs; backend/src/observability.mjs; admin/app.js; docs/ADMIN_ANALYTICS_METHOD.md; docs/SERVICE_LEVEL_AND_PERFORMANCE_METHOD.md",
+      "notes": "The Control Room calculates terminal plan success from authoritative jobs and the release method explicitly excludes valid NO_FEASIBLE_PLAN outcomes while counting dead jobs, timeouts and unexpected failures. A statistically agreed production-shaped beta sample meeting 99% remains."
     },
     {
       "id": "NFR-OFF-001",
@@ -701,9 +701,9 @@
       "area": "Recovery",
       "requirement": "Documented RPO/RTO approved before launch; restore test completed",
       "source": "Table 49, row 12",
-      "status": "not_started",
-      "evidence": "—",
-      "notes": ""
+      "status": "partial",
+      "evidence": "scripts/local-stack; backend/src/migrations.mjs; backend/src/staging-smoke.mjs; docs/DISASTER_RECOVERY_METHOD.md; docs/STAGING_DEPLOYMENT_METHOD.md",
+      "notes": "Proposed state/object RPO and RTO values, incident restore order, validation controls and an isolated local dump/restore rehearsal are documented and executable. Business/security approval plus managed PostgreSQL point-in-time restore, failover, encryption/key and private-object recovery evidence remain."
     },
     {
       "id": "NFR-COMP-001",
@@ -711,9 +711,9 @@
       "area": "API compatibility",
       "requirement": "Backward-compatible API for at least one supported app version window",
       "source": "Table 49, row 13",
-      "status": "not_started",
-      "evidence": "—",
-      "notes": ""
+      "status": "verified",
+      "evidence": "docs/api_v1_compatibility_baseline.json; docs/SERVICE_LEVEL_AND_PERFORMANCE_METHOD.md; backend/src/server.mjs; backend/src/observability.mjs; backend/test/api-compatibility.test.mjs; ios/Sources/NourishAPI/APIContract.swift",
+      "notes": "The frozen v1 contract retains all implemented consumer route fragments, structured error fields/codes, authentication/idempotency semantics and explicit version headers. The enforced policy supports the current public app and immediately preceding public app with additive-only v1 changes; breaking changes require parallel versioning and measured retirement."
     }
   ],
   "consumer_endpoints": [

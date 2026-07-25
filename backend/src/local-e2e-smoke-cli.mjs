@@ -48,6 +48,7 @@ try {
   });
 
   const weekStartLocalDate = nextMondayInIndia();
+  const generationStartedAt = performance.now();
   const created = await requestJSON("/v1/plans", {
     method: "POST",
     headers: { ...authorization, "idempotency-key": `local-plan-${runID}` },
@@ -59,6 +60,10 @@ try {
     },
   });
   const generated = await waitForPlan(created.id, authorization);
+  const initialPlanGenerationMilliseconds = Math.round(performance.now() - generationStartedAt);
+  if (initialPlanGenerationMilliseconds >= 8_000) {
+    throw new Error(`Local plan generation exceeded the 8-second processing target: ${initialPlanGenerationMilliseconds}ms.`);
+  }
   if (!generated.plan || generated.plan.days.length !== 7) {
     throw new Error("The worker did not materialize a complete seven-day plan.");
   }
@@ -74,14 +79,103 @@ try {
   if (active.plan?.id !== generated.plan.id || !active.groceryList?.items?.length || !active.prepTimeline?.tasks?.length) {
     throw new Error("The adopted plan did not produce groceries and prep tasks.");
   }
+  const activeReadSamples = [];
+  for (let sample = 0; sample < 20; sample += 1) {
+    const startedAt = performance.now();
+    await requestJSON("/v1/plans/active", { headers: authorization });
+    activeReadSamples.push(performance.now() - startedAt);
+  }
+  const activePlanReadP95Milliseconds = Math.round(percentile(activeReadSamples, 95));
+  if (activePlanReadP95Milliseconds >= 1_000) {
+    throw new Error(`Local active-plan read p95 exceeded the 1-second target: ${activePlanReadP95Milliseconds}ms.`);
+  }
+  const groceryItem = active.groceryList.items[0];
+  const concurrentGroceryWrites = await Promise.all([
+    requestResult(`/v1/grocery-lists/${active.groceryList.id}`, {
+      method: "PATCH",
+      headers: authorization,
+      body: {
+        expectedRevision: active.groceryList.revision,
+        changes: [{ itemID: groceryItem.id, disposition: "checked" }],
+      },
+    }),
+    requestResult(`/v1/grocery-lists/${active.groceryList.id}`, {
+      method: "PATCH",
+      headers: authorization,
+      body: {
+        expectedRevision: active.groceryList.revision,
+        changes: [{ itemID: groceryItem.id, disposition: "alreadyHave" }],
+      },
+    }),
+  ]);
+  const concurrentStatuses = concurrentGroceryWrites.map((result) => result.status).sort((left, right) => left - right);
+  if (concurrentStatuses[0] !== 200 || concurrentStatuses[1] !== 409) {
+    throw new Error(`Concurrent grocery writes did not produce one commit and one conflict: ${concurrentStatuses.join(",")}.`);
+  }
+  const groceryAfterConcurrency = await requestJSON(`/v1/grocery-lists/${active.groceryList.id}`, {
+    headers: authorization,
+  });
+  if (groceryAfterConcurrency.revision !== active.groceryList.revision + 1) {
+    throw new Error("Concurrent grocery writes advanced the revision more than once.");
+  }
+  const savedGroceryItem = groceryAfterConcurrency.items.find((item) => item.id === groceryItem.id);
+  if (!["checked", "alreadyHave"].includes(savedGroceryItem?.disposition)) {
+    throw new Error("The successful concurrent grocery state was not retained.");
+  }
+  const plannedItems = generated.plan.days.flatMap((day) => day.items);
+  const lockCandidate = plannedItems.find((item) => item.leftoverRelationship?.none)
+    ?? plannedItems.find((item) => item.leftoverRelationship?.batchSource);
+  if (!lockCandidate) throw new Error("The generated plan did not contain a safe lock candidate.");
+  const lockedPlanItemIDs = lockCandidate.leftoverRelationship?.batchSource
+    ? plannedItems
+      .filter((item) => item.id === lockCandidate.id
+        || item.leftoverRelationship?.plannedReuse?.batchID === lockCandidate.leftoverRelationship.batchSource.batchID)
+      .map((item) => item.id)
+    : [lockCandidate.id];
+  const regenerationRequest = {
+    weekStartLocalDate,
+    deterministicSeed: `local-e2e-regeneration|${runID}|${weekStartLocalDate}`,
+    trigger: "manual_regeneration",
+    regenerationReason: "Local PostgreSQL concurrency and locked-lineage verification.",
+    lockedPlanItemIDs,
+  };
+  const regenerationKey = `local-regeneration-${runID}`;
+  const concurrentRegenerations = await Promise.all([
+    requestResult("/v1/plans", {
+      method: "POST",
+      headers: { ...authorization, "idempotency-key": regenerationKey },
+      body: regenerationRequest,
+    }),
+    requestResult("/v1/plans", {
+      method: "POST",
+      headers: { ...authorization, "idempotency-key": regenerationKey },
+      body: regenerationRequest,
+    }),
+  ]);
+  if (concurrentRegenerations.some((result) => result.status !== 202)
+      || concurrentRegenerations[0].body?.id !== concurrentRegenerations[1].body?.id) {
+    throw new Error("Concurrent idempotent regeneration did not resolve to one durable plan job.");
+  }
+  const regenerated = await waitForPlan(concurrentRegenerations[0].body.id, authorization);
+  const preserved = regenerated.plan?.days
+    .flatMap((day) => day.items)
+    .find((item) => item.lockedFromPlanItemID === lockCandidate.id);
+  if (!preserved || preserved.recipeSnapshot?.recipeVersionID !== lockCandidate.recipeSnapshot?.recipeVersionID) {
+    throw new Error("Locked regeneration did not preserve immutable recipe lineage.");
+  }
 
   process.stdout.write(`${JSON.stringify({
     status: "ok",
-    checks: ["postgres", "migrations", "api", "authentication", "profile", "worker", "weekly-plan", "groceries", "prep"],
+    checks: ["postgres", "migrations", "api", "authentication", "profile", "worker", "weekly-plan", "groceries", "prep", "optimistic-concurrency", "idempotent-regeneration", "locked-lineage"],
     planID: generated.plan.id,
     meals: mealCount,
     groceryItems: active.groceryList.items.length,
     prepTasks: active.prepTimeline.tasks.length,
+    performance: {
+      initialPlanGenerationMilliseconds,
+      activePlanReadP95Milliseconds,
+      activePlanReadSamples: activeReadSamples.length,
+    },
   })}\n`);
 } finally {
   await pool.end();
@@ -105,6 +199,14 @@ async function getJSON(path) {
 }
 
 async function requestJSON(path, { method = "GET", headers = {}, body, expectedStatus = 200 } = {}) {
+  const result = await requestResult(path, { method, headers, body });
+  if (result.status !== expectedStatus) {
+    throw new Error(`${method} ${path} returned HTTP ${result.status}: ${JSON.stringify(result.body)}`);
+  }
+  return result.body;
+}
+
+async function requestResult(path, { method = "GET", headers = {}, body } = {}) {
   const response = await fetch(new URL(path, baseURL), {
     method,
     headers: {
@@ -119,10 +221,16 @@ async function requestJSON(path, { method = "GET", headers = {}, body, expectedS
   if (text) {
     try { parsed = JSON.parse(text); } catch { parsed = text; }
   }
-  if (response.status !== expectedStatus) {
-    throw new Error(`${method} ${path} returned HTTP ${response.status}: ${JSON.stringify(parsed)}`);
+  if (response.headers.get("x-nourish-api-version") !== "1") {
+    throw new Error(`${method} ${path} did not advertise the stable v1 API contract.`);
   }
-  return parsed;
+  return { status: response.status, body: parsed };
+}
+
+function percentile(samples, percentileValue) {
+  if (!samples.length) throw new Error("A percentile requires at least one sample.");
+  const ordered = [...samples].sort((left, right) => left - right);
+  return ordered[Math.ceil(percentileValue / 100 * ordered.length) - 1];
 }
 
 function localProfile() {

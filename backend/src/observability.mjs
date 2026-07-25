@@ -28,6 +28,7 @@ const staticRoutes = new Set([
   "/admin/v1/auth/session",
   "/admin/v1/auth/revoke",
   "/admin/v1/recipes",
+  "/admin/v1/recipe-generations",
   "/admin/v1/ingredients",
   "/admin/v1/nutrient-records",
   "/admin/v1/catalogue/queue",
@@ -56,6 +57,10 @@ const dynamicRoutes = Object.freeze([
   [/^\/admin\/v1\/exports\/[^/]+\/content$/, "/admin/v1/exports/:id/content"],
   [/^\/admin\/v1\/users\/[^/]+$/, "/admin/v1/users/:id"],
   [/^\/admin\/v1\/recipes\/[^/]+\/submit$/, "/admin/v1/recipes/:id/submit"],
+  [/^\/admin\/v1\/recipe-generations\/[^/]+$/, "/admin/v1/recipe-generations/:id"],
+  [/^\/admin\/v1\/recipe-generations\/[^/]+\/image$/, "/admin/v1/recipe-generations/:id/image"],
+  [/^\/admin\/v1\/recipe-generations\/[^/]+\/actions\/import$/, "/admin/v1/recipe-generations/:id/actions/import"],
+  [/^\/admin\/v1\/recipe-generations\/[^/]+\/actions\/discard$/, "/admin/v1/recipe-generations/:id/actions/discard"],
   [/^\/admin\/v1\/recipe-versions\/[^/]+\/approve$/, "/admin/v1/recipe-versions/:id/approve"],
   [/^\/admin\/v1\/recipe-versions\/[^/]+\/reject$/, "/admin/v1/recipe-versions/:id/reject"],
 ]);

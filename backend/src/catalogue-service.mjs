@@ -53,6 +53,7 @@ export class CatalogueService {
     if (!record?.id || !record.ingredientID || !record.source || !record.nutritionPer100Grams) {
       throw new CatalogueError("VALIDATION_ERROR", "Complete nutrient values and provenance are required.");
     }
+    validateNutrientProvenance(record);
     if (this.store.nutrientRecords.has(record.id)) {
       throw new CatalogueError("CONFLICT", "This nutrient record ID already exists and is immutable.", 409);
     }
@@ -271,6 +272,7 @@ export class CatalogueService {
           dominantIngredientIDs: version.content.dominantIngredientIDs,
           nutritionSourceSummary: sourceSummary,
           nutritionCalculationVersion: version.content.nutritionCalculationVersion,
+          nutritionDisclosure: version.content.nutritionDisclosure ?? "estimated",
           reviewStatus: "approved",
           publicationStatus: "published",
         };
@@ -323,6 +325,7 @@ export function validateForPublication(content, store, now) {
   if (!setsEqual(derivedAllergens, declared)) issues.push("ALLERGEN_DECLARATION_MISMATCH");
 
   const coveredIngredients = new Set();
+  let usesAIEstimates = false;
   for (const recordID of content?.nutrientRecordIDs ?? []) {
     const record = store.nutrientRecords.get(recordID);
     if (!record) {
@@ -336,11 +339,31 @@ export function validateForPublication(content, store, now) {
     const effectiveUntil = record.effectiveUntil ? new Date(record.effectiveUntil) : null;
     if (effectiveFrom > now || (effectiveUntil && effectiveUntil <= now)) issues.push(`STALE_NUTRIENT:${recordID}`);
     if (record.source?.licenseStatus !== "approvedForProduction") issues.push(`UNLICENSED_SOURCE:${recordID}`);
+    if (record.source?.provenanceKind === "aiEstimated") usesAIEstimates = true;
   }
   for (const ingredientID of ingredientIDs) {
     if (!coveredIngredients.has(ingredientID)) issues.push(`MISSING_NUTRIENT_RECORD:${ingredientID}`);
   }
+  if (usesAIEstimates && content?.nutritionDisclosure !== "estimated") {
+    issues.push("AI_NUTRITION_DISCLOSURE_REQUIRED");
+  }
   return [...new Set(issues)];
+}
+
+export function validateNutrientProvenance(record) {
+  const source = record?.source ?? {};
+  const provenanceKind = source.provenanceKind ?? "licensed";
+  if (!["publicDomain", "licensed", "aiEstimated"].includes(provenanceKind)) {
+    throw new CatalogueError("VALIDATION_ERROR", "A supported nutrient provenance kind is required.");
+  }
+  if (provenanceKind === "aiEstimated") {
+    if (!source.generationMetadata?.model?.trim() || !source.generationMetadata?.promptVersion?.trim()) {
+      throw new CatalogueError("VALIDATION_ERROR", "AI-estimated nutrients require model and prompt-version provenance.");
+    }
+    if (record.confidence === "high") {
+      throw new CatalogueError("VALIDATION_ERROR", "AI-estimated nutrients cannot be recorded with high confidence.");
+    }
+  }
 }
 
 function requireRole(actor, role) {

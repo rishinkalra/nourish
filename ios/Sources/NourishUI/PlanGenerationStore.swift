@@ -21,6 +21,7 @@ final class PlanGenerationStore: ObservableObject {
     @Published private(set) var lastAdoptionStatus: String?
     @Published private(set) var history: [PlanHistoryEntry] = []
     @Published private(set) var weeklyReviewMessage: String?
+    @Published private(set) var favoriteRecipeIDs: Set<String> = []
 
     private var userID: String?
     private var remote: (any PlanRemote)?
@@ -36,6 +37,7 @@ final class PlanGenerationStore: ObservableObject {
     func connect(userID: String, remote: any PlanRemote) async {
         self.userID = userID
         self.remote = remote
+        favoriteRecipeIDs = Set(defaults.stringArray(forKey: favoritesKey(userID)) ?? [])
         state = .idle
         await refreshHistory()
         if let jobID = defaults.string(forKey: jobKey(userID)) {
@@ -51,6 +53,7 @@ final class PlanGenerationStore: ObservableObject {
         lastAdoptionStatus = nil
         history = []
         weeklyReviewMessage = nil
+        favoriteRecipeIDs = []
         state = .signedOut
         #if DEBUG
         usesDevelopmentAdoption = false
@@ -58,7 +61,10 @@ final class PlanGenerationStore: ObservableObject {
     }
 
     func clearForAccountDeletion() {
-        if let userID { defaults.removeObject(forKey: jobKey(userID)) }
+        if let userID {
+            defaults.removeObject(forKey: jobKey(userID))
+            defaults.removeObject(forKey: favoritesKey(userID))
+        }
         disconnect()
     }
 
@@ -94,6 +100,7 @@ final class PlanGenerationStore: ObservableObject {
             lockedPlanItemIDs: isRegeneration ? lockedPlanItemIDs : [],
             deterministicSeed: "\(userID)|\(wireDate(weekStart))|\(UUID().uuidString)",
             recentRecipeIDs: recentRecipeIDs,
+            favoriteRecipeIDs: favoriteRecipeIDs,
             includeOptionalSnack: includeOptionalSnack,
             regenerationReason: regenerationReason
         )
@@ -189,6 +196,20 @@ final class PlanGenerationStore: ObservableObject {
         if let userID { defaults.removeObject(forKey: jobKey(userID)) }
         draft = nil
         state = remote == nil ? .signedOut : .idle
+    }
+
+    func isFavorite(recipeID: String) -> Bool {
+        favoriteRecipeIDs.contains(recipeID)
+    }
+
+    func toggleFavorite(recipeID: String) {
+        guard let userID else { return }
+        if favoriteRecipeIDs.contains(recipeID) {
+            favoriteRecipeIDs.remove(recipeID)
+        } else {
+            favoriteRecipeIDs.insert(recipeID)
+        }
+        defaults.set(favoriteRecipeIDs.sorted(), forKey: favoritesKey(userID))
     }
 
     #if DEBUG
@@ -289,5 +310,9 @@ final class PlanGenerationStore: ObservableObject {
 
     private func jobKey(_ userID: String) -> String {
         "nourish.plan-job.\(userID)"
+    }
+
+    private func favoritesKey(_ userID: String) -> String {
+        "nourish.favorite-recipes.\(userID)"
     }
 }

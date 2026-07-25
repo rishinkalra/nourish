@@ -1,0 +1,93 @@
+{
+  "version": "2026-07-25",
+  "tracking": false,
+  "advertisingDataSale": false,
+  "dataCategories": [
+    {
+      "category": "email_address",
+      "purpose": ["authentication", "transactional_account_messages"],
+      "linkedToAccount": true,
+      "required": true,
+      "retention": "until account deletion, except bounded delivery/security evidence",
+      "processors": ["Nourish", "Brevo when configured"]
+    },
+    {
+      "category": "health_and_profile",
+      "purpose": ["meal_plan_personalization", "safety_filtering"],
+      "linkedToAccount": true,
+      "required": "only fields selected by the user; optional body inputs stay optional",
+      "retention": "until corrected or account deletion",
+      "processors": ["Nourish"]
+    },
+    {
+      "category": "user_id",
+      "purpose": ["account_operation", "security", "consented_first_party_measurement"],
+      "linkedToAccount": true,
+      "required": true,
+      "retention": "until account deletion; operational audit links are anonymized",
+      "processors": ["Nourish", "Apple for subscription identity"]
+    },
+    {
+      "category": "purchase_history",
+      "purpose": ["subscription_entitlement", "fraud_and_reconciliation"],
+      "linkedToAccount": true,
+      "required": "only when a subscription exists",
+      "retention": "bounded by entitlement, accounting, dispute, and legal requirements",
+      "processors": ["Nourish", "Apple"]
+    },
+    {
+      "category": "product_interaction",
+      "purpose": ["product_operation", "consented_first_party_measurement"],
+      "linkedToAccount": true,
+      "required": false,
+      "retention": "400 days maximum for consented analytics",
+      "processors": ["Nourish"]
+    },
+    {
+      "category": "other_user_content",
+      "purpose": ["meal_feedback", "weekly_review", "support_summary"],
+      "linkedToAccount": true,
+      "required": false,
+      "retention": "until account deletion or earlier correction",
+      "processors": ["Nourish"]
+    }
+  ],
+  "vendors": [
+    {
+      "name": "Apple",
+      "roles": ["App Store", "StoreKit", "APNs", "Sign in with Apple when enabled"],
+      "embeddedSDK": false,
+      "personalData": ["subscription identity", "push token", "Apple identity assertion"],
+      "status": "platform-required; production credentials and disclosures pending owner setup"
+    },
+    {
+      "name": "DigitalOcean",
+      "roles": ["application hosting", "PostgreSQL", "private object storage"],
+      "embeddedSDK": false,
+      "personalData": ["account and product records", "application-encrypted exports"],
+      "status": "proposed; DPA, region, access, backup and deletion validation pending"
+    },
+    {
+      "name": "Brevo",
+      "roles": ["transactional authentication email"],
+      "embeddedSDK": false,
+      "personalData": ["email address", "single-use sign-in URL"],
+      "status": "adapter implemented; sender, tracking-off, retention, DPA and inbox validation pending"
+    },
+    {
+      "name": "OpenAI",
+      "roles": ["administrator-requested generic recipe and image generation"],
+      "embeddedSDK": false,
+      "personalData": [],
+      "status": "implemented with generic briefs only; organization terms, retention and key setup pending"
+    }
+  ],
+  "approvedRuntimePackages": {
+    "node": [
+      "@apple/app-store-server-library",
+      "@aws-sdk/client-s3",
+      "pg"
+    ],
+    "swiftRemotePackages": []
+  }
+}

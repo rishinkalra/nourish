@@ -14,7 +14,7 @@ const validProduction = Object.freeze({
   NOURISH_PRIVATE_OBJECT_ENCRYPTION_ACTIVE_KEY_ID: "staging-2026-07",
   NOURISH_PRIVATE_OBJECT_ENCRYPTION_KEYS: JSON.stringify({ "staging-2026-07": applicationEncryptionKey }),
   NOURISH_PLANNER_ELIGIBLE_LOCALES: "en-IN",
-  NOURISH_PLANNER_NUTRITION_CALCULATION_VERSIONS: "ifct-2017-v1",
+  NOURISH_PLANNER_NUTRITION_CALCULATION_VERSIONS: "weighted-grams-v1",
   NOURISH_RATE_LIMIT_SECRET: "test-production-rate-limit-secret-32-bytes",
   NOURISH_EMAIL_PROVIDER: "postmark",
   NOURISH_EMAIL_FROM: "Nourish <sign-in@nourish.example>",
@@ -135,6 +135,30 @@ test("workers require database and private export storage in every environment",
     (error) => error.issues.includes("DATABASE_URL is required")
       && error.issues.includes("NOURISH_PRIVATE_OBJECT_STORE must configure private export storage"),
   );
+});
+
+test("recipe generation is optional and fails closed when enabled without OpenAI credentials", () => {
+  const disabled = validateRuntimeConfiguration(validProduction, { processType: "worker" });
+  assert.equal(disabled.recipeGenerationEnabled, false);
+  assert.equal(disabled.openAIRecipeModel, "gpt-5.6-sol");
+  assert.equal(disabled.openAIImageModel, "gpt-image-2");
+
+  assert.throws(
+    () => validateRuntimeConfiguration({
+      ...validProduction,
+      NOURISH_RECIPE_GENERATION_ENABLED: "true",
+    }, { processType: "worker" }),
+    (error) => error.issues.includes("NOURISH_OPENAI_API_KEY is required when recipe generation is enabled"),
+  );
+
+  const enabled = validateRuntimeConfiguration({
+    ...validProduction,
+    NOURISH_RECIPE_GENERATION_ENABLED: "true",
+    NOURISH_OPENAI_API_KEY: "test-openai-key-long-enough",
+  }, { processType: "worker" });
+  assert.equal(enabled.recipeGenerationEnabled, true);
+  assert.equal(enabled.openAIAPIKey, "test-openai-key-long-enough");
+  assert.equal(enabled.openAITimeoutMilliseconds, 120_000);
 });
 
 test("production filesystem storage requires an explicit staging-only exception", () => {

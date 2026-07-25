@@ -1,5 +1,5 @@
 import { randomUUID } from "node:crypto";
-import { CatalogueError, validateForPublication } from "./catalogue-service.mjs";
+import { CatalogueError, validateForPublication, validateNutrientProvenance } from "./catalogue-service.mjs";
 import { withTransaction } from "./database.mjs";
 import { PostgresCatalogueReader } from "./postgres-catalogue-reader.mjs";
 
@@ -67,13 +67,14 @@ export class PostgresCatalogueService {
       if (!existingSource.rows[0]) await client.query(
         `INSERT INTO nutrient_sources (
             id, provider, dataset, dataset_version, source_record_id, source_url,
-            license_status, retrieved_at
-         ) VALUES ($1, $2, $3, $4, $5, $6, $7, $8)
+            license_status, retrieved_at, provenance_kind, generation_metadata
+         ) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10)
          RETURNING id`,
         [
           source.id, source.provider.trim(), source.dataset.trim(), source.datasetVersion.trim(),
           source.sourceRecordID.trim(), source.sourceURL ?? null, snakeLicense(source.licenseStatus),
-          new Date(source.retrievedAt),
+          new Date(source.retrievedAt), snakeProvenance(source.provenanceKind ?? "licensed"),
+          source.generationMetadata ?? {},
         ],
       );
       const nutrition = record.nutritionPer100Grams;
@@ -119,7 +120,8 @@ export class PostgresCatalogueService {
                 nutrient.effective_from, nutrient.effective_until, nutrient.reviewed_by,
                 nutrient.reviewed_at, source.id AS source_id, source.provider, source.dataset,
                 source.dataset_version, source.source_record_id, source.source_url,
-                source.license_status, source.retrieved_at
+                source.license_status, source.retrieved_at, source.provenance_kind,
+                source.generation_metadata
            FROM ingredient_nutrients nutrient
            JOIN nutrient_sources source ON source.id = nutrient.source_id
           ORDER BY nutrient.reviewed_at DESC, nutrient.id`,
@@ -153,6 +155,8 @@ export class PostgresCatalogueService {
           id: String(row.source_id), provider: row.provider, dataset: row.dataset,
           datasetVersion: row.dataset_version, sourceRecordID: row.source_record_id,
           sourceURL: row.source_url, licenseStatus: camelLicense(row.license_status), retrievedAt: row.retrieved_at,
+          provenanceKind: camelProvenance(row.provenance_kind),
+          generationMetadata: storedJSON(row.generation_metadata),
         },
         confidence: row.confidence, effectiveFrom: row.effective_from, effectiveUntil: row.effective_until,
         reviewedBy: row.reviewed_by ? String(row.reviewed_by) : null, reviewedAt: row.reviewed_at,
@@ -160,11 +164,11 @@ export class PostgresCatalogueService {
     };
   }
 
-  async createRecipeDraft(recipe, content, actor) {
+  async createRecipeDraft(recipe, content, actor, { transactionClient } = {}) {
     requireRole(actor, "author");
     validateRecipeMetadata(recipe);
     const createdAt = this.now();
-    return withTransaction(this.pool, async (client) => {
+    const create = async (client) => {
       await lockRecipe(client, recipe.id);
       const open = await client.query(
         `SELECT id FROM recipe_versions
@@ -210,7 +214,8 @@ export class PostgresCatalogueService {
       );
       await insertAudit(client, actor.id, "recipe_version.created", versionID, null, createdAt);
       return mapVersion(inserted.rows[0]);
-    });
+    };
+    return transactionClient ? create(transactionClient) : withTransaction(this.pool, create);
   }
 
   async editDraft(versionID, content, actor) {
@@ -415,7 +420,7 @@ async function publicationIssues(client, content, now) {
       ? client.query(
         `SELECT nutrient.id, nutrient.ingredient_id, nutrient.effective_from, nutrient.effective_until,
                 nutrient.reviewed_by, nutrient.reviewed_at, source.provider, source.dataset,
-                source.dataset_version, source.license_status
+                source.dataset_version, source.license_status, source.provenance_kind
            FROM ingredient_nutrients nutrient
            JOIN nutrient_sources source ON source.id = nutrient.source_id
           WHERE nutrient.id = ANY($1::uuid[])`,
@@ -436,7 +441,7 @@ async function publicationIssues(client, content, now) {
       effectiveUntil: row.effective_until, reviewedBy: row.reviewed_by, reviewedAt: row.reviewed_at,
       source: {
         provider: row.provider, dataset: row.dataset, datasetVersion: row.dataset_version,
-        licenseStatus: camelLicense(row.license_status),
+        licenseStatus: camelLicense(row.license_status), provenanceKind: camelProvenance(row.provenance_kind),
       },
     });
   }
@@ -451,7 +456,8 @@ async function nutrientEvidence(client, recordIDs) {
             nutrient.effective_from, nutrient.effective_until, nutrient.reviewed_by,
             nutrient.reviewed_at, source.id AS source_id, source.provider, source.dataset,
             source.dataset_version, source.source_record_id, source.source_url,
-            source.license_status, source.retrieved_at
+            source.license_status, source.retrieved_at, source.provenance_kind,
+            source.generation_metadata
        FROM ingredient_nutrients nutrient
        JOIN nutrient_sources source ON source.id = nutrient.source_id
       WHERE nutrient.id = ANY($1::uuid[])`,
@@ -469,6 +475,8 @@ async function nutrientEvidence(client, recordIDs) {
         id: String(row.source_id), provider: row.provider, dataset: row.dataset,
         datasetVersion: row.dataset_version, sourceRecordID: row.source_record_id,
         sourceURL: row.source_url, licenseStatus: camelLicense(row.license_status), retrievedAt: row.retrieved_at,
+        provenanceKind: camelProvenance(row.provenance_kind),
+        generationMetadata: storedJSON(row.generation_metadata),
       },
     };
   });
@@ -592,6 +600,7 @@ function validateNutrientRecord(record) {
     || (record.effectiveUntil && new Date(record.effectiveUntil) <= new Date(record.effectiveFrom))) {
     throw new CatalogueError("VALIDATION_ERROR", "Complete immutable nutrient values, provenance, licensing, confidence, and effective dates are required.");
   }
+  validateNutrientProvenance(record);
 }
 
 function requireRole(actor, role) {
@@ -616,10 +625,20 @@ function snakeLicense(value) {
   return ({ approvedForProduction: "approved_for_production", evaluationOnly: "evaluation_only" })[value] ?? value;
 }
 
+function camelProvenance(value) {
+  return ({ public_domain: "publicDomain", ai_estimated: "aiEstimated" })[value] ?? value ?? "licensed";
+}
+
+function snakeProvenance(value) {
+  return ({ publicDomain: "public_domain", aiEstimated: "ai_estimated" })[value] ?? value;
+}
+
 function sameSource(row, source) {
   return row && row.provider === source.provider.trim() && row.dataset === source.dataset.trim()
     && row.dataset_version === source.datasetVersion.trim() && row.source_record_id === source.sourceRecordID.trim()
     && row.license_status === snakeLicense(source.licenseStatus)
+    && (row.provenance_kind ?? "licensed") === snakeProvenance(source.provenanceKind ?? "licensed")
+    && JSON.stringify(storedJSON(row.generation_metadata)) === JSON.stringify(source.generationMetadata ?? {})
     && (row.source_url ?? null) === (source.sourceURL ?? null)
     && new Date(row.retrieved_at).getTime() === new Date(source.retrievedAt).getTime();
 }

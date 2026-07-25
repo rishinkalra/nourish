@@ -18,10 +18,13 @@ import { validateRuntimeConfiguration } from "./runtime-configuration.mjs";
 import {
   PostgresPushRegistrationService,
   createAPNsPushProviderFromEnvironment,
+  createOperationalNotificationHandler,
   createPlanReadyNotificationHandler,
 } from "./push-notification-service.mjs";
 import { deleteExpiredRateLimitCounters } from "./rate-limit-service.mjs";
 import { createStructuredTelemetry } from "./observability.mjs";
+import { OpenAIRecipeGenerator } from "./openai-recipe-generator.mjs";
+import { createRecipeGenerationHandler } from "./recipe-generation-service.mjs";
 
 const runtimeConfiguration = validateRuntimeConfiguration(process.env, { processType: "worker" });
 const telemetry = createStructuredTelemetry({
@@ -54,11 +57,29 @@ const handlers = {
     scoringConfiguration,
   }),
 };
+if (runtimeConfiguration.recipeGenerationEnabled) {
+  handlers["recipe.generate"] = createRecipeGenerationHandler({
+    pool,
+    objectStore,
+    generator: new OpenAIRecipeGenerator({
+      apiKey: runtimeConfiguration.openAIAPIKey,
+      textModel: runtimeConfiguration.openAIRecipeModel,
+      imageModel: runtimeConfiguration.openAIImageModel,
+      timeoutMilliseconds: runtimeConfiguration.openAITimeoutMilliseconds,
+    }),
+  });
+}
+const pushRegistrationService = new PostgresPushRegistrationService({
+  pool, appBundleID: runtimeConfiguration.apnsBundleID,
+});
+const pushProvider = createAPNsPushProviderFromEnvironment();
 handlers["notification.plan-ready"] = createPlanReadyNotificationHandler({
-  registrationService: new PostgresPushRegistrationService({
-    pool, appBundleID: runtimeConfiguration.apnsBundleID,
-  }),
-  pushProvider: createAPNsPushProviderFromEnvironment(),
+  registrationService: pushRegistrationService,
+  pushProvider,
+});
+handlers["notification.operational"] = createOperationalNotificationHandler({
+  registrationService: pushRegistrationService,
+  pushProvider,
 });
 const reconciliationEnabled = process.env.NOURISH_APP_STORE_RECONCILIATION_ENABLED === "true";
 if (reconciliationEnabled) {

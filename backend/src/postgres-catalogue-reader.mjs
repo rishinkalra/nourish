@@ -47,7 +47,7 @@ export class PostgresCatalogueReader {
       ),
       this.pool.query(
         `SELECT DISTINCT evidence.recipe_version_id, source.provider,
-                source.dataset, source.dataset_version
+                source.dataset, source.dataset_version, source.provenance_kind
            FROM recipe_version_nutrient_evidence evidence
            JOIN ingredient_nutrients nutrient ON nutrient.id = evidence.ingredient_nutrient_id
            JOIN nutrient_sources source ON source.id = nutrient.source_id
@@ -100,8 +100,11 @@ export class PostgresCatalogueReader {
         eligibleSlots: metadata.eligibleSlots ?? row.eligible_slots ?? [],
         dominantIngredientIDs: row.dominant_ingredient_ids ?? [],
         nutritionSourceSummary: (sourceGroups.get(row.recipe_version_id) ?? [])
-          .map((source) => `${source.provider} ${source.dataset} ${source.dataset_version}`).join("; "),
+          .map((source) => `${source.provider} ${source.dataset} ${source.dataset_version}${
+            source.provenance_kind === "ai_estimated" ? " (AI estimate)" : ""
+          }`).join("; "),
         nutritionCalculationVersion: row.nutrition_calculation_version,
+        nutritionDisclosure: content.nutritionDisclosure ?? "estimated",
         reviewStatus: "approved",
         publicationStatus: "published",
       };

@@ -183,7 +183,13 @@ def render_markdown(register, coverage):
             lines.append(md_table(headers, [[item.get(header, "") for header in headers] for item in values]))
 
     lines += ["", "## Release-blocking acceptance criteria", ""]
-    lines.extend(f"- [ ] {criterion}" for criterion in register["release_acceptance"])
+    acceptance_coverage = coverage.get("__release_acceptance__", {})
+    for index, criterion in enumerate(register["release_acceptance"], 1):
+        override = acceptance_coverage.get(str(index), {})
+        status = override.get("status", "not_started")
+        checked = "x" if status == "verified" else " "
+        evidence = override.get("evidence", "—")
+        lines.append(f"- [{checked}] {criterion} **{status}** · {evidence}")
     lines += [
         "",
         "## Status discipline",

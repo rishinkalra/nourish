@@ -3,6 +3,45 @@ import Foundation
 
 public enum AppFeatureFlagKey: String, CaseIterable, Codable, Sendable {
     case weeklyInsights = "weekly_insights"
+    case paywallConfiguration = "paywall_configuration"
+}
+
+public enum FeatureFlagJSONValue: Codable, Equatable, Sendable {
+    case string(String)
+    case number(Double)
+    case boolean(Bool)
+    case array([FeatureFlagJSONValue])
+    case object([String: FeatureFlagJSONValue])
+    case null
+
+    public init(from decoder: Decoder) throws {
+        let container = try decoder.singleValueContainer()
+        if container.decodeNil() { self = .null }
+        else if let value = try? container.decode(Bool.self) { self = .boolean(value) }
+        else if let value = try? container.decode(Double.self) { self = .number(value) }
+        else if let value = try? container.decode(String.self) { self = .string(value) }
+        else if let value = try? container.decode([FeatureFlagJSONValue].self) { self = .array(value) }
+        else { self = .object(try container.decode([String: FeatureFlagJSONValue].self)) }
+    }
+
+    public func encode(to encoder: Encoder) throws {
+        var container = encoder.singleValueContainer()
+        switch self {
+        case let .string(value): try container.encode(value)
+        case let .number(value): try container.encode(value)
+        case let .boolean(value): try container.encode(value)
+        case let .array(value): try container.encode(value)
+        case let .object(value): try container.encode(value)
+        case .null: try container.encodeNil()
+        }
+    }
+}
+
+public struct PaywallPresentation: Equatable, Sendable {
+    public let headline: String?
+    public let disclosure: String?
+    public let trialMessage: String?
+    public let productOrder: [String]
 }
 
 public struct FeatureFlagDecision: Codable, Equatable, Sendable {
@@ -10,12 +49,14 @@ public struct FeatureFlagDecision: Codable, Equatable, Sendable {
     public let enabled: Bool
     public let version: Int
     public let reasonCode: String
+    public let value: FeatureFlagJSONValue?
 
-    public init(key: String, enabled: Bool, version: Int, reasonCode: String) {
+    public init(key: String, enabled: Bool, version: Int, reasonCode: String, value: FeatureFlagJSONValue? = nil) {
         self.key = key
         self.enabled = enabled
         self.version = version
         self.reasonCode = reasonCode
+        self.value = value
     }
 }
 
@@ -51,7 +92,8 @@ public struct AppFeatureFlagSet: Equatable, Sendable {
                 key: decision.key,
                 enabled: mustDisable ? false : decision.enabled,
                 version: decision.version,
-                reasonCode: decision.reasonCode
+                reasonCode: decision.reasonCode,
+                value: mustDisable ? nil : decision.value
             )
         }
     }
@@ -66,6 +108,36 @@ public struct AppFeatureFlagSet: Equatable, Sendable {
 
     public func decision(_ key: AppFeatureFlagKey) -> FeatureFlagDecision? {
         decisions[key]
+    }
+
+    public var paywallPresentation: PaywallPresentation? {
+        guard let decision = decisions[.paywallConfiguration],
+              decision.enabled,
+              case let .object(value) = decision.value else { return nil }
+        func boundedString(_ key: String, maximum: Int) -> String? {
+            guard case let .string(text) = value[key] else { return nil }
+            let trimmed = text.trimmingCharacters(in: .whitespacesAndNewlines)
+            return trimmed.isEmpty || trimmed.count > maximum ? nil : trimmed
+        }
+        let productOrder: [String]
+        if case let .array(values) = value["productOrder"] {
+            productOrder = Array(values.compactMap {
+                guard case let .string(identifier) = $0,
+                      !identifier.isEmpty,
+                      identifier.count <= 160 else { return nil }
+                return identifier
+            }.prefix(12))
+        } else {
+            productOrder = []
+        }
+        var seenProductIDs = Set<String>()
+        let uniqueProductOrder = productOrder.filter { seenProductIDs.insert($0).inserted }
+        return PaywallPresentation(
+            headline: boundedString("headline", maximum: 100),
+            disclosure: boundedString("disclosure", maximum: 300),
+            trialMessage: boundedString("trialMessage", maximum: 200),
+            productOrder: uniqueProductOrder
+        )
     }
 }
 

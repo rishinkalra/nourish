@@ -15,6 +15,8 @@ enum NourishRoute: Equatable, Sendable {
     case prep
     case meal(MealSlot)
     case weeklyReview
+    case accountSettings
+    case subscription
 
     init?(url: URL) {
         guard url.scheme?.lowercased() == "nourish", url.host?.lowercased() == "open" else { return nil }
@@ -26,6 +28,8 @@ enum NourishRoute: Equatable, Sendable {
         case "lunch": self = .meal(.lunch)
         case "dinner": self = .meal(.dinner)
         case "weeklyreview": self = .weeklyReview
+        case "account-export", "account-security": self = .accountSettings
+        case "subscription": self = .subscription
         default: return nil
         }
     }

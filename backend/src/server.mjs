@@ -21,13 +21,18 @@ import { MemoryRateLimitService, RateLimitError } from "./rate-limit-service.mjs
 import { isIP } from "node:net";
 import { EmailDeliveryError } from "./email-delivery-service.mjs";
 import { normalizeCorrelationID, routeTemplate } from "./observability.mjs";
+import {
+  ConfigurationGatedRecipeGenerationService,
+  RecipeGenerationError,
+} from "./recipe-generation-service.mjs";
 
-export function createNourishServer({ authService, adminAuthService, profileService, catalogueService, planService, planOperationsService, subscriptionOperationsService, analyticsOperationsService, analyticsEventService, userSupportService, featureFlagService, adminExportService, weeklyLoopService, feedbackService, accountService, pushRegistrationService, rateLimitService, appStoreServerClient, delivery, adminKey, adminOrigin, readinessCheck, scoringConfiguration, telemetry, trustProxy = false } = {}) {
+export function createNourishServer({ authService, adminAuthService, profileService, catalogueService, recipeGenerationService, planService, planOperationsService, subscriptionOperationsService, analyticsOperationsService, analyticsEventService, userSupportService, featureFlagService, adminExportService, weeklyLoopService, feedbackService, accountService, pushRegistrationService, rateLimitService, appStoreServerClient, delivery, adminKey, adminOrigin, readinessCheck, scoringConfiguration, telemetry, trustProxy = false } = {}) {
   const resolvedDelivery = delivery ?? new MemoryMagicLinkDelivery();
   const resolvedAuth = authService ?? new AuthService({ delivery: resolvedDelivery });
   const resolvedAdminAuth = adminAuthService ?? new AdminAuthService();
   const resolvedProfiles = profileService ?? new ProfileService();
   const resolvedCatalogue = catalogueService ?? new CatalogueService();
+  const resolvedRecipeGenerations = recipeGenerationService ?? new ConfigurationGatedRecipeGenerationService();
   const resolvedPlanner = planService ?? new PlannerService({
     recipeProvider: () => resolvedCatalogue.publishedSnapshots(),
     scoringConfiguration,
@@ -493,6 +498,54 @@ export function createNourishServer({ authService, adminAuthService, profileServ
         const body = await readJSON(request);
         return send(response, 201, await resolvedCatalogue.createRecipeDraft(body.recipe, body.content, actor), correlationID);
       }
+      if (url.pathname === "/admin/v1/recipe-generations" && request.method === "POST") {
+        const actor = await adminActor(request, resolvedAdminAuth, adminKey, "author", url.pathname, correlationID);
+        const body = await readJSON(request);
+        return send(response, 202, await resolvedRecipeGenerations.request(body.brief, {
+          actor,
+          idempotencyKey: request.headers["idempotency-key"],
+        }), correlationID);
+      }
+      if (url.pathname === "/admin/v1/recipe-generations" && request.method === "GET") {
+        await adminActor(request, resolvedAdminAuth, adminKey, "author", url.pathname, correlationID);
+        return send(response, 200, {
+          items: await resolvedRecipeGenerations.list({ limit: url.searchParams.get("limit") ?? 100 }),
+        }, correlationID);
+      }
+      const recipeGenerationMatch = url.pathname.match(/^\/admin\/v1\/recipe-generations\/([^/]+)$/);
+      if (recipeGenerationMatch && request.method === "GET") {
+        await adminActor(request, resolvedAdminAuth, adminKey, "author", url.pathname, correlationID);
+        return send(response, 200, await resolvedRecipeGenerations.detail(
+          decodeURIComponent(recipeGenerationMatch[1]),
+        ), correlationID);
+      }
+      const recipeGenerationImageMatch = url.pathname.match(/^\/admin\/v1\/recipe-generations\/([^/]+)\/image$/);
+      if (recipeGenerationImageMatch && request.method === "GET") {
+        await adminActor(request, resolvedAdminAuth, adminKey, "author", url.pathname, correlationID);
+        return sendImage(response, await resolvedRecipeGenerations.image(
+          decodeURIComponent(recipeGenerationImageMatch[1]),
+        ), correlationID);
+      }
+      const recipeGenerationImportMatch = url.pathname.match(/^\/admin\/v1\/recipe-generations\/([^/]+)\/actions\/import$/);
+      if (recipeGenerationImportMatch && request.method === "POST") {
+        const actor = await adminActor(request, resolvedAdminAuth, adminKey, "author", url.pathname, correlationID);
+        const body = await readJSON(request);
+        return send(response, 201, await resolvedRecipeGenerations.importDraft(
+          decodeURIComponent(recipeGenerationImportMatch[1]),
+          body.review,
+          { actor },
+        ), correlationID);
+      }
+      const recipeGenerationDiscardMatch = url.pathname.match(/^\/admin\/v1\/recipe-generations\/([^/]+)\/actions\/discard$/);
+      if (recipeGenerationDiscardMatch && request.method === "POST") {
+        const actor = await adminActor(request, resolvedAdminAuth, adminKey, "author", url.pathname, correlationID);
+        const body = await readJSON(request);
+        return send(response, 200, await resolvedRecipeGenerations.discard(
+          decodeURIComponent(recipeGenerationDiscardMatch[1]),
+          body.reason,
+          { actor },
+        ), correlationID);
+      }
       if (url.pathname === "/admin/v1/ingredients" && request.method === "POST") {
         const actor = await adminActor(request, resolvedAdminAuth, adminKey, "reviewer", url.pathname, correlationID);
         const body = await readJSON(request);
@@ -628,7 +681,7 @@ export function createNourishServer({ authService, adminAuthService, profileServ
       }
       return sendError(response, 404, "VALIDATION_ERROR", "Route not found.", correlationID, false);
     } catch (error) {
-      if (error instanceof AuthError || error instanceof AdminAuthError || error instanceof ProfileError || error instanceof CatalogueError || error instanceof PlanError || error instanceof FeedbackError || error instanceof AccountError || error instanceof AnalyticsEventError || error instanceof UserSupportError || error instanceof FeatureFlagError || error instanceof AdminExportError || error instanceof PushRegistrationError || error instanceof RateLimitError || error instanceof EmailDeliveryError) {
+      if (error instanceof AuthError || error instanceof AdminAuthError || error instanceof ProfileError || error instanceof CatalogueError || error instanceof RecipeGenerationError || error instanceof PlanError || error instanceof FeedbackError || error instanceof AccountError || error instanceof AnalyticsEventError || error instanceof UserSupportError || error instanceof FeatureFlagError || error instanceof AdminExportError || error instanceof PushRegistrationError || error instanceof RateLimitError || error instanceof EmailDeliveryError) {
         return sendError(response, error.status, error.code, error.message, correlationID, error.retryable ?? error.code === "RATE_LIMITED", error.retryAfterSeconds);
       }
       if (error instanceof AppStoreServerError) {
@@ -649,7 +702,7 @@ export function createNourishServer({ authService, adminAuthService, profileServ
     }
   });
 
-  return { server, authService: resolvedAuth, adminAuthService: resolvedAdminAuth, profileService: resolvedProfiles, catalogueService: resolvedCatalogue, planService: resolvedPlanner, planOperationsService: resolvedPlanOperations, subscriptionOperationsService: resolvedSubscriptionOperations, analyticsOperationsService: resolvedAnalyticsOperations, analyticsEventService: resolvedAnalyticsEvents, userSupportService: resolvedUserSupport, featureFlagService: resolvedFeatureFlags, adminExportService: resolvedAdminExports, weeklyLoopService: resolvedWeeklyLoop, feedbackService: resolvedFeedback, accountService: resolvedAccount, pushRegistrationService: resolvedPushRegistrations, delivery: resolvedDelivery };
+  return { server, authService: resolvedAuth, adminAuthService: resolvedAdminAuth, profileService: resolvedProfiles, catalogueService: resolvedCatalogue, recipeGenerationService: resolvedRecipeGenerations, planService: resolvedPlanner, planOperationsService: resolvedPlanOperations, subscriptionOperationsService: resolvedSubscriptionOperations, analyticsOperationsService: resolvedAnalyticsOperations, analyticsEventService: resolvedAnalyticsEvents, userSupportService: resolvedUserSupport, featureFlagService: resolvedFeatureFlags, adminExportService: resolvedAdminExports, weeklyLoopService: resolvedWeeklyLoop, feedbackService: resolvedFeedback, accountService: resolvedAccount, pushRegistrationService: resolvedPushRegistrations, delivery: resolvedDelivery };
 }
 
 async function recordServerAnalytics(service, event) {
@@ -833,6 +886,7 @@ async function readJSON(request) {
 function send(response, status, payload, correlationID) {
   response.statusCode = status;
   response.setHeader("x-correlation-id", correlationID);
+  response.setHeader("x-nourish-api-version", "1");
   response.setHeader("cache-control", "no-store");
   if (status === 204) return response.end();
   response.setHeader("content-type", "application/json; charset=utf-8");
@@ -843,11 +897,23 @@ function sendCSV(response, delivered, correlationID) {
   const filename = String(delivered.filename ?? "nourish-export.csv").replace(/[^A-Za-z0-9._-]/g, "-");
   response.statusCode = 200;
   response.setHeader("x-correlation-id", correlationID);
+  response.setHeader("x-nourish-api-version", "1");
   response.setHeader("cache-control", "no-store");
   response.setHeader("content-type", "text/csv; charset=utf-8");
   response.setHeader("content-disposition", `attachment; filename="${filename}"`);
   response.setHeader("x-content-sha256", delivered.contentSHA256);
   response.end(delivered.content);
+}
+
+function sendImage(response, image, correlationID) {
+  response.statusCode = 200;
+  response.setHeader("x-correlation-id", correlationID);
+  response.setHeader("x-nourish-api-version", "1");
+  response.setHeader("cache-control", "no-store");
+  response.setHeader("content-type", image.mimeType);
+  response.setHeader("content-length", String(image.content.length));
+  response.setHeader("content-security-policy", "default-src 'none'; sandbox");
+  response.end(image.content);
 }
 
 function sendError(response, status, code, userSafeMessage, correlationID, retryable, retryAfterSeconds) {

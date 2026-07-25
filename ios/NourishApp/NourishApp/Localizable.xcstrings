@@ -1,6 +1,31 @@
 {
   "sourceLanguage" : "en",
   "strings" : {
+    "Add to favorites" : {
+      "localizations" : {
+        "hi" : { "stringUnit" : { "state" : "translated", "value" : "पसंदीदा में जोड़ें" } }
+      }
+    },
+    "Calories" : {
+      "localizations" : {
+        "hi" : { "stringUnit" : { "state" : "translated", "value" : "कैलोरी" } }
+      }
+    },
+    "Carbs" : {
+      "localizations" : {
+        "hi" : { "stringUnit" : { "state" : "translated", "value" : "कार्बोहाइड्रेट" } }
+      }
+    },
+    "Fat" : {
+      "localizations" : {
+        "hi" : { "stringUnit" : { "state" : "translated", "value" : "वसा" } }
+      }
+    },
+    "Fibre" : {
+      "localizations" : {
+        "hi" : { "stringUnit" : { "state" : "translated", "value" : "फाइबर" } }
+      }
+    },
     "A general-wellness plan is suitable for me" : {
       "localizations" : {
         "hi" : { "stringUnit" : { "state" : "translated", "value" : "सामान्य स्वास्थ्य योजना मेरे लिए उपयुक्त है" } }
@@ -16,6 +41,11 @@
         "hi" : { "stringUnit" : { "state" : "translated", "value" : "मेरा सप्ताह बनाएँ" } }
       }
     },
+    "Favorites influence future ranking but never override diet, allergen, or variety rules" : {
+      "localizations" : {
+        "hi" : { "stringUnit" : { "state" : "translated", "value" : "पसंदीदा भोजन भविष्य की रैंकिंग को प्रभावित करते हैं, लेकिन आहार, एलर्जी या विविधता के नियमों को कभी नहीं बदलते" } }
+      }
+    },
     "Continue" : {
       "localizations" : {
         "hi" : { "stringUnit" : { "state" : "translated", "value" : "आगे बढ़ें" } }
@@ -29,6 +59,11 @@
     "Delete account" : {
       "localizations" : {
         "hi" : { "stringUnit" : { "state" : "translated", "value" : "खाता हटाएँ" } }
+      }
+    },
+    "Remove from favorites" : {
+      "localizations" : {
+        "hi" : { "stringUnit" : { "state" : "translated", "value" : "पसंदीदा से हटाएँ" } }
       }
     },
     "First, a quick safety check." : {

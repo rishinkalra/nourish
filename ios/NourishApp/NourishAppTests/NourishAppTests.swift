@@ -165,6 +165,32 @@ final class NourishAppTests: XCTestCase {
         ])
     }
 
+    @MainActor
+    func testFavoritesPersistPerAccountAndFeedFuturePlanRequests() async {
+        let suiteName = "nourish-favorites-\(UUID().uuidString)"
+        let defaults = UserDefaults(suiteName: suiteName)!
+        defer { defaults.removePersistentDomain(forName: suiteName) }
+        let remote = PlanRemoteSpy()
+        let store = PlanGenerationStore(defaults: defaults)
+
+        await store.connect(userID: "user-a", remote: remote)
+        store.toggleFavorite(recipeID: "recipe-1")
+        XCTAssertTrue(store.isFavorite(recipeID: "recipe-1"))
+
+        let restored = PlanGenerationStore(defaults: defaults)
+        await restored.connect(userID: "user-a", remote: remote)
+        XCTAssertEqual(restored.favoriteRecipeIDs, ["recipe-1"])
+
+        let otherAccount = PlanGenerationStore(defaults: defaults)
+        await otherAccount.connect(userID: "user-b", remote: remote)
+        XCTAssertTrue(otherAccount.favoriteRecipeIDs.isEmpty)
+
+        restored.clearForAccountDeletion()
+        let afterDeletion = PlanGenerationStore(defaults: defaults)
+        await afterDeletion.connect(userID: "user-a", remote: remote)
+        XCTAssertTrue(afterDeletion.favoriteRecipeIDs.isEmpty)
+    }
+
     func testBackgroundRetryIsBoundedAndOnlyScheduledForPendingWork() {
         XCTAssertEqual(BackgroundSyncPolicy.retryDelay(forAttempt: -1), 15 * 60)
         XCTAssertEqual(BackgroundSyncPolicy.retryDelay(forAttempt: 1), 30 * 60)
@@ -336,6 +362,8 @@ final class NourishAppTests: XCTestCase {
         XCTAssertEqual(catalog["Current"], "वर्तमान")
         XCTAssertEqual(catalog["Non-vegetarian"], "मांसाहारी")
         XCTAssertEqual(catalog["Find another meal"], "कोई दूसरा भोजन खोजें")
+        XCTAssertEqual(catalog["Add to favorites"], "पसंदीदा में जोड़ें")
+        XCTAssertEqual(catalog["Carbs"], "कार्बोहाइड्रेट")
         XCTAssertEqual(catalog[" · regenerated successor"], " · पुनः बनाई गई अगली योजना")
         XCTAssertEqual(catalog["Feedback saved"], "प्रतिक्रिया सहेजी गई")
         XCTAssertEqual(
@@ -377,5 +405,29 @@ private actor AnalyticsRemoteSpy: AnalyticsEventRemote {
 
     func consentUpdates() -> [Bool] {
         enabledUpdates
+    }
+}
+
+private actor PlanRemoteSpy: PlanRemote {
+    func createPlan(_ request: PlanGenerationRequest, idempotencyKey: String) async throws -> PlanJob {
+        throw URLError(.unsupportedURL)
+    }
+
+    func readPlan(id: String) async throws -> PlanReadEnvelope {
+        throw URLError(.unsupportedURL)
+    }
+
+    func readPlanHistory() async throws -> [PlanHistoryEntry] { [] }
+
+    func adoptPlan(id: String, idempotencyKey: String) async throws -> PlanAdoptionReceipt {
+        throw URLError(.unsupportedURL)
+    }
+
+    func submitFeedback(_ request: MealFeedbackRequest) async throws -> FeedbackReceipt {
+        throw URLError(.unsupportedURL)
+    }
+
+    func submitWeeklyReview(_ request: WeeklyReviewRequest) async throws -> FeedbackReceipt {
+        throw URLError(.unsupportedURL)
     }
 }

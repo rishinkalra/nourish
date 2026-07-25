@@ -1,3 +1,4 @@
+import NourishAPI
 import StoreKit
 import SwiftUI
 
@@ -5,6 +6,7 @@ import SwiftUI
 struct SubscriptionPurchaseView: View {
     @Environment(\.dismiss) private var dismiss
     @EnvironmentObject private var analyticsEventStore: AnalyticsEventStore
+    @EnvironmentObject private var featureFlagStore: FeatureFlagStore
     @ObservedObject var accountStore: AccountLifecycleStore
     @State private var products: [Product] = []
     @State private var isLoading = true
@@ -17,13 +19,33 @@ struct SubscriptionPurchaseView: View {
             .filter { !$0.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty }
     }
 
+    private var presentation: PaywallPresentation? {
+        featureFlagStore.flags.paywallPresentation
+    }
+
     var body: some View {
         NavigationStack {
             List {
                 Section {
-                    Text("Choose the plan that fits your routine. Apple shows the final local price, billing period, trial terms, and renewal details before purchase.")
-                        .font(.subheadline)
-                        .accessibilityIdentifier("paywall.disclosure")
+                    if let headline = presentation?.headline {
+                        Text(verbatim: headline).font(.headline)
+                    }
+                    if let disclosure = presentation?.disclosure {
+                        Text(verbatim: disclosure)
+                            .font(.subheadline)
+                            .accessibilityIdentifier("paywall.disclosure")
+                    } else {
+                        Text("Choose the plan that fits your routine. Apple shows the final local price, billing period, trial terms, and renewal details before purchase.")
+                            .font(.subheadline)
+                            .accessibilityIdentifier("paywall.disclosure")
+                    }
+                    if let trialMessage = presentation?.trialMessage {
+                        Label {
+                            Text(verbatim: trialMessage)
+                        } icon: {
+                            Image(systemName: "calendar.badge.clock")
+                        }
+                    }
                     Label("Cancel any time in App Store subscription settings", systemImage: "checkmark.circle")
                     Label("Your meal history never changes your price", systemImage: "lock.shield")
                 }
@@ -96,9 +118,19 @@ struct SubscriptionPurchaseView: View {
         defer { isLoading = false }
         guard !configuredProductIDs.isEmpty else { return }
         do {
+            let order = presentation?.productOrder ?? []
             products = try await Product.products(for: configuredProductIDs)
                 .filter { $0.type == .autoRenewable }
-                .sorted { $0.price < $1.price }
+                .sorted { left, right in
+                    let leftIndex = order.firstIndex(of: left.id)
+                    let rightIndex = order.firstIndex(of: right.id)
+                    switch (leftIndex, rightIndex) {
+                    case let (.some(left), .some(right)): return left < right
+                    case (.some, .none): return true
+                    case (.none, .some): return false
+                    case (.none, .none): return left.price < right.price
+                    }
+                }
         } catch {
             message = "App Store plans could not be loaded. No purchase was started."
         }

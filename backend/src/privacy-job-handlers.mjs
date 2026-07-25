@@ -1,5 +1,6 @@
 import { accountSubjectHash } from "./account-service.mjs";
 import { withTransaction } from "./database.mjs";
+import { randomUUID } from "node:crypto";
 
 export function createPrivacyJobHandlers({ pool, objectStore, now = () => new Date() }) {
   if (!pool?.query || !pool?.connect) throw new Error("A PostgreSQL pool is required.");
@@ -68,12 +69,30 @@ export function createPrivacyJobHandlers({ pool, objectStore, now = () => new Da
           weeklyReviews: weeklyReviews.rows,
         },
       });
-      await pool.query(
-        `UPDATE account_export_requests
-            SET status = 'ready', object_key = $2, completed_at = $3, expires_at = $4
-          WHERE id = $1`,
-        [requestID, objectKey, generatedAt, expiresAt],
-      );
+      await withTransaction(pool, async (client) => {
+        await client.query(
+          `UPDATE account_export_requests
+              SET status = 'ready', object_key = $2, completed_at = $3, expires_at = $4
+            WHERE id = $1`,
+          [requestID, objectKey, generatedAt, expiresAt],
+        );
+        await client.query(
+          `INSERT INTO background_jobs (
+              id, job_type, user_id, idempotency_key, state, payload_json,
+              max_attempts, available_at, created_at, updated_at
+           ) VALUES ($1, 'notification.operational', $2, $3, 'queued', $4::jsonb, 6, $5, $5, $5)
+           ON CONFLICT (job_type, idempotency_key) DO NOTHING`,
+          [
+            randomUUID(), userID, `export-ready:${requestID}`,
+            JSON.stringify({
+              templateID: "export_ready",
+              referenceID: requestID,
+              correlationID: job.payload?.correlationID ?? job.id,
+            }),
+            generatedAt,
+          ],
+        );
+      });
       return { requestID, status: "ready", objectKey, expiresAt };
     },
 

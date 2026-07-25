@@ -9,6 +9,7 @@ const INPUTS = Object.freeze({
   CHANGE_ME_RATE_LIMIT_SECRET: "NOURISH_DO_RATE_LIMIT_SECRET",
   CHANGE_ME_EMAIL_FROM: "NOURISH_DO_EMAIL_FROM",
   CHANGE_ME_BREVO_API_KEY: "NOURISH_DO_BREVO_API_KEY",
+  CHANGE_ME_OPENAI_API_KEY: "NOURISH_DO_OPENAI_API_KEY",
   CHANGE_ME_ENCRYPTION_ACTIVE_KEY_ID: "NOURISH_DO_ENCRYPTION_ACTIVE_KEY_ID",
   CHANGE_ME_JSON_ENCRYPTION_KEYRING: "NOURISH_DO_ENCRYPTION_KEYS",
   CHANGE_ME_SPACES_READ_ACCESS_KEY: "NOURISH_DO_API_SPACES_ACCESS_KEY_ID",
@@ -84,6 +85,7 @@ function validateTemplateTopology(template, issues) {
     "key: NOURISH_PRIVATE_OBJECT_ENCRYPTION_KEYS",
     "key: NOURISH_RATE_LIMIT_SECRET",
     "key: NOURISH_BREVO_API_KEY",
+    "key: NOURISH_OPENAI_API_KEY",
     "value: none",
     "production: true",
   ];
@@ -170,6 +172,10 @@ function validateRuntime(processType, values, issues) {
       NOURISH_EMAIL_PROVIDER: "brevo",
       NOURISH_EMAIL_FROM: values.CHANGE_ME_EMAIL_FROM,
       NOURISH_BREVO_API_KEY: values.CHANGE_ME_BREVO_API_KEY,
+      NOURISH_RECIPE_GENERATION_ENABLED: processType === "worker" ? "true" : "false",
+      NOURISH_OPENAI_API_KEY: processType === "worker" ? values.CHANGE_ME_OPENAI_API_KEY : undefined,
+      NOURISH_OPENAI_RECIPE_MODEL: "gpt-5.6-sol",
+      NOURISH_OPENAI_IMAGE_MODEL: "gpt-image-2",
     }, { processType });
   } catch (error) {
     for (const issue of error?.issues ?? ["runtime configuration validation failed"]) {

@@ -29,6 +29,32 @@ case "$command" in
   logs)
     "$DOCKER" compose -f "$COMPOSE_FILE" logs --tail=150 api worker
     ;;
+  restore-test)
+    "$DOCKER" compose -f "$COMPOSE_FILE" exec -T db sh -ec '
+      set -eu
+      source_db=nourish_local
+      restore_db=nourish_restore_check
+      dump_file=/tmp/nourish-restore-check.dump
+      cleanup() {
+        dropdb -U nourish --if-exists "$restore_db" >/dev/null 2>&1 || true
+        rm -f "$dump_file"
+      }
+      trap cleanup EXIT
+      test "$(psql -U nourish -d "$source_db" -Atqc "SELECT current_database()")" = "$source_db"
+      pg_dump -U nourish -d "$source_db" --format=custom --file="$dump_file"
+      dropdb -U nourish --if-exists "$restore_db"
+      createdb -U nourish "$restore_db"
+      pg_restore -U nourish -d "$restore_db" --no-owner --no-privileges "$dump_file"
+      source_migrations=$(psql -U nourish -d "$source_db" -Atqc "SELECT count(*) FROM schema_migrations")
+      restored_migrations=$(psql -U nourish -d "$restore_db" -Atqc "SELECT count(*) FROM schema_migrations")
+      source_recipes=$(psql -U nourish -d "$source_db" -Atqc "SELECT count(*) FROM recipes")
+      restored_recipes=$(psql -U nourish -d "$restore_db" -Atqc "SELECT count(*) FROM recipes")
+      test "$source_migrations" = "$restored_migrations"
+      test "$source_recipes" = "$restored_recipes"
+      test "$restored_migrations" -ge 28
+      printf "{\"status\":\"ok\",\"source\":\"%s\",\"isolatedRestore\":\"%s\",\"migrations\":%s,\"recipes\":%s}\\n" "$source_db" "$restore_db" "$restored_migrations" "$restored_recipes"
+    '
+    ;;
   down)
     "$DOCKER" compose -f "$COMPOSE_FILE" down
     ;;
@@ -38,7 +64,7 @@ case "$command" in
     "$DOCKER" compose -f "$COMPOSE_FILE" up --build -d db migrate seed api worker web
     ;;
   *)
-    echo "Usage: scripts/local-stack {up|test|status|logs|down|reset}"
+    echo "Usage: scripts/local-stack {up|test|restore-test|status|logs|down|reset}"
     exit 2
     ;;
 esac

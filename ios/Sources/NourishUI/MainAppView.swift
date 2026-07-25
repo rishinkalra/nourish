@@ -103,6 +103,10 @@ struct MainAppView: View {
             deepLinkedMealItemID = weeklyLoopStore.snapshot?.plan.days
                 .flatMap(\.items)
                 .first { $0.slot == planSlot }?.id
+        case .accountSettings:
+            showingProfile = true
+        case .subscription:
+            showingPaywallDirectly = true
         }
         routeStore.consume()
     }
@@ -287,7 +291,7 @@ private struct ActiveTodayScreen: View {
                     if let featuredItem {
                         ActiveReviewedMealHero(item: featuredItem)
                     }
-                    ActiveNutritionSummary(day: day, target: plan.targetSnapshot.dailyCalories)
+                    ActiveNutritionSummary(day: day, target: plan.targetSnapshot)
                     sectionTitle("Today’s plan", subtitle: "Reviewed meals, ready when you are")
                     ForEach(supportingItems, id: \.id) { item in
                         NavigationLink { ActiveRecipeDetail(itemID: item.id) } label: {
@@ -437,7 +441,7 @@ private struct ActiveWeekScreen: View {
                     Text(activeDate(day.localDate))
                         .font(.system(.title2, design: .serif, weight: .semibold))
                         .foregroundStyle(NourishTheme.ink)
-                    ActiveNutritionSummary(day: day, target: plan.targetSnapshot.dailyCalories)
+                    ActiveNutritionSummary(day: day, target: plan.targetSnapshot)
                     ForEach(day.items, id: \.id) { item in
                         NavigationLink { ActiveRecipeDetail(itemID: item.id) } label: {
                             ActiveMealCard(item: item)
@@ -482,25 +486,47 @@ private struct WeeklyInsightsCard: View {
 
 private struct ActiveNutritionSummary: View {
     let day: PlanDay
-    let target: Int
+    let target: PlanTargetSnapshot
 
     var body: some View {
         VStack(alignment: .leading, spacing: 12) {
             HStack(alignment: .firstTextBaseline) {
                 Text(decimalText(day.nutrition.calories)).font(.title.bold())
-                (Text(verbatim: "/ \(NourishFormatting.energyKilocalories(Double(target)))") + Text(" estimated"))
+                (Text(verbatim: "/ \(NourishFormatting.energyKilocalories(Double(target.dailyCalories)))") + Text(" estimated"))
                     .font(.subheadline).foregroundStyle(.secondary)
-                Spacer()
-                (Text(verbatim: NourishFormatting.massGrams(decimalDouble(day.nutrition.proteinGrams))) + Text(" protein"))
-                    .font(.subheadline.bold())
             }
-            ProgressView(value: min(decimalDouble(day.nutrition.calories) / Double(max(target, 1)), 1))
+            ProgressView(value: min(decimalDouble(day.nutrition.calories) / Double(max(target.dailyCalories, 1)), 1))
                 .tint(NourishTheme.leaf)
+            LazyVGrid(columns: [GridItem(.adaptive(minimum: 118), spacing: 8)], spacing: 8) {
+                nutritionTarget(
+                    "Protein",
+                    planned: day.nutrition.proteinGrams,
+                    target: target.optionalDailyProteinGrams.map { Decimal($0) }
+                )
+                nutritionTarget("Carbs", planned: day.nutrition.carbohydrateGrams, target: nil)
+                nutritionTarget("Fat", planned: day.nutrition.fatGrams, target: nil)
+            }
             Text("Reviewed recipe snapshots; nutrition remains an estimate for general wellness.")
                 .font(.caption).foregroundStyle(.secondary)
         }
         .padding(18)
         .background(NourishTheme.card, in: RoundedRectangle(cornerRadius: 22))
+    }
+
+    private func nutritionTarget(_ label: LocalizedStringKey, planned: Decimal, target: Decimal?) -> some View {
+        VStack(alignment: .leading, spacing: 2) {
+            Text(label).font(.caption.bold())
+            if let target {
+                Text(verbatim: "\(NourishFormatting.massGrams(decimalDouble(planned))) / \(NourishFormatting.massGrams(decimalDouble(target)))")
+                    .font(.caption)
+            } else {
+                (Text(verbatim: NourishFormatting.massGrams(decimalDouble(planned))) + Text(" planned"))
+                    .font(.caption)
+            }
+        }
+        .frame(maxWidth: .infinity, alignment: .leading)
+        .padding(10)
+        .background(NourishTheme.limeSoft, in: RoundedRectangle(cornerRadius: 12))
     }
 }
 
@@ -545,6 +571,7 @@ private struct ActiveMealCard: View {
 
 private struct ActiveRecipeDetail: View {
     @EnvironmentObject private var store: ActiveWeeklyLoopStore
+    @EnvironmentObject private var generationStore: PlanGenerationStore
     @EnvironmentObject private var analyticsEventStore: AnalyticsEventStore
     @Environment(\.dismiss) private var dismiss
     let itemID: String
@@ -569,6 +596,24 @@ private struct ActiveRecipeDetail: View {
                         RecipeNutrient(label: "Carbs", value: NourishFormatting.massGrams(decimalDouble(item.nutrition.carbohydrateGrams)))
                         RecipeNutrient(label: "Fat", value: NourishFormatting.massGrams(decimalDouble(item.nutrition.fatGrams)))
                     }
+
+                    Button {
+                        generationStore.toggleFavorite(recipeID: item.recipeSnapshot.recipeID)
+                    } label: {
+                        Label(
+                            generationStore.isFavorite(recipeID: item.recipeSnapshot.recipeID)
+                                ? "Remove from favorites"
+                                : "Add to favorites",
+                            systemImage: generationStore.isFavorite(recipeID: item.recipeSnapshot.recipeID)
+                                ? "heart.fill"
+                                : "heart"
+                        )
+                        .frame(maxWidth: .infinity, minHeight: 44)
+                    }
+                    .buttonStyle(.bordered)
+                    .tint(NourishTheme.forest)
+                    .accessibilityIdentifier("recipe.favorite")
+                    .accessibilityHint("Favorites influence future ranking but never override diet, allergen, or variety rules")
 
                     if case .plannedReuse = item.leftoverRelationship {
                         Label("Intentional planned leftover", systemImage: "arrow.triangle.2.circlepath")

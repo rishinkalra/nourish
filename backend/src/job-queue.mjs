@@ -6,6 +6,8 @@ const permittedJobTypes = new Set([
   "account.delete",
   "entitlement.reconcile",
   "notification.plan-ready",
+  "notification.operational",
+  "recipe.generate",
 ]);
 
 export class JobQueueError extends Error {

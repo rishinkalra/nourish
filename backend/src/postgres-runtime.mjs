@@ -24,6 +24,7 @@ import { ConfigurationGatedPrivateObjectStore } from "./private-object-store.mjs
 import { plannerConfigurationFromEnvironment } from "./planner-service.mjs";
 import { PostgresPushRegistrationService } from "./push-notification-service.mjs";
 import { PostgresRateLimitService } from "./rate-limit-service.mjs";
+import { PostgresRecipeGenerationService } from "./recipe-generation-service.mjs";
 
 export async function createPostgresRuntime({
   connectionString,
@@ -75,6 +76,9 @@ export async function createPostgresRuntime({
       weeklyLoopService: new PostgresWeeklyLoopService({ pool, planService, catalogueReader, scoringConfiguration }),
       feedbackService: new FeedbackService({ planService, store: new PostgresFeedbackStore({ pool }) }),
       catalogueService,
+      recipeGenerationService: new PostgresRecipeGenerationService({
+        pool, objectStore: privateObjectStore, catalogueService,
+      }),
       jobQueue: new PostgresJobQueue({ pool }),
       readinessCheck: async () => ({
         ...(await checkDatabase(pool)),

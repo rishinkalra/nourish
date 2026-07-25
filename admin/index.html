@@ -10,10 +10,13 @@
     <link rel="stylesheet" href="content.css" />
     <link rel="stylesheet" href="plans.css" />
     <link rel="stylesheet" href="subscriptions.css" />
+    <link rel="stylesheet" href="subscription-economics.css" />
     <link rel="stylesheet" href="analytics.css" />
     <link rel="stylesheet" href="support.css" />
     <link rel="stylesheet" href="flags.css" />
     <link rel="stylesheet" href="exports.css" />
+    <link rel="stylesheet" href="recipe-studio.css" />
+    <link rel="stylesheet" href="recipe-studio-review.css" />
     <link rel="stylesheet" href="mobile.css" />
   </head>
   <body>
@@ -56,6 +59,7 @@
           <button class="nav-item" data-view="flags"><svg><use href="#i-settings"/></svg><span>Feature flags</span><b id="navEmergencyFlagCount">0</b></button>
           <button class="nav-item" data-view="exports"><svg><use href="#i-audit"/></svg><span>Exports</span><b id="navReadyExportCount">0</b></button>
           <button class="nav-item" data-view="catalogue"><svg><use href="#i-grid"/></svg><span>Catalogue</span><b id="navQueueCount">0</b></button>
+          <button class="nav-item" data-view="recipe-studio"><svg><use href="#i-leaf"/></svg><span>Recipe Studio</span><b id="navGenerationCount">0</b></button>
           <button class="nav-item" data-view="sources"><svg><use href="#i-leaf"/></svg><span>Evidence</span></button>
           <button class="nav-item" data-view="plans"><svg><use href="#i-clock"/></svg><span>Plan runs</span><b id="navPlanIssueCount">0</b></button>
           <button class="nav-item" data-view="subscriptions"><svg><use href="#i-shield"/></svg><span>Subscriptions</span><b id="navSubscriptionIssueCount">0</b></button>
@@ -205,6 +209,38 @@
           </div>
         </section>
 
+        <section class="view" data-view-panel="recipe-studio">
+          <div class="page-heading studio-heading">
+            <div><p class="eyebrow">ASSISTED AUTHORING</p><h1>Recipe Studio</h1><p>Create an original recipe, calculated nutrition estimate, and food image for human review.</p></div>
+            <span class="read-only-chip"><svg><use href="#i-shield"/></svg>Never auto-published</span>
+          </div>
+          <div class="studio-boundary"><svg><use href="#i-shield"/></svg><div><strong>Generation is a draft, not evidence</strong><span>Allergen hints, ingredient identity, nutrition estimates, instructions, and the image must be reviewed before catalogue import.</span></div></div>
+          <div class="studio-layout">
+            <form class="studio-form" id="recipeGenerationForm">
+              <div><p class="eyebrow">NEW DRAFT</p><h2>What should we cook?</h2><p>Give the model useful boundaries. Fewer vague choices produce a more reviewable result.</p></div>
+              <div class="studio-form-grid">
+                <label>Cuisine<input id="generationCuisine" required maxlength="80" value="Indian" placeholder="e.g. North Indian" /></label>
+                <label>Diet<select id="generationDiet"><option value="vegetarian">Vegetarian</option><option value="vegan">Vegan</option><option value="eggetarian">Eggetarian</option><option value="nonVegetarian">Non-vegetarian</option></select></label>
+                <label>Meal<select id="generationMeal"><option value="breakfast">Breakfast</option><option value="lunch" selected>Lunch</option><option value="dinner">Dinner</option><option value="snack">Snack</option></select></label>
+                <label>Servings<input id="generationServings" type="number" min="1" max="12" value="2" required /></label>
+                <label>Maximum active time<input id="generationMinutes" type="number" min="5" max="180" value="35" required /><small>minutes</small></label>
+                <label>Available equipment<input id="generationEquipment" maxlength="500" placeholder="stove, pressure cooker" /></label>
+              </div>
+              <label>Ingredients to include<input id="generationRequired" maxlength="500" placeholder="e.g. paneer, spinach" /></label>
+              <label>Ingredients to avoid<input id="generationAvoid" maxlength="1000" placeholder="e.g. peanuts, mushrooms" /></label>
+              <label>Extra guidance<textarea id="generationNotes" rows="3" maxlength="500" placeholder="Keep it weeknight-friendly and suitable for a lunchbox."></textarea></label>
+              <p class="studio-form-error" id="generationFormError" role="alert"></p>
+              <button class="primary-button wide" id="generateRecipeButton" type="submit">Generate review draft</button>
+            </form>
+            <section class="studio-runs">
+              <div class="studio-runs-heading"><div><p class="eyebrow">QUARANTINE</p><h2>Generated drafts</h2></div><button class="secondary-button" id="refreshGenerationsButton" type="button">Refresh</button></div>
+              <div class="studio-run-list" id="recipeGenerationList"></div>
+              <div class="studio-empty" id="recipeGenerationEmpty"><span><svg><use href="#i-leaf"/></svg></span><h3>No generated drafts yet</h3><p>Your first request will appear here while the background worker creates it.</p></div>
+              <article class="studio-detail is-hidden" id="recipeGenerationDetail"></article>
+            </section>
+          </div>
+        </section>
+
         <section class="view" data-view-panel="sources"><div class="page-heading"><div><p class="eyebrow">NUTRITION EVIDENCE</p><h1>Ingredient and source library</h1><p>Every published nutrient value needs traceable, current, production-approved evidence.</p></div><button class="primary-button" id="addEvidenceButton">Add reviewed content</button></div><div class="inventory-summary"><article><strong id="ingredientCount">0</strong><span>verified ingredients</span></article><article><strong id="nutrientCount">0</strong><span>nutrient records</span></article><article><strong id="approvedSourceCount">0</strong><span>production-approved</span></article></div><section class="inventory-section"><div class="section-heading"><h2>Verified ingredients</h2><small>Canonical identity and household conversions</small></div><div class="ingredient-grid" id="ingredientGrid"></div></section><section class="inventory-section"><div class="section-heading"><h2>Nutrient evidence</h2><small>Immutable per-100 g records and provenance</small></div><div class="source-grid" id="sourceGrid"></div></section></section>
         <section class="view" data-view-panel="plans">
           <div class="page-heading"><div><p class="eyebrow">PLANNER OPERATIONS</p><h1>Plan-run diagnostics</h1><p>Trace every generation outcome without exposing profile answers or raw deterministic seeds.</p></div><button class="secondary-button" id="refreshPlanRunsButton">Refresh runs</button></div>
@@ -222,6 +258,11 @@
         <section class="view" data-view-panel="subscriptions">
           <div class="page-heading"><div><p class="eyebrow">SUBSCRIPTION OPERATIONS</p><h1>Reconciliation cases</h1><p>Compare verified Apple evidence with Nourish state while preserving the last legitimate access decision.</p></div><button class="secondary-button" id="refreshSubscriptionsButton">Refresh cases</button></div>
           <div class="metric-row subscription-metrics"><article><span class="metric-icon ink"><svg><use href="#i-shield"/></svg></span><div><strong id="subscriptionCount">0</strong><small>linked subscriptions</small></div><em>Latest 200</em></article><article><span class="metric-icon red"><svg><use href="#i-x"/></svg></span><div><strong id="subscriptionMismatchCount">0</strong><small>identity mismatches</small></div><em>Needs action</em></article><article><span class="metric-icon amber"><svg><use href="#i-clock"/></svg></span><div><strong id="subscriptionDelayedCount">0</strong><small>delayed checks</small></div><em>Retry protected</em></article><article><span class="metric-icon green"><svg><use href="#i-check"/></svg></span><div><strong id="subscriptionCurrentCount">0</strong><small>current</small></div><em>Apple verified</em></article></div>
+          <section class="economics-boundary" aria-label="Subscription economics boundary">
+            <div><span>GROSS CUSTOMER PRICE</span><strong>Apple-localized at purchase</strong><small>Not inferred from entitlement records</small></div>
+            <div><span>TAX &amp; COMMISSION</span><strong>Unknown until settlement</strong><small>Storefront, tax and Apple terms vary</small></div>
+            <div><span>ESTIMATED NET PROCEEDS</span><strong>Unavailable—not zero</strong><small>Requires approved App Store financial-report ingestion</small></div>
+          </section>
           <div class="subscription-workspace">
             <section class="subscription-list-panel">
               <div class="queue-tools"><label class="search-box"><svg><use href="#i-search"/></svg><input id="subscriptionSearch" placeholder="Search user, product, environment, or error" /></label><select id="subscriptionStatus" aria-label="Filter reconciliation status"><option value="all">All cases</option><option value="attention">Needs attention</option><option value="mismatch">Mismatch</option><option value="delayed">Delayed</option><option value="pending">Pending</option><option value="current">Current</option></select></div>

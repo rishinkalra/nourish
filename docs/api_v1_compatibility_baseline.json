@@ -1,0 +1,45 @@
+{
+  "contractVersion": 1,
+  "supportedAppVersionWindow": {
+    "policy": "current public release and its immediately preceding public release",
+    "minimumVersion": "set at first public release",
+    "removalRule": "no required v1 route, field, enum case, error field, or authentication/idempotency behavior may be removed or tightened inside the window"
+  },
+  "responseHeaders": ["x-correlation-id", "x-nourish-api-version", "cache-control"],
+  "errorFields": ["code", "userSafeMessage", "correlationID", "retryable"],
+  "consumerRouteFragments": [
+    "/v1/auth/apple",
+    "/v1/auth/magic-link",
+    "/v1/auth/magic-link/complete",
+    "/v1/auth/refresh",
+    "/v1/auth/revoke",
+    "/v1/profile",
+    "/v1/feature-flags",
+    "/v1/analytics/dimensions",
+    "/v1/analytics/consent",
+    "/v1/analytics/events",
+    "/v1/push-registrations",
+    "/v1/plans",
+    "/v1/plans/active",
+    "/v1/plans/history",
+    "/v1/plan-items/",
+    "/v1/grocery-lists/",
+    "/v1/prep-tasks/",
+    "/v1/feedback",
+    "/v1/entitlement",
+    "/v1/entitlement/app-account-token",
+    "/v1/entitlement/transactions",
+    "/v1/account/export",
+    "/v1/account"
+  ],
+  "errorCodes": [
+    "VALIDATION_ERROR",
+    "PROFILE_INELIGIBLE",
+    "NO_FEASIBLE_PLAN",
+    "CONTENT_INSUFFICIENT",
+    "CONFLICT",
+    "RATE_LIMITED",
+    "TEMPORARY_FAILURE",
+    "AUTHENTICATION_REQUIRED"
+  ]
+}

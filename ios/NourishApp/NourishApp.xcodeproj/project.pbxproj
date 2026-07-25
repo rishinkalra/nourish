@@ -16,6 +16,7 @@
 		A20000000000000000000005 /* NourishUI in Frameworks */ = {isa = PBXBuildFile; productRef = A20000000000000000000092 /* NourishUI */; };
 		A30000000000000000000001 /* Localizable.xcstrings in Resources */ = {isa = PBXBuildFile; fileRef = A30000000000000000000002 /* Localizable.xcstrings */; };
 		A30000000000000000000003 /* palak-paneer-meal.png in Resources */ = {isa = PBXBuildFile; fileRef = A30000000000000000000004 /* palak-paneer-meal.png */; };
+		A30000000000000000000005 /* PrivacyInfo.xcprivacy in Resources */ = {isa = PBXBuildFile; fileRef = A30000000000000000000006 /* PrivacyInfo.xcprivacy */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -37,6 +38,7 @@
 		A20000000000000000000013 /* NourishAppUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = NourishAppUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		A30000000000000000000002 /* Localizable.xcstrings */ = {isa = PBXFileReference; lastKnownFileType = text.json.xcstrings; path = Localizable.xcstrings; sourceTree = "<group>"; };
 		A30000000000000000000004 /* palak-paneer-meal.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = palak-paneer-meal.png; path = ../../../assets/palak-paneer-meal.png; sourceTree = "<group>"; };
+		A30000000000000000000006 /* PrivacyInfo.xcprivacy */ = {isa = PBXFileReference; lastKnownFileType = text.xml; path = PrivacyInfo.xcprivacy; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -84,6 +86,7 @@
 				A10000000000000000000002 /* NourishApp.swift */,
 				A30000000000000000000002 /* Localizable.xcstrings */,
 				A30000000000000000000004 /* palak-paneer-meal.png */,
+				A30000000000000000000006 /* PrivacyInfo.xcprivacy */,
 			);
 			path = NourishApp;
 			sourceTree = "<group>";
@@ -232,6 +235,7 @@
 			files = (
 				A30000000000000000000001 /* Localizable.xcstrings in Resources */,
 				A30000000000000000000003 /* palak-paneer-meal.png in Resources */,
+				A30000000000000000000005 /* PrivacyInfo.xcprivacy in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

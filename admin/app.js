@@ -21,6 +21,10 @@ const state = {
   selectedFlagKey: null,
   exports: [],
   exportsLoaded: false,
+  recipeGenerations: [],
+  recipeGenerationsLoaded: false,
+  selectedRecipeGenerationID: null,
+  recipeGenerationImageURL: null,
   pendingExportID: null,
   selectedID: null,
   selectedPlanRunID: null,
@@ -314,6 +318,7 @@ function openDemo() {
   state.supportUser = null;
   state.flags = structuredClone(demoFlags); state.flagAudit = structuredClone(demoFlagAudit); state.flagsLoaded = true; state.selectedFlagKey = null;
   state.exports = structuredClone(demoExports); state.exportsLoaded = true; state.pendingExportID = null;
+  state.recipeGenerations = []; state.recipeGenerationsLoaded = true; state.selectedRecipeGenerationID = null;
   $("#supportLookupType").value = "verified_email";
   $("#supportLookupValue").value = demoSupportUser.identity.verifiedEmail;
   $("#supportLookupReason").value = "Investigating the account-access issue reported in demo ticket NP-1042.";
@@ -337,11 +342,14 @@ function disconnect() {
   state.ingredients = []; state.nutrientRecords = []; state.planRuns = []; state.subscriptions = []; state.analytics = null; state.cohorts = null; state.supportUser = null;
   state.flags = []; state.flagAudit = []; state.flagsLoaded = false; state.selectedFlagKey = null;
   state.exports = []; state.exportsLoaded = false; state.pendingExportID = null;
+  state.recipeGenerations = []; state.recipeGenerationsLoaded = false; state.selectedRecipeGenerationID = null;
+  if (state.recipeGenerationImageURL) URL.revokeObjectURL(state.recipeGenerationImageURL);
+  state.recipeGenerationImageURL = null;
   state.selectedID = null; state.selectedPlanRunID = null; state.selectedSubscriptionUserID = null; state.pendingSubscriptionUserID = null;
   $("#adminKey").value = ""; $("#dashboard").classList.add("is-hidden"); $("#accessGate").classList.remove("is-hidden");
 }
 
-function renderAll() { renderInsights(); renderSupportUser(); renderFlags(); renderExports(); renderMetrics(); renderQueue(); renderSources(); renderPlanRuns(); renderSubscriptions(); renderAudit(); renderIngredientOptions(); }
+function renderAll() { renderInsights(); renderSupportUser(); renderFlags(); renderExports(); renderRecipeGenerations(); renderMetrics(); renderQueue(); renderSources(); renderPlanRuns(); renderSubscriptions(); renderAudit(); renderIngredientOptions(); }
 
 function initializeAnalyticsFilters() {
   if ($("#analyticsStartDate").value) return;
@@ -1187,12 +1195,289 @@ function updateLicenceWarning() {
 function showContentError(message) { $("#contentFormError").textContent = message; }
 function setFormBusy(selector, busy, label) { const button = $(selector); button.disabled = busy; button.textContent = label; }
 function commaList(value) { return [...new Set(String(value).split(",").map((item) => item.trim()).filter(Boolean))]; }
+function slugIdentifier(value) { return String(value ?? "").normalize("NFKD").replace(/[\u0300-\u036f]/g, "").toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/^-|-$/g, "").slice(0, 120) || "generated-recipe"; }
 function localDateValue(value) { const date = new Date(value); return Number.isNaN(date.getTime()) ? "" : `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, "0")}-${String(date.getDate()).padStart(2, "0")}`; }
 function dateAtNoon(value) { return `${value}T12:00:00.000Z`; }
 function ingredientName(id) { return state.ingredients.find((ingredient) => ingredient.id === id)?.canonicalName ?? titleCase(id); }
 function ingredientCategory(id) { return /milk|paneer|yoghurt/.test(id) ? "dairy" : /rice|ragi|flour/.test(id) ? "grains" : /chickpea|lentil|dal/.test(id) ? "pulses" : "produce"; }
 
-function switchView(view) { $$(".nav-item").forEach((button) => button.classList.toggle("is-active", button.dataset.view === view)); $$('[data-view-panel]').forEach((panel) => panel.classList.toggle("is-visible", panel.dataset.viewPanel === view)); $("#sidebar").classList.remove("is-open"); window.scrollTo({ top: 0, behavior: "auto" }); if (view === "flags" && !state.flagsLoaded) loadFlags(); if (view === "exports" && !state.exportsLoaded) loadExports(); }
+async function loadRecipeGenerations({ quiet = false } = {}) {
+  const button = $("#refreshGenerationsButton");
+  if (button) { button.disabled = true; button.textContent = "Refreshing…"; }
+  try {
+    if (!state.demo) {
+      const result = await api("/admin/v1/recipe-generations?limit=100");
+      state.recipeGenerations = result.items || [];
+    }
+    state.recipeGenerationsLoaded = true;
+    if (state.selectedRecipeGenerationID && !state.recipeGenerations.some((run) => run.id === state.selectedRecipeGenerationID)) {
+      state.selectedRecipeGenerationID = null;
+    }
+    renderRecipeGenerations();
+    if (!quiet) showToast("Recipe Studio refreshed.");
+  } catch (error) {
+    $("#generationFormError").textContent = error.message;
+    if (!quiet) showToast(error.message, true);
+  } finally {
+    if (button) { button.disabled = false; button.textContent = "Refresh"; }
+  }
+}
+
+function renderRecipeGenerations() {
+  const list = $("#recipeGenerationList");
+  if (!list) return;
+  const runs = state.recipeGenerations;
+  $("#navGenerationCount").textContent = String(runs.filter((run) => run.status === "awaitingReview").length);
+  list.innerHTML = runs.map((run) => {
+    const recipeName = run.output?.recipe?.displayName;
+    const name = recipeName || `${run.brief?.cuisine || "Recipe"} ${titleCase(run.brief?.mealSlot || "draft")}`;
+    return `<button class="studio-run ${run.id === state.selectedRecipeGenerationID ? "is-active" : ""}" data-generation-id="${escapeHTML(run.id)}">
+      <span><strong>${escapeHTML(name)}</strong><small>${escapeHTML(titleCase(run.brief?.dietType || ""))} · ${escapeHTML(formatDate(run.createdAt))}</small></span>
+      <span class="studio-run-state ${escapeHTML(run.status)}">${escapeHTML(generationStatusLabel(run.status))}</span>
+    </button>`;
+  }).join("");
+  $("#recipeGenerationEmpty").classList.toggle("is-hidden", runs.length > 0);
+  $$("[data-generation-id]", list).forEach((button) => button.addEventListener("click", () => selectRecipeGeneration(button.dataset.generationId)));
+  renderRecipeGenerationDetail();
+}
+
+function selectRecipeGeneration(id) {
+  state.selectedRecipeGenerationID = id;
+  renderRecipeGenerations();
+}
+
+function renderRecipeGenerationDetail() {
+  const detail = $("#recipeGenerationDetail");
+  const run = state.recipeGenerations.find((item) => item.id === state.selectedRecipeGenerationID);
+  if (!run) { detail.classList.add("is-hidden"); detail.innerHTML = ""; return; }
+  detail.classList.remove("is-hidden");
+  const recipe = run.output?.recipe;
+  if (!recipe) {
+    detail.innerHTML = `<div class="studio-loading"><strong>${escapeHTML(generationStatusLabel(run.status))}</strong><p>${run.status === "failed" ? `Generation stopped safely (${escapeHTML(run.lastErrorCode || "temporary failure")}). Refresh to check for a retry.` : "The background worker is preparing the recipe and image. Refresh in a moment."}</p></div>`;
+    return;
+  }
+  const nutrition = recipe.nutritionPerServing || {};
+  detail.innerHTML = `
+    <div class="studio-image-placeholder" id="generationImageSlot">${run.imageAvailable || run.output?.image?.objectKey ? "Loading private image…" : "Image unavailable"}</div>
+    <h3>${escapeHTML(recipe.displayName)}</h3>
+    <p class="studio-detail-copy">${escapeHTML(recipe.description)}</p>
+    <div class="studio-facts">
+      <div><small>Calories</small><strong>${escapeHTML(nutrition.calories ?? "—")} kcal</strong></div>
+      <div><small>Protein</small><strong>${escapeHTML(nutrition.proteinGrams ?? "—")} g</strong></div>
+      <div><small>Active time</small><strong>${escapeHTML(recipe.activePreparationMinutes)} min</strong></div>
+      <div><small>Servings</small><strong>${escapeHTML(recipe.servings)}</strong></div>
+    </div>
+    <div class="studio-review-warning"><strong>Estimated—not verified.</strong> Nourish calculated these totals from AI-estimated ingredient values. Review grams, allergens, diet compatibility, method safety, and image accuracy before import.</div>
+    <div class="section-heading"><h3>Ingredients</h3><small>Household measure + grams</small></div>
+    <div class="studio-ingredients">${(recipe.ingredients || []).map((ingredient) => `<div class="studio-ingredient"><span>${escapeHTML(ingredient.canonicalName)}</span><span>${escapeHTML(ingredient.householdQuantity)} ${escapeHTML(ingredient.householdUnit)} · ${escapeHTML(ingredient.grams)} g</span></div>`).join("")}</div>
+    <div class="section-heading detail-section"><h3>Method</h3><small>${escapeHTML(recipe.totalMinutes)} minutes total</small></div>
+    <ol class="studio-method">${(recipe.methodSteps || []).map((step) => `<li>${escapeHTML(step)}</li>`).join("")}</ol>
+    <p class="studio-provenance">Generated with ${escapeHTML(run.textModel || run.output?.provenance?.textModel || "configured text model")} + ${escapeHTML(run.imageModel || run.output?.provenance?.imageModel || "configured image model")} · prompt ${escapeHTML(run.promptVersion || run.output?.provenance?.promptVersion || "—")}</p>
+    ${studioReviewControls(run, recipe)}`;
+  $("#generationImportForm")?.addEventListener("submit", importReviewedGeneration);
+  $("#discardGenerationButton")?.addEventListener("click", discardRecipeGeneration);
+  $$("[data-generation-ingredient]").forEach((select) => select.addEventListener("change", () => {
+    const nutrient = $(`[data-generation-nutrient="${select.dataset.generationIngredient}"]`);
+    nutrient.innerHTML = generationNutrientOptions(select.value);
+  }));
+  if (run.imageAvailable || run.output?.image?.objectKey) loadRecipeGenerationImage(run.id);
+}
+
+function studioReviewControls(run, recipe) {
+  if (run.status === "imported") {
+    return `<div class="studio-terminal success"><strong>Imported as an editable catalogue draft.</strong><span>Draft version ${escapeHTML(run.importedRecipeVersionID || "created")} still requires evidence validation, submission, and a separate reviewer.</span></div>`;
+  }
+  if (run.status === "discarded") {
+    return `<div class="studio-terminal"><strong>Discarded from the authoring queue.</strong><span>${escapeHTML(run.decisionReason || "No longer under consideration.")}</span></div>`;
+  }
+  if (run.status !== "awaitingReview") return "";
+  const proposedAllergens = [...new Set((recipe.ingredients || []).flatMap((ingredient) => ingredient.proposedAllergenIDs || []))];
+  const rows = (recipe.ingredients || []).map((ingredient, index) => {
+    const matched = state.ingredients.find((candidate) => candidate.canonicalName.toLocaleLowerCase("en-IN") === ingredient.canonicalName.toLocaleLowerCase("en-IN"));
+    return `<div class="studio-mapping-row" data-generation-mapping="${index}">
+      <strong>${escapeHTML(ingredient.canonicalName)}</strong>
+      <label>Verified ingredient<select data-generation-ingredient="${index}" required><option value="">Select ingredient</option>${state.ingredients.map((candidate) => `<option value="${escapeHTML(candidate.id)}" ${matched?.id === candidate.id ? "selected" : ""}>${escapeHTML(candidate.canonicalName)}</option>`).join("")}</select></label>
+      <label>Reviewed nutrition<select data-generation-nutrient="${index}" required>${generationNutrientOptions(matched?.id || "")}</select></label>
+      <div class="studio-mapping-measures">
+        <label>Quantity<input data-generation-quantity="${index}" type="number" min=".01" max="100" step=".01" value="${escapeHTML(ingredient.householdQuantity)}" required /></label>
+        <label>Unit<input data-generation-unit="${index}" maxlength="40" value="${escapeHTML(ingredient.householdUnit)}" required /></label>
+        <label>Grams<input data-generation-grams="${index}" type="number" min=".1" max="5000" step=".1" value="${escapeHTML(ingredient.grams)}" required /></label>
+      </div>
+      <input type="hidden" data-generation-name="${index}" value="${escapeHTML(ingredient.canonicalName)}" />
+    </div>`;
+  }).join("");
+  return `<section class="studio-review-panel">
+    <div><p class="eyebrow">AUTHOR REVIEW</p><h3>Map evidence before import</h3><p>Import creates a draft only. Missing ingredients or nutrition records must be reviewed in Evidence first.</p></div>
+    <form id="generationImportForm">
+      <label>Stable recipe ID<input id="generationRecipeID" required pattern="[A-Za-z0-9][A-Za-z0-9._:-]{1,119}" value="${escapeHTML(slugIdentifier(recipe.displayName))}" /></label>
+      <div class="studio-mappings">${rows}</div>
+      <label>Confirmed allergen IDs<input id="generationAllergens" value="${escapeHTML(proposedAllergens.join(", "))}" placeholder="milk, peanuts" /></label>
+      <div class="studio-confirmations">
+        <label><input type="checkbox" id="confirmEstimatedNutrition" required /> Nutrition is estimated and ingredient grams are plausible.</label>
+        <label><input type="checkbox" id="confirmImageMatches" required /> The image accurately represents this recipe.</label>
+        <label><input type="checkbox" id="confirmMethodSafe" required /> The preparation method is complete and safe.</label>
+        <label><input type="checkbox" id="confirmDietCompatible" required /> The mapped ingredients match the stated diet.</label>
+        <label><input type="checkbox" id="confirmAllergensReviewed" required /> Allergens were checked from mapped ingredients.</label>
+      </div>
+      <p class="studio-action-error" id="generationActionError" role="alert"></p>
+      <button class="primary-button wide" id="importGenerationButton" type="submit">Import as catalogue draft</button>
+    </form>
+    <div class="studio-discard">
+      <label>Discard reason<textarea id="generationDiscardReason" minlength="12" maxlength="500" rows="2" placeholder="Explain why this generated draft should not proceed."></textarea></label>
+      <button class="reject-button" id="discardGenerationButton" type="button">Discard draft</button>
+    </div>
+  </section>`;
+}
+
+function generationNutrientOptions(ingredientID) {
+  const records = state.nutrientRecords.filter((record) => record.ingredientID === ingredientID);
+  return `<option value="">Select nutrition</option>${records.map((record) => `<option value="${escapeHTML(record.id)}">${escapeHTML(record.id)} · ${escapeHTML(record.confidence)} confidence</option>`).join("")}`;
+}
+
+async function importReviewedGeneration(event) {
+  event.preventDefault();
+  const run = state.recipeGenerations.find((item) => item.id === state.selectedRecipeGenerationID);
+  if (!run) return;
+  const mappings = (run.output?.recipe?.ingredients || []).map((ingredient, index) => ({
+    generatedIngredientName: $(`[data-generation-name="${index}"]`).value,
+    ingredientID: $(`[data-generation-ingredient="${index}"]`).value,
+    nutrientRecordID: $(`[data-generation-nutrient="${index}"]`).value,
+    householdQuantity: Number($(`[data-generation-quantity="${index}"]`).value),
+    householdUnit: $(`[data-generation-unit="${index}"]`).value.trim(),
+    grams: Number($(`[data-generation-grams="${index}"]`).value),
+  }));
+  const review = {
+    recipeID: $("#generationRecipeID").value.trim(),
+    ingredientMappings: mappings,
+    declaredAllergenIDs: commaList($("#generationAllergens").value),
+    confirmEstimatedNutrition: $("#confirmEstimatedNutrition").checked,
+    confirmImageMatches: $("#confirmImageMatches").checked,
+    confirmMethodSafe: $("#confirmMethodSafe").checked,
+    confirmDietCompatible: $("#confirmDietCompatible").checked,
+    confirmAllergensReviewed: $("#confirmAllergensReviewed").checked,
+  };
+  const button = $("#importGenerationButton");
+  button.disabled = true; button.textContent = "Creating protected draft…";
+  $("#generationActionError").textContent = "";
+  try {
+    if (state.demo) {
+      throw new Error("Import is disabled in demo mode because it requires reviewed catalogue evidence.");
+    }
+    const result = await api(`/admin/v1/recipe-generations/${encodeURIComponent(run.id)}/actions/import`, {
+      method: "POST",
+      body: JSON.stringify({ review }),
+    });
+    Object.assign(run, result.generation);
+    await reloadCatalogue();
+    state.selectedID = result.recipeVersion.id;
+    renderAll();
+    switchView("catalogue");
+    selectItem(result.recipeVersion.id);
+    showToast(`${result.recipeVersion.content.displayName} imported as a draft. It is not published.`);
+  } catch (error) {
+    $("#generationActionError").textContent = error.message;
+    button.disabled = false; button.textContent = "Import as catalogue draft";
+  }
+}
+
+async function discardRecipeGeneration() {
+  const run = state.recipeGenerations.find((item) => item.id === state.selectedRecipeGenerationID);
+  const reason = $("#generationDiscardReason")?.value.trim();
+  if (!run || !reason || reason.length < 12) {
+    $("#generationActionError").textContent = "Enter a specific discard reason of at least 12 characters.";
+    return;
+  }
+  const button = $("#discardGenerationButton");
+  button.disabled = true; button.textContent = "Discarding…";
+  try {
+    if (state.demo) {
+      Object.assign(run, { status: "discarded", decisionReason: reason, decisionActor: state.adminID });
+    } else {
+      Object.assign(run, await api(`/admin/v1/recipe-generations/${encodeURIComponent(run.id)}/actions/discard`, {
+        method: "POST",
+        body: JSON.stringify({ reason }),
+      }));
+    }
+    renderRecipeGenerations();
+    showToast("Generated draft discarded with an accountable reason.");
+  } catch (error) {
+    $("#generationActionError").textContent = error.message;
+    button.disabled = false; button.textContent = "Discard draft";
+  }
+}
+
+async function loadRecipeGenerationImage(id) {
+  const slot = $("#generationImageSlot");
+  if (!slot || state.demo) { if (slot) slot.textContent = "Private image preview is unavailable in demo mode."; return; }
+  try {
+    const response = await fetch(`${state.apiBase}/admin/v1/recipe-generations/${encodeURIComponent(id)}/image`, { headers: adminHeaders() });
+    if (!response.ok) {
+      const error = await response.json().catch(() => ({}));
+      throw new Error(error.userSafeMessage || `Image preview failed (${response.status})`);
+    }
+    const blob = await response.blob();
+    if (state.selectedRecipeGenerationID !== id || !$("#generationImageSlot")) return;
+    if (state.recipeGenerationImageURL) URL.revokeObjectURL(state.recipeGenerationImageURL);
+    state.recipeGenerationImageURL = URL.createObjectURL(blob);
+    const image = document.createElement("img");
+    image.className = "studio-detail-image";
+    image.alt = `Generated preview for ${state.recipeGenerations.find((run) => run.id === id)?.output?.recipe?.displayName || "recipe"}`;
+    image.src = state.recipeGenerationImageURL;
+    $("#generationImageSlot").replaceWith(image);
+  } catch (error) {
+    const current = $("#generationImageSlot");
+    if (current) current.textContent = error.message;
+  }
+}
+
+async function generateRecipe(event) {
+  event.preventDefault();
+  const button = $("#generateRecipeButton");
+  const brief = {
+    cuisine: $("#generationCuisine").value.trim(),
+    dietType: $("#generationDiet").value,
+    mealSlot: $("#generationMeal").value,
+    localeIdentifier: "en-IN",
+    maximumActiveMinutes: Number($("#generationMinutes").value),
+    servings: Number($("#generationServings").value),
+    avoidIngredients: commaList($("#generationAvoid").value),
+    requiredIngredients: commaList($("#generationRequired").value),
+    equipment: commaList($("#generationEquipment").value),
+    notes: $("#generationNotes").value.trim(),
+  };
+  $("#generationFormError").textContent = "";
+  button.disabled = true; button.textContent = "Sending to secure queue…";
+  try {
+    if (state.demo) {
+      const now = new Date();
+      state.recipeGenerations.unshift({
+        id: crypto.randomUUID(), status: "queued", brief, requestedBy: state.adminID,
+        attemptCount: 0, createdAt: now.toISOString(), updatedAt: now.toISOString(), output: null,
+      });
+    } else {
+      const run = await api("/admin/v1/recipe-generations", {
+        method: "POST",
+        headers: { "idempotency-key": crypto.randomUUID() },
+        body: JSON.stringify({ brief }),
+      });
+      state.recipeGenerations.unshift(run);
+    }
+    state.recipeGenerationsLoaded = true;
+    state.selectedRecipeGenerationID = state.recipeGenerations[0].id;
+    renderRecipeGenerations();
+    showToast("Recipe request queued. The worker will prepare the draft and image.");
+  } catch (error) {
+    $("#generationFormError").textContent = error.message;
+  } finally {
+    button.disabled = false; button.textContent = "Generate review draft";
+  }
+}
+
+function generationStatusLabel(value) {
+  return ({ queued: "QUEUED", running: "GENERATING", awaitingReview: "REVIEW NEEDED", failed: "RETRYING", imported: "IMPORTED", discarded: "DISCARDED" })[value] || titleCase(value).toUpperCase();
+}
+
+function switchView(view) { $$(".nav-item").forEach((button) => button.classList.toggle("is-active", button.dataset.view === view)); $$('[data-view-panel]').forEach((panel) => panel.classList.toggle("is-visible", panel.dataset.viewPanel === view)); $("#sidebar").classList.remove("is-open"); window.scrollTo({ top: 0, behavior: "auto" }); if (view === "flags" && !state.flagsLoaded) loadFlags(); if (view === "exports" && !state.exportsLoaded) loadExports(); if (view === "recipe-studio" && !state.recipeGenerationsLoaded) loadRecipeGenerations({ quiet: true }); }
 function switchDetailTab(tab) { $$("[data-detail-tab]").forEach((button) => button.classList.toggle("is-active", button.dataset.detailTab === tab)); $$("[data-detail-panel]").forEach((panel) => panel.classList.toggle("is-visible", panel.dataset.detailPanel === tab)); }
 function selectedItem() { return state.items.find((item) => item.id === state.selectedID); }
 function closeDetail() { state.selectedID = null; $("#detailPanel").classList.remove("is-open"); $("#detailContent").classList.add("is-hidden"); $("#detailEmpty").classList.remove("is-hidden"); renderQueue(); }
@@ -1240,6 +1525,8 @@ $("#exportType").addEventListener("change", updateExportForm);
 $("#exportIdentifierType").addEventListener("change", () => { $("#exportIdentifierValue").placeholder = $("#exportIdentifierType").value === "verifiedEmail" ? "person@example.com" : "Internal user ID"; });
 $("#exportForm").addEventListener("submit", createExport);
 $("#refreshExportsButton").addEventListener("click", loadExports);
+$("#recipeGenerationForm").addEventListener("submit", generateRecipe);
+$("#refreshGenerationsButton").addEventListener("click", () => loadRecipeGenerations());
 $("#confirmExportDownload").addEventListener("click", confirmExportDownload);
 $("#flagRolloutRange").addEventListener("input", () => { $("#flagRollout").value = $("#flagRolloutRange").value; });
 $("#flagRollout").addEventListener("input", () => { $("#flagRolloutRange").value = $("#flagRollout").value; });

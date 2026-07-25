@@ -168,7 +168,7 @@ export class APNsPushProvider {
         "apns-push-type": "alert",
         "apns-priority": "10",
         "apns-expiration": "0",
-        "apns-collapse-id": `plan-ready-${notification.planJobID}`.slice(0, 64),
+        "apns-collapse-id": requiredIdentifier(notification.collapseID, "notification collapse").slice(0, 64),
         "content-type": "application/json",
         "content-length": Buffer.byteLength(payload),
       }, payload);
@@ -224,6 +224,7 @@ export function createPlanReadyNotificationHandler({ registrationService, pushPr
         destination: "nourish://open/plan",
         analyticsDestination: "plan_studio",
         planJobID: requiredIdentifier(job.payload?.planJobID, "plan job"),
+        collapseID: `plan-ready-${job.payload?.planJobID}`,
       });
       if (result.status === "sent") sent += 1;
       else if (result.status === "disabled") disabled += 1;
@@ -233,6 +234,61 @@ export function createPlanReadyNotificationHandler({ registrationService, pushPr
       }
     }
     return { registrations: registrations.length, sent, invalidated, disabled };
+  };
+}
+
+const OPERATIONAL_NOTIFICATION_TEMPLATES = Object.freeze({
+  export_ready: {
+    title: "Your Nourish export is ready",
+    body: "Open Account settings to access it before it expires.",
+    destination: "nourish://open/account-export",
+    analyticsDestination: "account_settings",
+  },
+  trial_ending: {
+    title: "Your Nourish trial is ending soon",
+    body: "Review Apple’s renewal details or manage your subscription in Account settings.",
+    destination: "nourish://open/subscription",
+    analyticsDestination: "subscription_settings",
+  },
+  account_security: {
+    title: "Review your Nourish account",
+    body: "Open Account settings to review an important security update.",
+    destination: "nourish://open/account-security",
+    analyticsDestination: "account_settings",
+  },
+});
+
+export function operationalNotificationTemplate(templateID) {
+  const template = OPERATIONAL_NOTIFICATION_TEMPLATES[templateID];
+  if (!template) throw new PushRegistrationError("VALIDATION_ERROR", "The notification template is not supported.");
+  return { templateID, ...template };
+}
+
+export function createOperationalNotificationHandler({ registrationService, pushProvider }) {
+  if (!registrationService?.activeRegistrations || !registrationService?.deactivate) {
+    throw new Error("A push registration service is required.");
+  }
+  if (!pushProvider?.send) throw new Error("A push provider is required.");
+  return async (job) => {
+    const template = operationalNotificationTemplate(job.payload?.templateID);
+    const referenceID = requiredIdentifier(job.payload?.referenceID, "notification reference");
+    const registrations = await registrationService.activeRegistrations(job.userID);
+    let sent = 0;
+    let invalidated = 0;
+    let disabled = 0;
+    for (const registration of registrations) {
+      const result = await pushProvider.send(registration, {
+        ...template,
+        collapseID: `${template.templateID}-${referenceID}`,
+      });
+      if (result.status === "sent") sent += 1;
+      else if (result.status === "disabled") disabled += 1;
+      else if (result.status === "invalidToken") {
+        await registrationService.deactivate(registration, result.reason);
+        invalidated += 1;
+      }
+    }
+    return { templateID: template.templateID, registrations: registrations.length, sent, invalidated, disabled };
   };
 }
 

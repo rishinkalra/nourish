@@ -216,6 +216,22 @@ workers:
         value: "false"
         scope: RUN_TIME
         type: GENERAL
+      - key: NOURISH_RECIPE_GENERATION_ENABLED
+        value: "true"
+        scope: RUN_TIME
+        type: GENERAL
+      - key: NOURISH_OPENAI_API_KEY
+        value: CHANGE_ME_OPENAI_API_KEY
+        scope: RUN_TIME
+        type: SECRET
+      - key: NOURISH_OPENAI_RECIPE_MODEL
+        value: gpt-5.6-sol
+        scope: RUN_TIME
+        type: GENERAL
+      - key: NOURISH_OPENAI_IMAGE_MODEL
+        value: gpt-image-2
+        scope: RUN_TIME
+        type: GENERAL
       - key: NOURISH_PRIVATE_OBJECT_ENCRYPTION_ACTIVE_KEY_ID
         value: CHANGE_ME_ENCRYPTION_ACTIVE_KEY_ID
         scope: RUN_TIME

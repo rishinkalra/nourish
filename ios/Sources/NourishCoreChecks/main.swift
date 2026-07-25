@@ -62,6 +62,26 @@ struct NourishCoreChecks {
         expect(!AppFeatureFlagSet(snapshot: duplicated).isEnabled(.weeklyInsights), "Duplicate decisions must fail closed")
         expect(!AppFeatureFlagSet.safeDefaults.isEnabled(.weeklyInsights), "Missing evaluation must use a compiled-off default")
 
+        let paywall = FeatureFlagSnapshot(
+            appVersion: "1.4.0",
+            evaluatedAt: evaluatedAt,
+            contractVersion: "feature-flags-v1",
+            flags: [FeatureFlagDecision(
+                key: "paywall_configuration",
+                enabled: true,
+                version: 1,
+                reasonCode: "enabled",
+                value: .object([
+                    "headline": .string("Plan with confidence"),
+                    "trialMessage": .string("Eligible trials are confirmed by Apple."),
+                    "productOrder": .array([.string("annual"), .string("monthly"), .string("annual")]),
+                ])
+            )]
+        )
+        let paywallPresentation = AppFeatureFlagSet(snapshot: paywall).paywallPresentation
+        expect(paywallPresentation?.headline == "Plan with confidence", "Remote paywall copy should decode only from the evaluated compiled flag")
+        expect(paywallPresentation?.productOrder == ["annual", "monthly"], "Remote paywall order should be stable and deduplicated")
+
         let root = FileManager.default.temporaryDirectory.appending(path: "nourish-feature-flag-check-\(UUID().uuidString)")
         let cache = FileFeatureFlagCache(rootURL: root)
         try await cache.save(enabled, userID: "user-a")

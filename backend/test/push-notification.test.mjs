@@ -9,7 +9,9 @@ import {
   APNsPushProvider,
   MemoryPushRegistrationService,
   PostgresPushRegistrationService,
+  createOperationalNotificationHandler,
   createPlanReadyNotificationHandler,
+  operationalNotificationTemplate,
 } from "../src/push-notification-service.mjs";
 import { createNourishServer } from "../src/server.mjs";
 
@@ -61,6 +63,7 @@ test("plan-ready delivery retires invalid APNs tokens without exposing meal data
     destination: "nourish://open/plan",
     analyticsDestination: "plan_studio",
     planJobID: "plan-job-1",
+    collapseID: "plan-ready-plan-job-1",
   });
   assert.equal((await registrations.activeRegistrations("user-1")).length, 1);
 });
@@ -104,6 +107,7 @@ test("APNs provider signs an HTTP/2 alert with a safe collapsed plan payload", a
     destination: "nourish://open/plan",
     analyticsDestination: "plan_studio",
     planJobID: "plan-job-1",
+    collapseID: "plan-ready-plan-job-1",
   });
   assert.deepEqual(result, { status: "sent", apnsID: "apns-1" });
   assert.equal(capturedHeaders[":path"], `/3/device/${tokenA}`);
@@ -145,9 +149,40 @@ test("APNs provider surfaces a failed HTTP/2 session without crashing the worker
       destination: "nourish://open/plan",
       analyticsDestination: "plan_studio",
       planJobID: "plan-job-1",
+      collapseID: "plan-ready-plan-job-1",
     }),
     /connection failed/,
   );
+});
+
+test("operational templates are bounded, account-directed, and contain no export data", async () => {
+  const registrations = new MemoryPushRegistrationService();
+  await registrations.register("user-1", { deviceToken: tokenA, environment: "sandbox" });
+  const deliveries = [];
+  const handler = createOperationalNotificationHandler({
+    registrationService: registrations,
+    pushProvider: {
+      async send(_registration, notification) {
+        deliveries.push(notification);
+        return { status: "sent" };
+      },
+    },
+  });
+  const result = await handler({
+    userID: "user-1",
+    payload: { templateID: "export_ready", referenceID: "request-1" },
+  });
+  assert.equal(result.sent, 1);
+  assert.deepEqual(operationalNotificationTemplate("trial_ending"), {
+    templateID: "trial_ending",
+    title: "Your Nourish trial is ending soon",
+    body: "Review Apple’s renewal details or manage your subscription in Account settings.",
+    destination: "nourish://open/subscription",
+    analyticsDestination: "subscription_settings",
+  });
+  assert.equal(deliveries[0].destination, "nourish://open/account-export");
+  assert.equal(deliveries[0].collapseID, "export_ready-request-1");
+  assert.doesNotMatch(JSON.stringify(deliveries[0]), /objectKey|email|profile|meal/i);
 });
 
 test("authenticated HTTP push registration never accepts or returns another account token", async (context) => {

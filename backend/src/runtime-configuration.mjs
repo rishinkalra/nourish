@@ -130,6 +130,20 @@ export function validateRuntimeConfiguration(environment = process.env, { proces
   const analyticsRetentionDays = integerSetting(environment.NOURISH_ANALYTICS_RETENTION_DAYS, 90, {
     name: "NOURISH_ANALYTICS_RETENTION_DAYS", minimum: 1, maximum: 400, issues,
   });
+  const recipeGenerationEnabled = environment.NOURISH_RECIPE_GENERATION_ENABLED === "true";
+  const openAIAPIKey = nonEmpty(environment.NOURISH_OPENAI_API_KEY);
+  const openAIRecipeModel = nonEmpty(environment.NOURISH_OPENAI_RECIPE_MODEL) ?? "gpt-5.6-sol";
+  const openAIImageModel = nonEmpty(environment.NOURISH_OPENAI_IMAGE_MODEL) ?? "gpt-image-2";
+  const openAITimeoutMilliseconds = integerSetting(environment.NOURISH_OPENAI_TIMEOUT_MILLISECONDS, 120_000, {
+    name: "NOURISH_OPENAI_TIMEOUT_MILLISECONDS", minimum: 10_000, maximum: 600_000, issues,
+  });
+  if (recipeGenerationEnabled && processType === "worker") {
+    if (!openAIAPIKey || openAIAPIKey.length < 20) {
+      issues.push("NOURISH_OPENAI_API_KEY is required when recipe generation is enabled");
+    }
+    if (!validModelID(openAIRecipeModel)) issues.push("NOURISH_OPENAI_RECIPE_MODEL must be a safe OpenAI model identifier");
+    if (!validModelID(openAIImageModel)) issues.push("NOURISH_OPENAI_IMAGE_MODEL must be a safe OpenAI model identifier");
+  }
   const apnsEnabled = environment.NOURISH_APNS_ENABLED === "true";
   const apnsBundleID = nonEmpty(environment.NOURISH_APNS_BUNDLE_ID) ?? "com.projectnourish.app";
   if (!/^[A-Za-z0-9][A-Za-z0-9.-]{2,254}$/.test(apnsBundleID)) {
@@ -171,6 +185,11 @@ export function validateRuntimeConfiguration(environment = process.env, { proces
     privateObjectEncryptionKeys,
     privateObjectForcePathStyle: environment.NOURISH_PRIVATE_OBJECT_FORCE_PATH_STYLE === "true",
     analyticsRetentionDays,
+    recipeGenerationEnabled,
+    openAIAPIKey,
+    openAIRecipeModel,
+    openAIImageModel,
+    openAITimeoutMilliseconds,
     apnsEnabled,
     apnsBundleID,
     rateLimitSecret,
@@ -258,6 +277,10 @@ function validMailbox(value) {
   if (typeof value !== "string" || value.length > 320) return false;
   const address = "[^<>\\s@]+@[^<>\\s@]+\\.[^<>\\s@]+";
   return new RegExp(`^(?:${address}|[^<>\\r\\n]{1,80}\\s+<${address}>)$`).test(value);
+}
+
+function validModelID(value) {
+  return /^[A-Za-z0-9][A-Za-z0-9._-]{1,127}$/.test(String(value ?? ""));
 }
 
 function validMagicLinkPrefix(value) {

@@ -79,6 +79,10 @@ test("unsafe correlation values and unmatched paths are never reflected", () => 
   assert.equal(normalizeCorrelationID("safe.request-1", "fallback"), "fallback");
   assert.equal(normalizeCorrelationID("person@example.test", "fallback"), "fallback");
   assert.equal(routeTemplate("/v1/profile"), "/v1/profile");
+  assert.equal(
+    routeTemplate("/admin/v1/recipe-generations/715cf4f1-8c81-5ab6-bb75-e5c89efeb582/image"),
+    "/admin/v1/recipe-generations/:id/image",
+  );
   assert.equal(routeTemplate("/v1/unknown/person@example.test"), "unmatched");
 });
 
