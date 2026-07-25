@@ -37,9 +37,12 @@ APNs delivery is disabled unless `NOURISH_APNS_ENABLED=true`. When enabled, the 
 
 ## Remaining live validation
 
-1. Enable Push Notifications for the App ID and regenerate the development/distribution signing profiles.
-2. Create a restricted APNs signing key and store it as a worker-only staging secret.
-3. Install a sandbox-signed build on a physical device and grant notification permission.
-4. Confirm registration, background plan generation, one collapsed alert, foreground presentation, and Plan Studio routing.
-5. Sign out, authenticate as a different account on the same phone, and confirm the prior account cannot notify that token.
-6. Exercise invalid-token retirement and retry behavior against staging logs and database evidence without logging raw tokens.
+The ordinary Debug configuration intentionally has no `aps-environment` entitlement so a Personal Development Team can continue to install and test the local app. `NourishApp.Debug.entitlements` remains the explicit development-push entitlement and `NourishApp.Release.entitlements` remains the required production entitlement. A sandbox-capable paid-team build can select the development entitlement with the Xcode build-setting override `CODE_SIGN_ENTITLEMENTS=NourishApp/NourishApp.Debug.entitlements`.
+
+1. Obtain approval to use an Apple Developer Program team where the user has Certificates, Identifiers & Profiles access.
+2. Enable Push Notifications for the `com.projectnourish.app` App ID and regenerate the development/distribution signing profiles.
+3. Create a restricted APNs signing key and store it as a worker-only staging secret.
+4. Build with the development-push entitlement, install on a physical device, and grant notification permission.
+5. Confirm registration, background plan generation, one collapsed alert, foreground presentation, and Plan Studio routing.
+6. Sign out, authenticate as a different account on the same phone, and confirm the prior account cannot notify that token.
+7. Exercise invalid-token retirement and retry behavior against staging logs and database evidence without logging raw tokens.
