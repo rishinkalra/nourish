@@ -53,7 +53,13 @@ export class PostgresPlannerService {
             max_attempts, available_at, created_at, updated_at
          ) VALUES ($1, 'plan.generate', $2, $3, 'queued', $4::jsonb, 8, $5, $5, $5)
          ON CONFLICT (job_type, idempotency_key) DO NOTHING`,
-        [backgroundJobID, userID, `plan:${userID}:${idempotencyKey}`, JSON.stringify({ planJobID: job.id }), now],
+        [
+          backgroundJobID,
+          userID,
+          `plan:${userID}:${idempotencyKey}`,
+          JSON.stringify({ planJobID: job.id, correlationID: correlationUUID }),
+          now,
+        ],
       );
       const materialized = await client.query("SELECT id FROM weekly_plans WHERE plan_job_id = $1", [job.id]);
       return mapJob({ ...job, plan_id: materialized.rows[0]?.id ?? null });

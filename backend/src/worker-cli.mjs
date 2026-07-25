@@ -21,8 +21,13 @@ import {
   createPlanReadyNotificationHandler,
 } from "./push-notification-service.mjs";
 import { deleteExpiredRateLimitCounters } from "./rate-limit-service.mjs";
+import { createStructuredTelemetry } from "./observability.mjs";
 
 const runtimeConfiguration = validateRuntimeConfiguration(process.env, { processType: "worker" });
+const telemetry = createStructuredTelemetry({
+  service: "nourish-worker",
+  environment: runtimeConfiguration.production ? "production" : "development",
+});
 
 const pool = await createPostgresPool({
   connectionString: runtimeConfiguration.databaseURL,
@@ -70,6 +75,7 @@ const worker = new LeasedJobWorker({
   queue: new PostgresJobQueue({ pool }),
   workerID: process.env.NOURISH_WORKER_ID ?? `${hostname()}:${process.pid}`,
   handlers,
+  telemetry,
 });
 
 let stopping = false;
@@ -91,7 +97,10 @@ try {
       try {
         await cleanupExpiredExportObjects({ pool, objectStore });
       } catch (error) {
-        process.stderr.write(`${JSON.stringify({ event: "export_retention_scan_failed", code: error?.code ?? "TEMPORARY_FAILURE" })}\n`);
+        telemetry.recordOperationalFailure({
+          event: "export_retention_scan_failed",
+          errorCode: error?.code ?? "TEMPORARY_FAILURE",
+        });
       }
       nextExportRetentionScanAt = Date.now() + 60_000;
     }
@@ -99,7 +108,10 @@ try {
       try {
         await deleteExpiredAnalyticsEvents({ pool });
       } catch (error) {
-        process.stderr.write(`${JSON.stringify({ event: "analytics_retention_scan_failed", code: error?.code ?? "TEMPORARY_FAILURE" })}\n`);
+        telemetry.recordOperationalFailure({
+          event: "analytics_retention_scan_failed",
+          errorCode: error?.code ?? "TEMPORARY_FAILURE",
+        });
       }
       nextAnalyticsRetentionScanAt = Date.now() + 60 * 60_000;
     }
@@ -107,7 +119,10 @@ try {
       try {
         await deleteExpiredRateLimitCounters({ pool });
       } catch (error) {
-        process.stderr.write(`${JSON.stringify({ event: "rate_limit_retention_scan_failed", code: error?.code ?? "TEMPORARY_FAILURE" })}\n`);
+        telemetry.recordOperationalFailure({
+          event: "rate_limit_retention_scan_failed",
+          errorCode: error?.code ?? "TEMPORARY_FAILURE",
+        });
       }
       nextRateLimitRetentionScanAt = Date.now() + 60 * 60_000;
     }

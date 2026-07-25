@@ -170,7 +170,13 @@ export class PostgresSubscriptionOperationsService {
             max_attempts, available_at, created_at, updated_at
          ) VALUES ($1, 'entitlement.reconcile', $2, $3, 'queued', $4::jsonb, 8, $5, $5, $5)
          ON CONFLICT (job_type, idempotency_key) DO NOTHING`,
-        [jobID, userID, `operator:${userID}:${correlationID}`, JSON.stringify({ userID }), now],
+        [
+          jobID,
+          userID,
+          `operator:${userID}:${correlationID}`,
+          JSON.stringify({ userID, correlationID }),
+          now,
+        ],
       );
       await client.query(
         `INSERT INTO subscription_operation_events (

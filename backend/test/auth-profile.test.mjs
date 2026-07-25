@@ -572,11 +572,15 @@ test("admin HTTP sessions require MFA and authorize every route from persisted r
   const queue = await fetch(`${baseURL}/admin/v1/catalogue/queue`, { headers: bearer });
   assert.equal(queue.status, 200);
   const forbiddenAuthoring = await fetch(`${baseURL}/admin/v1/recipes`, {
-    method: "POST", headers: { ...bearer, "content-type": "application/json", "x-correlation-id": "admin-role-denied" },
+    method: "POST", headers: {
+      ...bearer,
+      "content-type": "application/json",
+      "x-correlation-id": "5d13a0e7-6ca9-40f9-a6fb-5638169f50d1",
+    },
     body: JSON.stringify({ recipe: {}, content: {} }),
   });
   assert.equal(forbiddenAuthoring.status, 403);
-  assert.equal(adminAuth.auditLog().some((event) => event.correlationID === "admin-role-denied" && event.requiredRole === "author" && event.outcome === "denied"), true);
+  assert.equal(adminAuth.auditLog().some((event) => event.correlationID === "5d13a0e7-6ca9-40f9-a6fb-5638169f50d1" && event.requiredRole === "author" && event.outcome === "denied"), true);
 
   const authorExchange = await fetch(`${baseURL}/admin/v1/auth/session`, {
     method: "POST", headers: { "content-type": "application/json" },

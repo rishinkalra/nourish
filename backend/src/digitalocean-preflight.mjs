@@ -92,6 +92,15 @@ function validateTemplateTopology(template, issues) {
   }
   const automaticDeployments = template.match(/deploy_on_push:\s*true/g) ?? [];
   if (automaticDeployments.length) issues.push("automatic source deployment must remain disabled for staging");
+  if ((template.match(/rule:\s*CPU_UTILIZATION/g) ?? []).length < 2) {
+    issues.push("both long-running staging components require CPU saturation alerts");
+  }
+  if ((template.match(/rule:\s*MEM_UTILIZATION/g) ?? []).length < 2) {
+    issues.push("both long-running staging components require memory saturation alerts");
+  }
+  if ((template.match(/rule:\s*RESTART_COUNT/g) ?? []).length < 2) {
+    issues.push("both long-running staging components require restart anomaly alerts");
+  }
 }
 
 function validateDeploymentInputs(values, issues) {

@@ -38,6 +38,9 @@ test("DigitalOcean preflight renders a placeholder-free, fail-closed staging spe
   assert.match(result.rendered, /repo: "project-nourish\/app"/);
   assert.match(result.rendered, /value: "project-nourish-private-staging"/);
   assert.match(result.rendered, /value: "\{\\"staging-2026-06\\"/);
+  assert.equal([...result.rendered.matchAll(/rule: CPU_UTILIZATION/g)].length, 2);
+  assert.equal([...result.rendered.matchAll(/rule: MEM_UTILIZATION/g)].length, 2);
+  assert.equal([...result.rendered.matchAll(/rule: RESTART_COUNT/g)].length, 2);
   assert.doesNotMatch(JSON.stringify(result.summary), /api-read-secret|worker-write-secret|staging-2026/);
 });
 

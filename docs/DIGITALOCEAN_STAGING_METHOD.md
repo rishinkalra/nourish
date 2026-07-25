@@ -24,6 +24,8 @@ The checked-in file remains a secret-free template. `npm run digitalocean:prefli
 6. `NOURISH_DO_ENCRYPTION_ACTIVE_KEY_ID` and `NOURISH_DO_ENCRYPTION_KEYS`: active ID and one-line JSON key ring.
 7. `NOURISH_DO_API_SPACES_ACCESS_KEY_ID` / `NOURISH_DO_API_SPACES_SECRET_ACCESS_KEY`: bucket-read API identity.
 8. `NOURISH_DO_WORKER_SPACES_ACCESS_KEY_ID` / `NOURISH_DO_WORKER_SPACES_SECRET_ACCESS_KEY`: distinct bucket-read/write/delete worker identity.
+9. `NOURISH_DO_EMAIL_FROM`: Brevo-verified sender mailbox.
+10. `NOURISH_DO_BREVO_API_KEY`: restricted transactional-send API key.
 
 The checked-in staging template keeps APNs delivery disabled until Apple configuration is ready. To validate plan-ready delivery, add `NOURISH_APNS_TEAM_ID`, `NOURISH_APNS_KEY_ID`, and the `.p8` value as worker-only secrets, then change the worker's `NOURISH_APNS_ENABLED` to `true`. Keep `NOURISH_APNS_BUNDLE_ID=com.projectnourish.app`. Never attach the APNs signing key to the public API component.
 
@@ -55,6 +57,7 @@ Before allowing any billable submission, run `scripts/verify_release_candidate.s
 5. Confirm the encryption JSON contains a valid base64-encoded 32-byte key and is marked secret.
 6. Confirm the database backup and restore evidence is current.
 7. Review the estimated monthly cost and billing alerts with the account owner.
+8. Select a restricted log destination, uptime check, and named staging alert responder using `OBSERVABILITY_METHOD.md`; keep every monitoring credential outside source control.
 
 ## First deployment sequence
 
@@ -66,6 +69,7 @@ Before allowing any billable submission, run `scripts/verify_release_candidate.s
 6. Run a controlled plan job and confirm terminal state, retry evidence, and Control Room visibility.
 7. Point a non-production iOS build at the staging API and complete authentication, onboarding, plan generation, adoption, swap, groceries, prep, feedback, export, and deletion acceptance journeys.
 8. With APNs enabled, grant notification permission on a physical sandbox device, generate a plan while the app is not foregrounded, verify one collapsed plan-ready alert opens Plan Studio, then sign out and confirm the former account receives no later notification.
+9. Prove one correlation ID joins an API request to its background job, then exercise the documented 5xx, latency, queue, dead-job, retention, and webhook alert drills.
 
 ## Rotation and recovery
 

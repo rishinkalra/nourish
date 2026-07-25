@@ -30,6 +30,7 @@ export async function scheduleDueEntitlementReconciliations({ pool, now = () => 
     for (const row of due.rows) {
       const dueAt = new Date(row.next_reconciliation_at);
       const idempotencyKey = `entitlement:${row.user_id}:${dueAt.toISOString()}`;
+      const jobID = randomUUID();
       const inserted = await client.query(
         `INSERT INTO background_jobs (
             id, job_type, user_id, idempotency_key, state, payload_json,
@@ -37,7 +38,13 @@ export async function scheduleDueEntitlementReconciliations({ pool, now = () => 
          ) VALUES ($1, 'entitlement.reconcile', $2, $3, 'queued', $4::jsonb, 8, $5, $5, $5)
          ON CONFLICT (job_type, idempotency_key) DO NOTHING
          RETURNING id`,
-        [randomUUID(), row.user_id, idempotencyKey, JSON.stringify({ dueAt: dueAt.toISOString() }), scheduledAt],
+        [
+          jobID,
+          row.user_id,
+          idempotencyKey,
+          JSON.stringify({ dueAt: dueAt.toISOString(), correlationID: jobID }),
+          scheduledAt,
+        ],
       );
       if (!inserted.rows[0]) continue;
       await client.query(

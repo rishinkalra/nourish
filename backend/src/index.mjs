@@ -5,9 +5,14 @@ import { createPrivateObjectStore } from "./private-object-store.mjs";
 import { plannerConfigurationFromEnvironment } from "./planner-service.mjs";
 import { validateRuntimeConfiguration } from "./runtime-configuration.mjs";
 import { createMagicLinkDelivery } from "./email-delivery-service.mjs";
+import { createStructuredTelemetry } from "./observability.mjs";
 
 const runtimeConfiguration = validateRuntimeConfiguration(process.env, { processType: "api" });
 const { port, host } = runtimeConfiguration;
+const telemetry = createStructuredTelemetry({
+  service: "nourish-api",
+  environment: runtimeConfiguration.production ? "production" : "development",
+});
 const delivery = createMagicLinkDelivery(runtimeConfiguration);
 const scoringConfiguration = plannerConfigurationFromEnvironment();
 const privateObjectStore = await createPrivateObjectStore(runtimeConfiguration);
@@ -35,6 +40,7 @@ const app = createNourishServer({
   adminKey: process.env.NOURISH_ADMIN_KEY,
   adminOrigin: process.env.NOURISH_ADMIN_ORIGIN ?? "http://127.0.0.1:4173",
   scoringConfiguration,
+  telemetry,
   trustProxy: runtimeConfiguration.trustProxy,
 });
 const { server } = app;

@@ -20,8 +20,9 @@ import { MemoryPushRegistrationService, PushRegistrationError } from "./push-not
 import { MemoryRateLimitService, RateLimitError } from "./rate-limit-service.mjs";
 import { isIP } from "node:net";
 import { EmailDeliveryError } from "./email-delivery-service.mjs";
+import { normalizeCorrelationID, routeTemplate } from "./observability.mjs";
 
-export function createNourishServer({ authService, adminAuthService, profileService, catalogueService, planService, planOperationsService, subscriptionOperationsService, analyticsOperationsService, analyticsEventService, userSupportService, featureFlagService, adminExportService, weeklyLoopService, feedbackService, accountService, pushRegistrationService, rateLimitService, appStoreServerClient, delivery, adminKey, adminOrigin, readinessCheck, scoringConfiguration, trustProxy = false } = {}) {
+export function createNourishServer({ authService, adminAuthService, profileService, catalogueService, planService, planOperationsService, subscriptionOperationsService, analyticsOperationsService, analyticsEventService, userSupportService, featureFlagService, adminExportService, weeklyLoopService, feedbackService, accountService, pushRegistrationService, rateLimitService, appStoreServerClient, delivery, adminKey, adminOrigin, readinessCheck, scoringConfiguration, telemetry, trustProxy = false } = {}) {
   const resolvedDelivery = delivery ?? new MemoryMagicLinkDelivery();
   const resolvedAuth = authService ?? new AuthService({ delivery: resolvedDelivery });
   const resolvedAdminAuth = adminAuthService ?? new AdminAuthService();
@@ -52,9 +53,29 @@ export function createNourishServer({ authService, adminAuthService, profileServ
   });
 
   const server = createServer(async (request, response) => {
-    const correlationID = request.headers["x-correlation-id"] || randomUUID();
+    const startedAt = performance.now();
+    const correlationID = normalizeCorrelationID(request.headers["x-correlation-id"], randomUUID());
+    let observedRoute = "unmatched";
+    if (telemetry?.recordAPIRequest && typeof response.once === "function") {
+      response.once("finish", () => {
+        try {
+          telemetry.recordAPIRequest({
+            method: request.method,
+            route: observedRoute,
+            statusCode: response.statusCode,
+            durationMilliseconds: performance.now() - startedAt,
+            correlationID,
+            errorCode: response.nourishErrorCode,
+            retryable: response.nourishRetryable,
+          });
+        } catch {
+          // Telemetry must never change a completed API response.
+        }
+      });
+    }
     try {
       const url = new URL(request.url, "http://127.0.0.1");
+      observedRoute = routeTemplate(url.pathname);
       if (url.pathname.startsWith("/admin/")) {
         applyAdminCORS(request, response, adminOrigin);
         if (request.method === "OPTIONS") return send(response, 204, null, correlationID);
@@ -435,6 +456,7 @@ export function createNourishServer({ authService, adminAuthService, profileServ
         const receipt = await resolvedAccount.requestExport(
           identity.userID,
           request.headers["idempotency-key"],
+          { correlationID },
         );
         await recordServerAnalytics(resolvedAnalyticsEvents, {
           userID: identity.userID,
@@ -452,6 +474,7 @@ export function createNourishServer({ authService, adminAuthService, profileServ
           identity.userID,
           body,
           request.headers["idempotency-key"],
+          { correlationID },
         );
         await recordServerAnalytics(resolvedAnalyticsEvents, {
           userID: identity.userID,
@@ -828,6 +851,8 @@ function sendCSV(response, delivered, correlationID) {
 }
 
 function sendError(response, status, code, userSafeMessage, correlationID, retryable, retryAfterSeconds) {
+  response.nourishErrorCode = code;
+  response.nourishRetryable = Boolean(retryable);
   const boundedRetryAfter = Number.isFinite(retryAfterSeconds)
     ? Math.max(1, Math.min(86_400, Math.ceil(retryAfterSeconds)))
     : undefined;

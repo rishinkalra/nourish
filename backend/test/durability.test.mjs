@@ -872,7 +872,8 @@ test("PostgreSQL plan requests atomically snapshot inputs and enqueue one durabl
   assert.equal(insert.values[7], "whole-week-serving-planner-v2");
   assert.equal(insert.values[8], "wellness-score-v3");
   const queueInsert = calls.find((call) => call.text.includes("INSERT INTO background_jobs"));
-  assert.deepEqual(Object.keys(JSON.parse(queueInsert.values[3])), ["planJobID"]);
+  assert.deepEqual(Object.keys(JSON.parse(queueInsert.values[3])), ["planJobID", "correlationID"]);
+  assert.equal(JSON.parse(queueInsert.values[3]).correlationID, insert.values[11]);
   assert.match(queueInsert.text, /ON CONFLICT \(job_type, idempotency_key\) DO NOTHING/);
 });
 

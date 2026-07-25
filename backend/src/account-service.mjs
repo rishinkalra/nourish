@@ -331,7 +331,7 @@ export class AccountService {
     ));
   }
 
-  async requestExport(userID, idempotencyKey) {
+  async requestExport(userID, idempotencyKey, { correlationID = null } = {}) {
     requireIdempotencyKey(idempotencyKey);
     const requestedAt = this.now();
     const receipt = {
@@ -342,10 +342,10 @@ export class AccountService {
       format: "json",
       message: "Your portable export is queued. A private expiring download will be created after processing.",
     };
-    return structuredClone(await this.store.createExport(userID, idempotencyKey, receipt));
+    return structuredClone(await this.store.createExport(userID, idempotencyKey, receipt, { correlationID }));
   }
 
-  async requestDeletion(userID, request, idempotencyKey) {
+  async requestDeletion(userID, request, idempotencyKey, { correlationID = null } = {}) {
     requireIdempotencyKey(idempotencyKey);
     if (request?.acknowledgement !== "DELETE") {
       throw new AccountError("VALIDATION_ERROR", "Type DELETE to confirm permanent account deletion.");
@@ -362,7 +362,7 @@ export class AccountService {
       accountAccessRevokedAt: requestedAt,
       message: "Account access is disabled and deletion is queued. App Store subscription cancellation is managed separately by Apple.",
     };
-    return structuredClone(await this.store.createDeletion(userID, idempotencyKey, receipt));
+    return structuredClone(await this.store.createDeletion(userID, idempotencyKey, receipt, { correlationID }));
   }
 
   #unknownEntitlement(userID) {

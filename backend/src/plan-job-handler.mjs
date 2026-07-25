@@ -199,7 +199,7 @@ async function persistPlan({ pool, job, generated, now }) {
        ON CONFLICT (job_type, idempotency_key) DO NOTHING`,
       [
         notificationJobID, job.user_id, `plan-ready:${job.id}`,
-        JSON.stringify({ planJobID: job.id }), now,
+        JSON.stringify({ planJobID: job.id, correlationID: job.correlation_id }), now,
       ],
     );
     return { planJobID: job.id, planID: plan.id, state: "succeeded" };

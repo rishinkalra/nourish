@@ -213,7 +213,7 @@ export class PostgresAccountStore {
     return result.rows[0] ? mapEntitlement(result.rows[0]) : null;
   }
 
-  async createExport(userID, idempotencyKey, receipt) {
+  async createExport(userID, idempotencyKey, receipt, { correlationID = null } = {}) {
     return withTransaction(this.pool, async (client) => {
       const result = await client.query(
         `INSERT INTO account_export_requests (
@@ -229,14 +229,14 @@ export class PostgresAccountStore {
         type: "account.export",
         userID,
         idempotencyKey: `export:${idempotencyKey}`,
-        payload: { requestID: row.id, userID },
+        payload: { requestID: row.id, userID, correlationID },
         now: receipt.requestedAt,
       });
       return mapExport(row);
     });
   }
 
-  async createDeletion(userID, idempotencyKey, receipt) {
+  async createDeletion(userID, idempotencyKey, receipt, { correlationID = null } = {}) {
     return withTransaction(this.pool, async (client) => {
       const subjectHash = accountSubjectHash(userID);
       const result = await client.query(
@@ -257,7 +257,7 @@ export class PostgresAccountStore {
         type: "account.delete",
         userID,
         idempotencyKey: `delete:${idempotencyKey}`,
-        payload: { requestID: row.id, subjectHash },
+        payload: { requestID: row.id, subjectHash, correlationID },
         now: receipt.requestedAt,
       });
       return mapDeletion(row);

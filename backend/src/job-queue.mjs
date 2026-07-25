@@ -246,27 +246,53 @@ export class PostgresJobQueue {
 }
 
 export class LeasedJobWorker {
-  constructor({ queue, workerID, handlers = {} }) {
+  constructor({ queue, workerID, handlers = {}, telemetry = null, now = () => new Date() }) {
     this.queue = queue;
     this.workerID = workerID;
     this.handlers = new Map(Object.entries(handlers));
+    this.telemetry = telemetry;
+    this.now = now;
   }
 
   async runOnce() {
     const job = await this.queue.claim({ workerID: this.workerID, types: [...this.handlers.keys()] });
     if (!job) return null;
+    const startedAt = this.now();
     const handler = this.handlers.get(job.type);
     if (!handler) {
-      return this.queue.fail(job.id, this.workerID, new JobQueueError("HANDLER_MISSING", `No handler is registered for ${job.type}.`));
+      const failed = await this.queue.fail(job.id, this.workerID, new JobQueueError("HANDLER_MISSING", `No handler is registered for ${job.type}.`));
+      recordJobTelemetry(this.telemetry, job, failed, startedAt, this.now());
+      return failed;
     }
     try {
       const result = await handler(job, {
         extendLease: (milliseconds) => this.queue.extendLease(job.id, this.workerID, milliseconds),
       });
-      return this.queue.complete(job.id, this.workerID, result ?? null);
+      const completed = await this.queue.complete(job.id, this.workerID, result ?? null);
+      recordJobTelemetry(this.telemetry, job, completed, startedAt, this.now());
+      return completed;
     } catch (error) {
-      return this.queue.fail(job.id, this.workerID, error);
+      const failed = await this.queue.fail(job.id, this.workerID, error);
+      recordJobTelemetry(this.telemetry, job, failed, startedAt, this.now());
+      return failed;
     }
+  }
+}
+
+function recordJobTelemetry(telemetry, claimed, outcome, startedAt, completedAt) {
+  try {
+    telemetry?.recordJobRun?.({
+      jobID: claimed.id,
+      jobType: claimed.type,
+      state: outcome.state,
+      attemptCount: outcome.attemptCount,
+      queueDelayMilliseconds: Math.max(0, startedAt.getTime() - claimed.createdAt.getTime()),
+      durationMilliseconds: Math.max(0, completedAt.getTime() - startedAt.getTime()),
+      correlationID: claimed.payload?.correlationID ?? null,
+      errorCode: outcome.lastErrorCode ?? null,
+    });
+  } catch {
+    // Telemetry must never change job acknowledgement or retry behavior.
   }
 }
 
