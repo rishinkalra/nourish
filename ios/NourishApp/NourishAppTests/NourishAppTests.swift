@@ -15,10 +15,10 @@ final class NourishAppTests: XCTestCase {
         )
         XCTAssertEqual(
             try APIBaseURLPolicy.validated(
-                rawValue: "https://staging-api.nourish.example",
+                rawValue: "https://api.familychef.in",
                 allowsLocalHTTP: false
             ).absoluteString,
-            "https://staging-api.nourish.example"
+            "https://api.familychef.in"
         )
         XCTAssertEqual(
             try APIBaseURLPolicy.validated(
@@ -45,7 +45,7 @@ final class NourishAppTests: XCTestCase {
         }
         XCTAssertThrowsError(
             try APIBaseURLPolicy.validated(
-                rawValue: "http://staging-api.nourish.example",
+                rawValue: "http://api.familychef.in",
                 allowsLocalHTTP: true
             )
         ) { error in
@@ -61,7 +61,7 @@ final class NourishAppTests: XCTestCase {
         }
         XCTAssertThrowsError(
             try APIBaseURLPolicy.validated(
-                rawValue: "https://user:secret@staging-api.nourish.example/path",
+                rawValue: "https://user:secret@api.familychef.in/path",
                 allowsLocalHTTP: false
             )
         ) { error in

@@ -5,7 +5,8 @@ This is the exhaustive hand-off for work that cannot be completed or truthfully 
 ## 1. Company, Apple and commercial ownership
 
 - [ ] Finish enrollment in a new Apple Developer Program organization owned by the intended Nourish legal entity; grant Account Holder/Admin access for Certificates, Identifiers & Profiles.
-- [ ] Confirm the final legal entity, app name, bundle identifier, domains, launch geography, supported diets/cuisines, age position, customer-support address and grievance contact.
+- [x] Adopt `familychef.in` for the public domain family with the hostname map in `FAMILYCHEF_DOMAIN_CONFIGURATION.md`; retain Nourish as the app name and preserve the existing bundle identifier until the Apple organization is ready.
+- [ ] Confirm the final legal entity, App Store positioning, launch geography, supported diets/cuisines, age position, customer-support ownership and grievance contact.
 - [ ] Create App Store Connect products and approve monthly/annual pricing, introductory offer or trial, preview depth, tax/accounting treatment and customer-facing terms.
 - [ ] Configure the App ID, Sign in with Apple, APNs keys, distribution certificates/profiles, App Store Server API credentials and Server Notifications V2 URL.
 - [ ] Complete sandbox evidence for purchase, trial if enabled, renewal, cancellation, expiration, billing retry/grace, upgrade/downgrade, refund/revocation, restore, account switching and temporary server failure.
@@ -39,7 +40,7 @@ Local evidence: `DIGITALOCEAN_STAGING_METHOD.md`, `STAGING_DEPLOYMENT_METHOD.md`
 ## 4. Identity, email, monitoring and operations
 
 - [ ] Select and configure the workforce identity provider; require MFA and assign separate author, reviewer, operator and security-admin grants.
-- [ ] Configure Brevo with an authenticated sending domain, anonymous transactional tracking disabled, approved log/content retention and DPA; validate magic-link and operational mail in representative inboxes.
+- [ ] Configure Brevo with an authenticated sending domain, anonymous transactional tracking enabled, recipient-level tracking prohibited, approved short log/content retention and DPA; validate magic-link and operational mail in representative inboxes.
 - [ ] Select the monitoring/log destination and on-call owner; activate uptime, latency, error, queue/dead-job, webhook, restart, CPU and memory alerts plus dashboards and escalation routes.
 - [ ] Run alert, incident, rollback, restore, breach-assessment and key-rotation drills; record owners, dates and outcomes.
 - [ ] Approve whether any production attribution mechanism is needed. Keep it absent unless its privacy review and disclosures are complete.

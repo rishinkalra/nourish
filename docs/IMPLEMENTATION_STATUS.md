@@ -10,6 +10,7 @@ The source-of-truth documents are:
 
 - `REQUIREMENTS_TRACEABILITY.md` for every numbered requirement, interface, release criterion, evidence path and remaining qualification;
 - `PRODUCTION_OWNER_CHECKLIST.md` for the exhaustive non-local production gates;
+- `FAMILYCHEF_DOMAIN_CONFIGURATION.md` for the approved public/API/Control Room/email hostname boundary and DNS sequence;
 - the focused method documents in this folder for operation and verification details.
 
 ## Product and native app
@@ -41,11 +42,11 @@ The source-of-truth documents are:
 - First-party analytics uses the exact 26-event typed catalogue, default-off consent, server-derived identity for authoritative outcomes, bounded fields and 90-day default retention.
 - API responses advertise compatibility version 1. The frozen native/API compatibility window has an executable regression check.
 - Structured telemetry carries validated correlation IDs across API, jobs, privacy, notification, subscription and recipe-generation work without raw health or credential data.
-- The DigitalOcean template defines separate API, worker and migration components, managed PostgreSQL, private Spaces-compatible encrypted storage, health checks and initial resource alerts. It cannot deploy automatically and its renderer fails closed on placeholders or unsafe configuration.
+- The DigitalOcean template defines separate API, worker and migration components, managed PostgreSQL, private Spaces-compatible encrypted storage, health checks and initial resource alerts. Staging is pinned to `api-staging.familychef.in`, its Control Room CORS boundary is `control-staging.familychef.in`, and transactional email uses the future verified `familychef.in` sender. The iOS Release build is pinned to `api.familychef.in`. The template cannot deploy automatically and its renderer fails closed on placeholders or unsafe configuration.
 
 ## Current verification evidence
 
-- Complete backend suite: 152 checks pass.
+- Complete backend suite: 154 checks pass.
 - Shared Swift core checks pass.
 - Debug and Release iOS simulator builds pass.
 - Native application tests: 15 pass.

@@ -72,7 +72,7 @@
       "roles": ["transactional authentication email"],
       "embeddedSDK": false,
       "personalData": ["email address", "single-use sign-in URL"],
-      "status": "adapter implemented; sender, tracking-off, retention, DPA and inbox validation pending"
+      "status": "adapter implemented; sender, anonymous tracking, short retention, DPA and inbox validation pending"
     },
     {
       "name": "OpenAI",

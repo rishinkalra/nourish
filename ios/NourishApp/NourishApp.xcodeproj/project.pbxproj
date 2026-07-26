@@ -442,7 +442,7 @@
 				INFOPLIST_KEY_UISupportedInterfaceOrientations = UIInterfaceOrientationPortrait;
 				IPHONEOS_DEPLOYMENT_TARGET = 17.0;
 				MARKETING_VERSION = 1.0;
-				NOURISH_API_BASE_URL = "https://CHANGE_ME_API_BASE_URL";
+				NOURISH_API_BASE_URL = "https://api.familychef.in";
 				PRODUCT_BUNDLE_IDENTIFIER = com.projectnourish.app;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";

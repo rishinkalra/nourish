@@ -4,6 +4,8 @@
 
 `.do/app.staging.yaml` is a fail-closed template for a Bangalore staging deployment. It defines one public API component, one background worker, one pre-deploy migration job, and a binding to an existing managed PostgreSQL cluster. It does not create or submit anything by itself.
 
+The approved staging API domain is `api-staging.familychef.in`; the exact Control Room CORS origin is `https://control-staging.familychef.in`; and the sender identity is `Nourish <sign-in@familychef.in>`. These non-secret boundaries are pinned in the template. See `FAMILYCHEF_DOMAIN_CONFIGURATION.md` for production hostnames and DNS sequencing.
+
 Use these regional placements:
 
 - App Platform: `blr`;
@@ -20,12 +22,10 @@ The checked-in file remains a secret-free template. `npm run digitalocean:prefli
 2. `NOURISH_DO_POSTGRES_CLUSTER`: existing managed PostgreSQL cluster name.
 3. `NOURISH_DO_SPACE_NAME`: private Spaces bucket name.
 4. `NOURISH_DO_NUTRITION_VERSION`: exact reviewed nutrition-calculation version.
-5. `NOURISH_DO_CONTROL_ROOM_ORIGIN`: HTTPS Control Room staging origin.
-6. `NOURISH_DO_ENCRYPTION_ACTIVE_KEY_ID` and `NOURISH_DO_ENCRYPTION_KEYS`: active ID and one-line JSON key ring.
-7. `NOURISH_DO_API_SPACES_ACCESS_KEY_ID` / `NOURISH_DO_API_SPACES_SECRET_ACCESS_KEY`: bucket-read API identity.
-8. `NOURISH_DO_WORKER_SPACES_ACCESS_KEY_ID` / `NOURISH_DO_WORKER_SPACES_SECRET_ACCESS_KEY`: distinct bucket-read/write/delete worker identity.
-9. `NOURISH_DO_EMAIL_FROM`: Brevo-verified sender mailbox.
-10. `NOURISH_DO_BREVO_API_KEY`: restricted transactional-send API key.
+5. `NOURISH_DO_ENCRYPTION_ACTIVE_KEY_ID` and `NOURISH_DO_ENCRYPTION_KEYS`: active ID and one-line JSON key ring.
+6. `NOURISH_DO_API_SPACES_ACCESS_KEY_ID` / `NOURISH_DO_API_SPACES_SECRET_ACCESS_KEY`: bucket-read API identity.
+7. `NOURISH_DO_WORKER_SPACES_ACCESS_KEY_ID` / `NOURISH_DO_WORKER_SPACES_SECRET_ACCESS_KEY`: distinct bucket-read/write/delete worker identity.
+8. `NOURISH_DO_BREVO_API_KEY`: restricted transactional-send API key after `familychef.in` is verified.
 
 The checked-in staging template keeps APNs delivery disabled until Apple configuration is ready. To validate plan-ready delivery, add `NOURISH_APNS_TEAM_ID`, `NOURISH_APNS_KEY_ID`, and the `.p8` value as worker-only secrets, then change the worker's `NOURISH_APNS_ENABLED` to `true`. Keep `NOURISH_APNS_BUNDLE_ID=com.projectnourish.app`. Never attach the APNs signing key to the public API component.
 
@@ -52,12 +52,13 @@ Before allowing any billable submission, run `scripts/verify_release_candidate.s
 
 1. Confirm the release gate and preflight succeed; the in-memory rendered spec must contain no unresolved placeholder.
 2. Confirm the target is the staging DigitalOcean team and project.
-3. Write a temporary rendered spec outside the workspace and validate it in DigitalOcean without creating the app.
-4. Confirm both Spaces keys are limited to the one staging bucket.
-5. Confirm the encryption JSON contains a valid base64-encoded 32-byte key and is marked secret.
-6. Confirm the database backup and restore evidence is current.
-7. Review the estimated monthly cost and billing alerts with the account owner.
-8. Select a restricted log destination, uptime check, and named staging alert responder using `OBSERVABILITY_METHOD.md`; keep every monitoring credential outside source control.
+3. Confirm `api-staging.familychef.in` is the primary app domain and the rendered spec uses only the approved FamilyChef Control Room and sender boundaries.
+4. Write a temporary rendered spec outside the workspace and validate it in DigitalOcean without creating the app.
+5. Confirm both Spaces keys are limited to the one staging bucket.
+6. Confirm the encryption JSON contains a valid base64-encoded 32-byte key and is marked secret.
+7. Confirm the database backup and restore evidence is current.
+8. Review the estimated monthly cost and billing alerts with the account owner.
+9. Select a restricted log destination, uptime check, and named staging alert responder using `OBSERVABILITY_METHOD.md`; keep every monitoring credential outside source control.
 
 ## First deployment sequence
 

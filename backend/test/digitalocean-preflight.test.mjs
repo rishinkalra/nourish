@@ -15,9 +15,7 @@ const validEnvironment = Object.freeze({
   NOURISH_DO_POSTGRES_CLUSTER: "nourish-staging-db",
   NOURISH_DO_SPACE_NAME: "project-nourish-private-staging",
   NOURISH_DO_NUTRITION_VERSION: "ai-weighted-grams-v1",
-  NOURISH_DO_CONTROL_ROOM_ORIGIN: "https://control-staging.nourish.example",
   NOURISH_DO_RATE_LIMIT_SECRET: "digitalocean-test-rate-limit-secret-64-characters-long-value",
-  NOURISH_DO_EMAIL_FROM: "Nourish <sign-in@nourish.example>",
   NOURISH_DO_BREVO_API_KEY: "brevo-test-api-key-long-enough",
   NOURISH_DO_OPENAI_API_KEY: "openai-test-api-key-long-enough",
   NOURISH_DO_ENCRYPTION_ACTIVE_KEY_ID: "staging-2026-07",
@@ -38,6 +36,10 @@ test("DigitalOcean preflight renders a placeholder-free, fail-closed staging spe
   assert.doesNotMatch(result.rendered, /CHANGE_ME/);
   assert.match(result.rendered, /repo: "project-nourish\/app"/);
   assert.match(result.rendered, /value: "project-nourish-private-staging"/);
+  assert.match(result.rendered, /domain: api-staging\.familychef\.in/);
+  assert.match(result.rendered, /value: https:\/\/control-staging\.familychef\.in/);
+  assert.match(result.rendered, /value: "Nourish <sign-in@familychef\.in>"/);
+  assert.equal(result.summary.apiDomain, "api-staging.familychef.in");
   assert.match(result.rendered, /value: "\{\\"staging-2026-06\\"/);
   assert.equal([...result.rendered.matchAll(/rule: CPU_UTILIZATION/g)].length, 2);
   assert.equal([...result.rendered.matchAll(/rule: MEM_UTILIZATION/g)].length, 2);
@@ -54,18 +56,27 @@ test("DigitalOcean preflight reports missing inputs without echoing secret value
   );
 });
 
-test("DigitalOcean preflight rejects unsafe origins, invalid key rings, and shared provider identities", () => {
+test("DigitalOcean preflight rejects invalid key rings and shared provider identities", () => {
   const environment = {
     ...validEnvironment,
-    NOURISH_DO_CONTROL_ROOM_ORIGIN: "http://control.example/path",
     NOURISH_DO_ENCRYPTION_KEYS: JSON.stringify({ "staging-2026-07": "short" }),
     NOURISH_DO_WORKER_SPACES_ACCESS_KEY_ID: validEnvironment.NOURISH_DO_API_SPACES_ACCESS_KEY_ID,
   };
   assert.throws(
     () => renderDigitalOceanStagingSpec({ template, environment }),
-    (error) => error.issues.some((issue) => issue.includes("HTTPS origin"))
-      && error.issues.some((issue) => issue.includes("must be different"))
+    (error) => error.issues.some((issue) => issue.includes("must be different"))
       && error.issues.some((issue) => issue.includes("base64-encoded 256-bit keys")),
+  );
+});
+
+test("DigitalOcean preflight pins the approved FamilyChef staging domain boundary", () => {
+  const unsafeTemplate = template
+    .replace("domain: api-staging.familychef.in", "domain: unrelated.example")
+    .replace("https://control-staging.familychef.in", "http://control-staging.familychef.in");
+  assert.throws(
+    () => renderDigitalOceanStagingSpec({ template: unsafeTemplate, environment: validEnvironment }),
+    (error) => error.issues.some((issue) => issue.includes("api-staging.familychef.in"))
+      && error.issues.some((issue) => issue.includes("control-staging.familychef.in")),
   );
 });
 

@@ -30,15 +30,17 @@ AWS SES remains attractive at materially larger volume, but it adds region, acco
 
 ## Staging acceptance
 
+The chosen sending domain is `familychef.in`, with `Nourish <sign-in@familychef.in>` as the transactional identity. Reserve monitored `support@familychef.in` and `privacy@familychef.in` mailboxes for public support and privacy/grievance handling.
+
 Before enabling live users:
 
-1. Register the chosen sending domain and publish provider-issued SPF and DKIM records.
+1. Register `familychef.in` in Brevo and publish the provider-issued SPF and DKIM records.
 2. Publish a DMARC policy with aggregate reporting, beginning conservatively and tightening after validation.
 3. Inject a server-scoped send token; never use an account-management token.
-4. For Brevo, enable anonymous tracking under transactional-email tracking settings and set an explicitly reviewed short retention period for logs and message previews; the provider defaults are not acceptable for sign-in links.
+4. For Brevo, enable anonymous transactional tracking so opens/clicks cannot be tied to a recipient, and set an explicitly reviewed short retention period for logs and message previews; Brevo's identifiable tracking and indefinite default retention are not acceptable for sign-in links.
 5. Send to representative Gmail, Outlook, Apple/iCloud, and business-domain inboxes and verify latency, spam placement, dark mode, and link opening on a physical iPhone.
 6. Confirm provider retention settings, subprocessors, data region, deletion behavior, and the launch privacy notice.
 7. Configure delivery, bounce, and suppression monitoring without copying message bodies or raw sign-in tokens into Nourish logs.
 8. Rotate the provider token and repeat delivery to prove the runbook.
 
-An HTTPS universal link is preferable for the final public experience, but it depends on the final domain and Apple associated-domain configuration. The registered custom-scheme callback remains the explicit interim production configuration.
+The future universal-link prefix is `https://www.familychef.in/auth/magic-link?token=`. Enable it only after `www.familychef.in` serves the Apple App Site Association file and the paid Apple organization can sign the associated-domain entitlement. The registered `nourish:` custom-scheme callback remains the explicit interim configuration.

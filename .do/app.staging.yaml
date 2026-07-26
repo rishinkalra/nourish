@@ -7,6 +7,11 @@ alerts:
   - rule: DEPLOYMENT_FAILED
   - rule: DOMAIN_FAILED
 
+domains:
+  - domain: api-staging.familychef.in
+    type: PRIMARY
+    minimum_tls_version: "1.2"
+
 ingress:
   rules:
     - component:
@@ -137,7 +142,7 @@ services:
         scope: RUN_TIME
         type: GENERAL
       - key: NOURISH_ADMIN_ORIGIN
-        value: CHANGE_ME_CONTROL_ROOM_ORIGIN
+        value: https://control-staging.familychef.in
         scope: RUN_TIME
         type: GENERAL
       - key: NOURISH_TRUST_PROXY
@@ -153,7 +158,7 @@ services:
         scope: RUN_TIME
         type: GENERAL
       - key: NOURISH_EMAIL_FROM
-        value: CHANGE_ME_EMAIL_FROM
+        value: "Nourish <sign-in@familychef.in>"
         scope: RUN_TIME
         type: GENERAL
       - key: NOURISH_BREVO_API_KEY

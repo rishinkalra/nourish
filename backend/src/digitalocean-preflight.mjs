@@ -5,9 +5,7 @@ const INPUTS = Object.freeze({
   CHANGE_ME_EXISTING_MANAGED_POSTGRES_CLUSTER: "NOURISH_DO_POSTGRES_CLUSTER",
   CHANGE_ME_PRIVATE_SPACE_NAME: "NOURISH_DO_SPACE_NAME",
   CHANGE_ME_REVIEWED_VERSION: "NOURISH_DO_NUTRITION_VERSION",
-  CHANGE_ME_CONTROL_ROOM_ORIGIN: "NOURISH_DO_CONTROL_ROOM_ORIGIN",
   CHANGE_ME_RATE_LIMIT_SECRET: "NOURISH_DO_RATE_LIMIT_SECRET",
-  CHANGE_ME_EMAIL_FROM: "NOURISH_DO_EMAIL_FROM",
   CHANGE_ME_BREVO_API_KEY: "NOURISH_DO_BREVO_API_KEY",
   CHANGE_ME_OPENAI_API_KEY: "NOURISH_DO_OPENAI_API_KEY",
   CHANGE_ME_ENCRYPTION_ACTIVE_KEY_ID: "NOURISH_DO_ENCRYPTION_ACTIVE_KEY_ID",
@@ -16,6 +14,12 @@ const INPUTS = Object.freeze({
   CHANGE_ME_SPACES_READ_SECRET_KEY: "NOURISH_DO_API_SPACES_SECRET_ACCESS_KEY",
   CHANGE_ME_SPACES_WRITE_DELETE_ACCESS_KEY: "NOURISH_DO_WORKER_SPACES_ACCESS_KEY_ID",
   CHANGE_ME_SPACES_WRITE_DELETE_SECRET_KEY: "NOURISH_DO_WORKER_SPACES_SECRET_ACCESS_KEY",
+});
+
+const FAMILY_CHEF_STAGING = Object.freeze({
+  apiDomain: "api-staging.familychef.in",
+  controlRoomOrigin: "https://control-staging.familychef.in",
+  emailFrom: "Nourish <sign-in@familychef.in>",
 });
 
 export class DigitalOceanPreflightError extends Error {
@@ -68,6 +72,7 @@ export function renderDigitalOceanStagingSpec({ template, environment = process.
       applicationEncryptionConfigured: true,
       separateSpaceAccessKeys: true,
       transactionalEmailConfigured: true,
+      apiDomain: FAMILY_CHEF_STAGING.apiDomain,
       automaticDeployments: false,
     }),
   });
@@ -88,6 +93,9 @@ function validateTemplateTopology(template, issues) {
     "key: NOURISH_OPENAI_API_KEY",
     "value: none",
     "production: true",
+    `domain: ${FAMILY_CHEF_STAGING.apiDomain}`,
+    `value: ${FAMILY_CHEF_STAGING.controlRoomOrigin}`,
+    `value: "${FAMILY_CHEF_STAGING.emailFrom}"`,
   ];
   for (const marker of required) {
     if (!template.includes(marker)) issues.push(`the staging app-spec template is missing ${JSON.stringify(marker)}`);
@@ -122,8 +130,7 @@ function validateDeploymentInputs(values, issues) {
   if (nutritionVersion && !/^[A-Za-z0-9][A-Za-z0-9._-]{0,127}$/.test(nutritionVersion)) {
     issues.push("NOURISH_DO_NUTRITION_VERSION must be a safe reviewed version identifier");
   }
-  const origin = values.CHANGE_ME_CONTROL_ROOM_ORIGIN;
-  if (origin) validateHTTPSOrigin(origin, "NOURISH_DO_CONTROL_ROOM_ORIGIN", issues);
+  validateHTTPSOrigin(FAMILY_CHEF_STAGING.controlRoomOrigin, "NOURISH_ADMIN_ORIGIN", issues);
   const activeKeyID = values.CHANGE_ME_ENCRYPTION_ACTIVE_KEY_ID;
   const encodedKeyRing = values.CHANGE_ME_JSON_ENCRYPTION_KEYRING;
   if (encodedKeyRing) {
@@ -170,7 +177,7 @@ function validateRuntime(processType, values, issues) {
       NOURISH_RATE_LIMIT_SECRET: values.CHANGE_ME_RATE_LIMIT_SECRET,
       NOURISH_TRUST_PROXY: "true",
       NOURISH_EMAIL_PROVIDER: "brevo",
-      NOURISH_EMAIL_FROM: values.CHANGE_ME_EMAIL_FROM,
+      NOURISH_EMAIL_FROM: FAMILY_CHEF_STAGING.emailFrom,
       NOURISH_BREVO_API_KEY: values.CHANGE_ME_BREVO_API_KEY,
       NOURISH_RECIPE_GENERATION_ENABLED: processType === "worker" ? "true" : "false",
       NOURISH_OPENAI_API_KEY: processType === "worker" ? values.CHANGE_ME_OPENAI_API_KEY : undefined,
