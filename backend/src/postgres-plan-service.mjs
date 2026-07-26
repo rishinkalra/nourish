@@ -333,7 +333,7 @@ function sha256(value) {
 function userMessage(code) {
   if (code === "PROFILE_INELIGIBLE") return "Complete your planning profile first.";
   if (code === "CONTENT_INSUFFICIENT") return "There are not enough reviewed recipes for this profile yet.";
-  if (code === "NO_FEASIBLE_PLAN") return "Nourish could not build a safe varied week with the current choices.";
+  if (code === "NO_FEASIBLE_PLAN") return "FamilyChef could not build a safe varied week with the current choices.";
   if (code === "VALIDATION_ERROR") return "Review the plan request and try again.";
-  return "Nourish could not complete this plan yet.";
+  return "FamilyChef could not complete this plan yet.";
 }

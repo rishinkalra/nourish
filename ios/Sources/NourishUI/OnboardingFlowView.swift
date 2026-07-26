@@ -82,7 +82,7 @@ public struct OnboardingFlowView: View {
         case .valueProposition:
             onboardingWelcome
         case .wellnessEligibility:
-            heading("First, a quick safety check.", "Nourish supports general wellness and meal organization—not clinical diets.")
+            heading("First, a quick safety check.", "FamilyChef supports general wellness and meal organization—not clinical diets.")
             Toggle("I am 18 years or older", isOn: $draft.confirmsAdult)
             Toggle("A general-wellness plan is suitable for me", isOn: $draft.confirmsGeneralWellnessFit)
             TextField("Country/region code", text: $draft.countryRegionCode)
@@ -161,7 +161,7 @@ public struct OnboardingFlowView: View {
                         Text(verbatim: NourishFormatting.massGrams(Double(draft.optionalDailyProteinTargetGrams ?? 90)))
                     }
                 }
-                Text("This is a target you provide, not a target calculated or recommended by Nourish.")
+                Text("This is a target you provide, not a target calculated or recommended by FamilyChef.")
                     .font(.footnote).foregroundStyle(.secondary)
             }
             selectionGroup(
@@ -255,7 +255,7 @@ public struct OnboardingFlowView: View {
                 }
             }
         case .review:
-            heading("Here’s what Nourish will protect.", "Hard exclusions first; then targets, cooking load, waste, variety, and preference fit.")
+            heading("Here’s what FamilyChef will protect.", "Hard exclusions first; then targets, cooking load, waste, variety, and preference fit.")
             summaryRow(
                 "Goal",
                 Text(draft.goal.localizedLabel)
@@ -303,7 +303,7 @@ public struct OnboardingFlowView: View {
         case let .authenticated(identity):
             Label {
                 Text("Signed in as ")
-                    + Text(verbatim: identity.verifiedEmail ?? String(localized: "Nourish user"))
+                    + Text(verbatim: identity.verifiedEmail ?? String(localized: "FamilyChef user"))
             } icon: {
                 Image(systemName: "checkmark.shield")
             }
@@ -442,12 +442,12 @@ public struct OnboardingFlowView: View {
                     .offset(x: 250, y: 140)
                 VStack(alignment: .leading, spacing: 22) {
                     HStack(spacing: 10) {
-                        Text(verbatim: "n")
-                            .font(.system(size: 24, weight: .semibold, design: .serif).italic())
-                            .foregroundStyle(NourishTheme.forest)
+                        Image("FamilyChefMark")
+                            .resizable()
+                            .scaledToFit()
                             .frame(width: 38, height: 38)
-                            .background(NourishTheme.limeSoft, in: RoundedRectangle(cornerRadius: 13))
-                        Text(verbatim: "Nourish")
+                            .clipShape(RoundedRectangle(cornerRadius: 11))
+                        Text(verbatim: "FamilyChef")
                             .font(.title3.bold())
                             .foregroundStyle(.white)
                     }

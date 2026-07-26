@@ -41,7 +41,7 @@ export class SubscriptionOperationsService {
     const actions = this.actions.filter((action) => action.userID === userID).map(actionTimeline);
     const verified = entitlement.lastVerifiedAt ? [{
       id: `verified:${entitlement.sourceEventID ?? userID}`,
-      kind: "server_entitlement", source: "Nourish", at: entitlement.lastVerifiedAt,
+      kind: "server_entitlement", source: "FamilyChef", at: entitlement.lastVerifiedAt,
       title: "Verified entitlement applied", outcome: "succeeded",
       detail: `${titleCase(entitlement.state)} · ${entitlement.hasAccess ? "access retained" : "no access"}`,
       reference: safeReference(entitlement.sourceEventID),
@@ -291,7 +291,7 @@ function appStoreEventTimeline(row) {
   return {
     id: `apple:${row.app_store_event_id}`, kind: "apple_event", source: "Apple verified event",
     at: row.verified_at, title: titleCase(row.notification_type), outcome: row.processing_state,
-    detail: row.failure_code ? `Failure: ${row.failure_code}` : `${titleCase(row.environment)} event processed by Nourish`,
+    detail: row.failure_code ? `Failure: ${row.failure_code}` : `${titleCase(row.environment)} event processed by FamilyChef`,
     reference: safeReference(row.transaction_id ?? row.original_transaction_id),
     payloadSHA256Prefix: prefixHash(row.signed_payload_sha256),
   };
@@ -320,7 +320,7 @@ function postgresNotificationTimeline(row) {
 
 function jobTimeline(job) {
   return {
-    id: `job:${job.id}`, kind: "reconciliation_job", source: "Nourish worker",
+    id: `job:${job.id}`, kind: "reconciliation_job", source: "FamilyChef worker",
     at: job.updatedAt ?? job.createdAt, title: `Reconciliation ${titleCase(job.state)}`, outcome: job.state,
     detail: job.lastErrorCode ? `${job.lastErrorCode} · attempt ${job.attemptCount}/${job.maxAttempts}` : `Attempt ${job.attemptCount}/${job.maxAttempts}`,
     reference: safeReference(job.id),

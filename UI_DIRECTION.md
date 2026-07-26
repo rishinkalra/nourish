@@ -1,8 +1,8 @@
-# Nourish UI direction
+# FamilyChef UI direction
 
 ## Product experience
 
-Nourish should feel like a calm weekly food companion, not a calorie ledger. The home screen begins with the next useful decision—what to eat today—then keeps calories and macros visible but secondary. The experience follows the product loop in the specification: plan → shop → prepare → eat → review → improve.
+FamilyChef should feel like a calm weekly food companion, not a calorie ledger. The home screen begins with the next useful decision—what to eat today—then keeps calories and macros visible but secondary. The experience follows the product loop in the specification: plan → shop → prepare → eat → review → improve.
 
 ## Navigation
 

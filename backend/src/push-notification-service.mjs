@@ -219,7 +219,7 @@ export function createPlanReadyNotificationHandler({ registrationService, pushPr
     for (const registration of registrations) {
       const result = await pushProvider.send(registration, {
         templateID: "plan_ready",
-        title: "Your Nourish plan is ready",
+        title: "Your FamilyChef plan is ready",
         body: "Review your seven-day plan before making it active.",
         destination: "nourish://open/plan",
         analyticsDestination: "plan_studio",
@@ -239,19 +239,19 @@ export function createPlanReadyNotificationHandler({ registrationService, pushPr
 
 const OPERATIONAL_NOTIFICATION_TEMPLATES = Object.freeze({
   export_ready: {
-    title: "Your Nourish export is ready",
+    title: "Your FamilyChef export is ready",
     body: "Open Account settings to access it before it expires.",
     destination: "nourish://open/account-export",
     analyticsDestination: "account_settings",
   },
   trial_ending: {
-    title: "Your Nourish trial is ending soon",
+    title: "Your FamilyChef trial is ending soon",
     body: "Review Apple’s renewal details or manage your subscription in Account settings.",
     destination: "nourish://open/subscription",
     analyticsDestination: "subscription_settings",
   },
   account_security: {
-    title: "Review your Nourish account",
+    title: "Review your FamilyChef account",
     body: "Open Account settings to review an important security update.",
     destination: "nourish://open/account-security",
     analyticsDestination: "account_settings",

@@ -33,7 +33,7 @@ export class UserSupportService {
       : normalizeEmail(candidate.verifiedEmail ?? "") === normalized.lookupValue);
     const audit = makeAudit({ ...normalized, userID: user?.id, now: this.now() });
     this.auditEvents.push(audit);
-    if (!user) throw new UserSupportError("NOT_FOUND", "No Nourish account matched that exact identifier.", 404);
+    if (!user) throw new UserSupportError("NOT_FOUND", "No FamilyChef account matched that exact identifier.", 404);
     return projectMemoryUser(this.dataset, user, audit, this.now());
   }
 
@@ -66,7 +66,7 @@ export class PostgresUserSupportService {
       );
       return { row, audit };
     });
-    if (!result.row) throw new UserSupportError("NOT_FOUND", "No Nourish account matched that exact identifier.", 404);
+    if (!result.row) throw new UserSupportError("NOT_FOUND", "No FamilyChef account matched that exact identifier.", 404);
     return projectPostgresUser(result.row, result.audit, occurredAt);
   }
 }

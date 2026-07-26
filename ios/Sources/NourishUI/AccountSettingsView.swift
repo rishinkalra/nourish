@@ -18,10 +18,10 @@ struct DeleteAccountView: View {
         NavigationStack {
             Form {
                 Section("Before you delete") {
-                    Label("All Nourish sessions will be invalidated immediately.", systemImage: "lock.slash")
-                    Label("Scheduled Nourish notifications will be cancelled on this device.", systemImage: "bell.slash")
+                    Label("All FamilyChef sessions will be invalidated immediately.", systemImage: "lock.slash")
+                    Label("Scheduled FamilyChef notifications will be cancelled on this device.", systemImage: "bell.slash")
                     Label("Your server data will enter the deletion queue.", systemImage: "trash")
-                    Text("Deleting Nourish does not cancel an App Store subscription. Manage or cancel the subscription separately through Apple.")
+                    Text("Deleting FamilyChef does not cancel an App Store subscription. Manage or cancel the subscription separately through Apple.")
                         .font(.footnote.bold())
                         .foregroundStyle(.red)
                 }
@@ -113,7 +113,7 @@ struct SupportRequestView: View {
     }
 
     private var supportText: String {
-        var text = "Nourish support request\n\nWhat happened:\n\nWhat I expected:\n"
+        var text = "FamilyChef support request\n\nWhat happened:\n\nWhat I expected:\n"
         if includesDiagnostics {
             let version = Bundle.main.object(forInfoDictionaryKey: "CFBundleShortVersionString") as? String ?? "unknown"
             let build = Bundle.main.object(forInfoDictionaryKey: "CFBundleVersion") as? String ?? "unknown"
@@ -130,17 +130,17 @@ struct LegalInformationView: View {
         NavigationStack {
             List {
                 legalSection("Privacy summary", icon: "hand.raised") {
-                    Text("Nourish stores account identity, planning preferences, adopted plans, grocery and prep state, feedback, subscription state, and security/audit records needed to operate the service. Sensitive tokens stay in Keychain. Export and deletion are available in-app. Nourish does not sell personal data.")
+                    Text("FamilyChef stores account identity, planning preferences, adopted plans, grocery and prep state, feedback, subscription state, and security/audit records needed to operate the service. Sensitive tokens stay in Keychain. Export and deletion are available in-app. FamilyChef does not sell personal data.")
                     Text("Processor list, retention periods, cross-border basis, grievance contact, and counsel-approved launch policy remain pending business decisions.")
                         .foregroundStyle(.secondary)
                 }
                 legalSection("Terms summary", icon: "doc.text") {
-                    Text("Nourish is for adults using meal organization for general wellness. It is not medical advice, diagnosis, or treatment. Users remain responsible for checking ingredients, allergens, food condition, and suitability.")
+                    Text("FamilyChef is for adults using meal organization for general wellness. It is not medical advice, diagnosis, or treatment. Users remain responsible for checking ingredients, allergens, food condition, and suitability.")
                     Text("Final commercial terms, governing law, pricing, trials, and dispute language require approval before release.")
                         .foregroundStyle(.secondary)
                 }
                 legalSection("Wellness disclaimer", icon: "heart.text.square") {
-                    Text("Nutrition values and targets are estimates. Do not use Nourish for pregnancy, eating-disorder care, kidney disease, diabetes treatment, therapeutic diets, or another condition requiring individualized clinical advice without a qualified professional.")
+                    Text("Nutrition values and targets are estimates. Do not use FamilyChef for pregnancy, eating-disorder care, kidney disease, diabetes treatment, therapeutic diets, or another condition requiring individualized clinical advice without a qualified professional.")
                 }
                 legalSection("Nutrition-data methodology", icon: "scalemass") {
                     Text("Ingredient quantities retain household units and grams. Nutrients are calculated from versioned per-100g source records, serving multipliers, and immutable recipe snapshots. Production plans require licensed evidence and separate nutrition review.")

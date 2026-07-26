@@ -58,7 +58,7 @@ test("plan-ready delivery retires invalid APNs tokens without exposing meal data
   assert.deepEqual(result, { registrations: 2, sent: 1, invalidated: 1, disabled: 0 });
   assert.deepEqual(deliveries[0].notification, {
     templateID: "plan_ready",
-    title: "Your Nourish plan is ready",
+    title: "Your FamilyChef plan is ready",
     body: "Review your seven-day plan before making it active.",
     destination: "nourish://open/plan",
     analyticsDestination: "plan_studio",
@@ -102,7 +102,7 @@ test("APNs provider signs an HTTP/2 alert with a safe collapsed plan payload", a
     appBundleID: "com.projectnourish.app",
   }, {
     templateID: "plan_ready",
-    title: "Your Nourish plan is ready",
+    title: "Your FamilyChef plan is ready",
     body: "Review your seven-day plan before making it active.",
     destination: "nourish://open/plan",
     analyticsDestination: "plan_studio",
@@ -144,7 +144,7 @@ test("APNs provider surfaces a failed HTTP/2 session without crashing the worker
       appBundleID: "com.projectnourish.app",
     }, {
       templateID: "plan_ready",
-      title: "Your Nourish plan is ready",
+      title: "Your FamilyChef plan is ready",
       body: "Review your seven-day plan before making it active.",
       destination: "nourish://open/plan",
       analyticsDestination: "plan_studio",
@@ -175,7 +175,7 @@ test("operational templates are bounded, account-directed, and contain no export
   assert.equal(result.sent, 1);
   assert.deepEqual(operationalNotificationTemplate("trial_ending"), {
     templateID: "trial_ending",
-    title: "Your Nourish trial is ending soon",
+    title: "Your FamilyChef trial is ending soon",
     body: "Review Apple’s renewal details or manage your subscription in Account settings.",
     destination: "nourish://open/subscription",
     analyticsDestination: "subscription_settings",

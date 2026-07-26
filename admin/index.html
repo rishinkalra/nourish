@@ -4,8 +4,9 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <meta name="theme-color" content="#f4f2ea" />
-    <meta name="description" content="Nourish private catalogue operations dashboard." />
-    <title>Nourish Control Room</title>
+    <meta name="description" content="FamilyChef private catalogue operations dashboard." />
+    <title>FamilyChef Control Room</title>
+    <link rel="icon" type="image/png" href="../assets/brand/favicon.png" />
     <link rel="stylesheet" href="styles.css" />
     <link rel="stylesheet" href="content.css" />
     <link rel="stylesheet" href="plans.css" />
@@ -35,7 +36,7 @@
     </svg>
 
     <section class="access-gate" id="accessGate">
-      <div class="gate-brand"><span class="brand-mark">n</span><span>Nourish</span></div>
+      <div class="gate-brand"><img class="brand-mark" src="../assets/brand/familychef-app-icon.png" alt="" /><span>FamilyChef</span></div>
       <div class="gate-card">
         <span class="gate-icon"><svg><use href="#i-shield"/></svg></span>
         <p class="eyebrow">PRIVATE OPERATIONS</p>
@@ -52,7 +53,7 @@
 
     <div class="dashboard is-hidden" id="dashboard">
       <aside class="sidebar" id="sidebar">
-        <a class="brand" href="#catalogue"><span class="brand-mark">n</span><span>Nourish</span><small>CONTROL ROOM</small></a>
+        <a class="brand" href="#catalogue"><img class="brand-mark" src="../assets/brand/familychef-app-icon.png" alt="" /><span>FamilyChef</span><small>CONTROL ROOM</small></a>
         <nav aria-label="Dashboard navigation">
           <button class="nav-item is-active" data-view="insights"><svg><use href="#i-grid"/></svg><span>Insights</span></button>
           <button class="nav-item" data-view="support"><svg><use href="#i-search"/></svg><span>User support</span></button>
@@ -71,7 +72,7 @@
       </aside>
 
       <main>
-        <header class="mobile-header"><button id="menuButton" aria-label="Open navigation"><svg><use href="#i-menu"/></svg></button><div class="gate-brand"><span class="brand-mark">n</span><span>Nourish</span></div><span class="avatar" id="mobileAvatar">RO</span></header>
+        <header class="mobile-header"><button id="menuButton" aria-label="Open navigation"><svg><use href="#i-menu"/></svg></button><div class="gate-brand"><img class="brand-mark" src="../assets/brand/familychef-app-icon.png" alt="" /><span>FamilyChef</span></div><span class="avatar" id="mobileAvatar">RO</span></header>
 
         <section class="view is-visible" data-view-panel="insights">
           <div class="page-heading insights-heading"><div><p class="eyebrow">OWNER INSIGHTS</p><h1>Product health, with definitions attached.</h1><p>Aggregated outcomes only—every number carries its formula and freshness evidence.</p></div><div class="freshness-chip"><span>DATA FRESHNESS</span><strong id="analyticsFreshness">Not loaded</strong></div></div>
@@ -256,7 +257,7 @@
           </div>
         </section>
         <section class="view" data-view-panel="subscriptions">
-          <div class="page-heading"><div><p class="eyebrow">SUBSCRIPTION OPERATIONS</p><h1>Reconciliation cases</h1><p>Compare verified Apple evidence with Nourish state while preserving the last legitimate access decision.</p></div><button class="secondary-button" id="refreshSubscriptionsButton">Refresh cases</button></div>
+          <div class="page-heading"><div><p class="eyebrow">SUBSCRIPTION OPERATIONS</p><h1>Reconciliation cases</h1><p>Compare verified Apple evidence with FamilyChef state while preserving the last legitimate access decision.</p></div><button class="secondary-button" id="refreshSubscriptionsButton">Refresh cases</button></div>
           <div class="metric-row subscription-metrics"><article><span class="metric-icon ink"><svg><use href="#i-shield"/></svg></span><div><strong id="subscriptionCount">0</strong><small>linked subscriptions</small></div><em>Latest 200</em></article><article><span class="metric-icon red"><svg><use href="#i-x"/></svg></span><div><strong id="subscriptionMismatchCount">0</strong><small>identity mismatches</small></div><em>Needs action</em></article><article><span class="metric-icon amber"><svg><use href="#i-clock"/></svg></span><div><strong id="subscriptionDelayedCount">0</strong><small>delayed checks</small></div><em>Retry protected</em></article><article><span class="metric-icon green"><svg><use href="#i-check"/></svg></span><div><strong id="subscriptionCurrentCount">0</strong><small>current</small></div><em>Apple verified</em></article></div>
           <section class="economics-boundary" aria-label="Subscription economics boundary">
             <div><span>GROSS CUSTOMER PRICE</span><strong>Apple-localized at purchase</strong><small>Not inferred from entitlement records</small></div>

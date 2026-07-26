@@ -2,14 +2,14 @@
 
 ## Approved hostname map
 
-Nourish remains the product/app name. `familychef.in` is the owned internet domain.
+FamilyChef is the customer-facing product, app and web brand. `familychef.in` is its owned internet domain. Internal code modules and infrastructure identifiers may retain the historical Nourish name until a deliberate low-risk migration is justified.
 
 | Purpose | Production | Staging |
 |---|---|---|
 | Public website and policy pages | `https://www.familychef.in` | optional preview URL |
 | API | `https://api.familychef.in` | `https://api-staging.familychef.in` |
 | Private Control Room | `https://control.familychef.in` | `https://control-staging.familychef.in` |
-| Transactional sender | `Nourish <sign-in@familychef.in>` | same verified sender initially |
+| Transactional sender | `FamilyChef <sign-in@familychef.in>` | same verified sender initially |
 | Support mailbox | `support@familychef.in` | not used for automated testing |
 | Privacy/grievance mailbox | `privacy@familychef.in` | not used for automated testing |
 

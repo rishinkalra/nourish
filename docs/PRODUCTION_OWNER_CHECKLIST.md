@@ -5,7 +5,7 @@ This is the exhaustive hand-off for work that cannot be completed or truthfully 
 ## 1. Company, Apple and commercial ownership
 
 - [ ] Finish enrollment in a new Apple Developer Program organization owned by the intended Nourish legal entity; grant Account Holder/Admin access for Certificates, Identifiers & Profiles.
-- [x] Adopt `familychef.in` for the public domain family with the hostname map in `FAMILYCHEF_DOMAIN_CONFIGURATION.md`; retain Nourish as the app name and preserve the existing bundle identifier until the Apple organization is ready.
+- [x] Adopt FamilyChef as the customer-facing app/web brand and `familychef.in` as its domain family; preserve the internal project identifiers and existing bundle identifier until the Apple organization is ready.
 - [ ] Confirm the final legal entity, App Store positioning, launch geography, supported diets/cuisines, age position, customer-support ownership and grievance contact.
 - [ ] Create App Store Connect products and approve monthly/annual pricing, introductory offer or trial, preview depth, tax/accounting treatment and customer-facing terms.
 - [ ] Configure the App ID, Sign in with Apple, APNs keys, distribution certificates/profiles, App Store Server API credentials and Server Notifications V2 URL.

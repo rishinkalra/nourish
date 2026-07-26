@@ -64,7 +64,7 @@ final class AppProfileStore: ObservableObject {
             #endif
             state = .ready
         } catch {
-            state = .failed("Nourish could not restore the local profile.")
+            state = .failed("FamilyChef could not restore the local profile.")
         }
     }
 
@@ -99,7 +99,7 @@ final class AppProfileStore: ObservableObject {
             state = .failed(error.userSafeMessage)
             return false
         } catch {
-            state = .failed("Nourish could not save this profile. Please try again.")
+            state = .failed("FamilyChef could not save this profile. Please try again.")
             return false
         }
     }
@@ -164,10 +164,10 @@ final class AppProfileStore: ObservableObject {
             syncState = .synced(result.action)
             writeDevelopmentSyncProbe(state: "synced", action: result.action.rawValue)
         } catch let error as APIErrorEnvelope where error.code == .conflict {
-            syncState = .pending("Your profile changed elsewhere. Nourish will retry after refreshing it.")
+            syncState = .pending("Your profile changed elsewhere. FamilyChef will retry after refreshing it.")
             writeDevelopmentSyncProbe(state: "pending", action: "conflict")
         } catch {
-            syncState = .pending("Saved on this device. Nourish will sync when the service is available.")
+            syncState = .pending("Saved on this device. FamilyChef will sync when the service is available.")
             writeDevelopmentSyncProbe(state: "pending", action: "unavailable")
         }
     }

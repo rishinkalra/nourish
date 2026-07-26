@@ -88,7 +88,7 @@ public struct AppRootView: View {
                 if let email = authenticationStore.identity?.verifiedEmail {
                     Text(verbatim: email)
                 } else {
-                    Text("Your Nourish session is stored in Keychain.")
+                    Text("Your FamilyChef session is stored in Keychain.")
                 }
             }
     }

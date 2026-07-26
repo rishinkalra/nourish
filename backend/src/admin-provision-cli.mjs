@@ -24,7 +24,7 @@ try {
     reason: process.env.NOURISH_ADMIN_GRANT_REASON,
     provisionedBySubject: process.env.NOURISH_ADMIN_PROVISIONED_BY ?? "deployment",
   });
-  process.stdout.write(`Provisioned Nourish administrator ${result.verifiedEmail} with roles ${result.roles.join(", ")}\n`);
+  process.stdout.write(`Provisioned FamilyChef administrator ${result.verifiedEmail} with roles ${result.roles.join(", ")}\n`);
 } finally {
   await pool.end();
 }

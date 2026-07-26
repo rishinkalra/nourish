@@ -20,8 +20,8 @@ test("production and staging use the approved FamilyChef hostname boundary", asy
 
   assert.match(staging, /domain: api-staging\.familychef\.in/);
   assert.match(staging, /value: https:\/\/control-staging\.familychef\.in/);
-  assert.match(staging, /value: "Nourish <sign-in@familychef\.in>"/);
-  assert.match(example, /NOURISH_EMAIL_FROM=Nourish <sign-in@familychef\.in>/);
+  assert.match(staging, /value: "FamilyChef <sign-in@familychef\.in>"/);
+  assert.match(example, /NOURISH_EMAIL_FROM=FamilyChef <sign-in@familychef\.in>/);
   assert.match(example, /NOURISH_ADMIN_ORIGIN=https:\/\/control-staging\.familychef\.in/);
 
   for (const hostname of [

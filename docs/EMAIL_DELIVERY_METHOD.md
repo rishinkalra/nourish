@@ -30,7 +30,7 @@ AWS SES remains attractive at materially larger volume, but it adds region, acco
 
 ## Staging acceptance
 
-The chosen sending domain is `familychef.in`, with `Nourish <sign-in@familychef.in>` as the transactional identity. Reserve monitored `support@familychef.in` and `privacy@familychef.in` mailboxes for public support and privacy/grievance handling.
+The chosen sending domain is `familychef.in`, with `FamilyChef <sign-in@familychef.in>` as the transactional identity. Reserve monitored `support@familychef.in` and `privacy@familychef.in` mailboxes for public support and privacy/grievance handling.
 
 Before enabling live users:
 

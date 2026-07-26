@@ -29,7 +29,7 @@ svg { width: 21px; height: 21px; fill: none; stroke: currentColor; stroke-width:
 .app-shell { min-height: 100vh; }
 .sidebar { position: fixed; inset: 0 auto 0 0; width: 250px; padding: 32px 22px; background: #f0eee5; border-right: 1px solid rgba(23,52,43,.08); display: flex; flex-direction: column; z-index: 20; }
 .brand { display: inline-flex; align-items: center; gap: 11px; color: var(--ink); text-decoration: none; font-size: 22px; font-weight: 750; letter-spacing: -.6px; }
-.brand-mark { display: grid; place-items: center; width: 35px; height: 35px; border-radius: 12px 12px 12px 5px; color: #fff; background: var(--forest); font-family: Georgia, serif; font-size: 23px; font-style: italic; }
+.brand-mark { display: block; width: 35px; height: 35px; border-radius: 11px; object-fit: cover; }
 .side-nav { display: grid; gap: 6px; margin-top: 52px; }
 .nav-item { border: 0; background: transparent; cursor: pointer; display: flex; align-items: center; gap: 14px; padding: 13px 14px; border-radius: 14px; color: #65726d; font-weight: 620; transition: .2s ease; }
 .nav-item:hover { background: rgba(255,255,255,.6); color: var(--ink); }
@@ -240,7 +240,7 @@ h3 { margin:0; font-size:18px; line-height:1.25; }
 .onboarding-story { position:relative; overflow:hidden; display:flex; flex-direction:column; justify-content:space-between; padding:42px; color:#fff; background:linear-gradient(145deg,#163c2d 0%,#235a43 68%,#2e684e 100%); }
 .onboarding-story::after { content:""; position:absolute; width:480px; height:480px; right:-250px; bottom:-170px; border:1px solid rgba(255,255,255,.12); border-radius:50%; box-shadow:0 0 0 65px rgba(255,255,255,.035),0 0 0 130px rgba(255,255,255,.025); }
 .onboarding-brand { color:#fff; position:relative; z-index:1; }
-.onboarding-brand .brand-mark { background:var(--lime); color:var(--forest); }
+.onboarding-brand .brand-mark { box-shadow:0 0 0 1px rgba(255,255,255,.14); }
 .story-copy { max-width:430px; position:relative; z-index:1; }
 .story-copy .eyebrow { color:#bcd4c8; }
 .story-copy h2 { font-family:Georgia,serif; font-size:clamp(38px,4vw,58px); font-weight:500; letter-spacing:-1.4px; }

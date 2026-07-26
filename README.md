@@ -8,7 +8,7 @@ This prototype has no dependencies or build step. Open `index.html` directly, or
 
 ## Domain
 
-Nourish remains the app name and now uses the owned `familychef.in` domain family. The public site is `www.familychef.in`, the production API is `api.familychef.in`, and the privileged Control Room is `control.familychef.in`; staging uses separate `api-staging` and `control-staging` hosts. See `docs/FAMILYCHEF_DOMAIN_CONFIGURATION.md` for DNS, email and universal-link sequencing. The iOS bundle identifier and interim `nourish://` callback are intentionally unchanged.
+FamilyChef is the customer-facing app and web brand and uses the owned `familychef.in` domain family. The public site is `www.familychef.in`, the production API is `api.familychef.in`, and the privileged Control Room is `control.familychef.in`; staging uses separate `api-staging` and `control-staging` hosts. See `docs/FAMILYCHEF_DOMAIN_CONFIGURATION.md` for branding, DNS, email and universal-link sequencing. The internal project names, iOS bundle identifier and interim `nourish://` callback are intentionally unchanged.
 
 ## Included in this first slice
 

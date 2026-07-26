@@ -17,6 +17,7 @@
 		A30000000000000000000001 /* Localizable.xcstrings in Resources */ = {isa = PBXBuildFile; fileRef = A30000000000000000000002 /* Localizable.xcstrings */; };
 		A30000000000000000000003 /* palak-paneer-meal.png in Resources */ = {isa = PBXBuildFile; fileRef = A30000000000000000000004 /* palak-paneer-meal.png */; };
 		A30000000000000000000005 /* PrivacyInfo.xcprivacy in Resources */ = {isa = PBXBuildFile; fileRef = A30000000000000000000006 /* PrivacyInfo.xcprivacy */; };
+		A30000000000000000000007 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = A30000000000000000000008 /* Assets.xcassets */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -39,6 +40,7 @@
 		A30000000000000000000002 /* Localizable.xcstrings */ = {isa = PBXFileReference; lastKnownFileType = text.json.xcstrings; path = Localizable.xcstrings; sourceTree = "<group>"; };
 		A30000000000000000000004 /* palak-paneer-meal.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = palak-paneer-meal.png; path = ../../../assets/palak-paneer-meal.png; sourceTree = "<group>"; };
 		A30000000000000000000006 /* PrivacyInfo.xcprivacy */ = {isa = PBXFileReference; lastKnownFileType = text.xml; path = PrivacyInfo.xcprivacy; sourceTree = "<group>"; };
+		A30000000000000000000008 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -87,6 +89,7 @@
 				A30000000000000000000002 /* Localizable.xcstrings */,
 				A30000000000000000000004 /* palak-paneer-meal.png */,
 				A30000000000000000000006 /* PrivacyInfo.xcprivacy */,
+				A30000000000000000000008 /* Assets.xcassets */,
 			);
 			path = NourishApp;
 			sourceTree = "<group>";
@@ -236,6 +239,7 @@
 				A30000000000000000000001 /* Localizable.xcstrings in Resources */,
 				A30000000000000000000003 /* palak-paneer-meal.png in Resources */,
 				A30000000000000000000005 /* PrivacyInfo.xcprivacy in Resources */,
+				A30000000000000000000007 /* Assets.xcassets in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -406,7 +410,8 @@
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = NO;
 				INFOPLIST_FILE = NourishApp/Info.plist;
-				INFOPLIST_KEY_CFBundleDisplayName = Nourish;
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				INFOPLIST_KEY_CFBundleDisplayName = FamilyChef;
 				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.healthcare-fitness";
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
@@ -434,7 +439,8 @@
 				DEVELOPMENT_TEAM = B59NRU7RVT;
 				GENERATE_INFOPLIST_FILE = NO;
 				INFOPLIST_FILE = NourishApp/Info.plist;
-				INFOPLIST_KEY_CFBundleDisplayName = Nourish;
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				INFOPLIST_KEY_CFBundleDisplayName = FamilyChef;
 				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.healthcare-fitness";
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;

@@ -1,6 +1,6 @@
-# Native Nourish app
+# Native FamilyChef app
 
-This Swift package contains the first production-facing iOS foundations:
+FamilyChef is the customer-facing app name. The historical `NourishApp`, `NourishUI`, `NourishAPI` and `NourishCore` target/module names remain internal to preserve build and migration stability. This Swift package contains the production-facing iOS foundations:
 
 - shared profile and onboarding models;
 - eligibility, calorie-target, cooking-day, and estimate acknowledgement validation;

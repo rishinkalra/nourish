@@ -38,7 +38,7 @@ test("DigitalOcean preflight renders a placeholder-free, fail-closed staging spe
   assert.match(result.rendered, /value: "project-nourish-private-staging"/);
   assert.match(result.rendered, /domain: api-staging\.familychef\.in/);
   assert.match(result.rendered, /value: https:\/\/control-staging\.familychef\.in/);
-  assert.match(result.rendered, /value: "Nourish <sign-in@familychef\.in>"/);
+  assert.match(result.rendered, /value: "FamilyChef <sign-in@familychef\.in>"/);
   assert.equal(result.summary.apiDomain, "api-staging.familychef.in");
   assert.match(result.rendered, /value: "\{\\"staging-2026-06\\"/);
   assert.equal([...result.rendered.matchAll(/rule: CPU_UTILIZATION/g)].length, 2);

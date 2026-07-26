@@ -158,7 +158,7 @@ services:
         scope: RUN_TIME
         type: GENERAL
       - key: NOURISH_EMAIL_FROM
-        value: "Nourish <sign-in@familychef.in>"
+        value: "FamilyChef <sign-in@familychef.in>"
         scope: RUN_TIME
         type: GENERAL
       - key: NOURISH_BREVO_API_KEY

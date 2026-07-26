@@ -136,7 +136,7 @@ export class OfficialAppStoreSubscriptionClient {
 
   #requireAllowedProduct(productID) {
     if (!productID || !this.allowedProductIDs.has(productID)) {
-      throw new AppStoreServerError("APPLE_PRODUCT_NOT_CONFIGURED", "The verified transaction is not for a configured Nourish subscription product.");
+      throw new AppStoreServerError("APPLE_PRODUCT_NOT_CONFIGURED", "The verified transaction is not for a configured FamilyChef subscription product.");
     }
   }
 }

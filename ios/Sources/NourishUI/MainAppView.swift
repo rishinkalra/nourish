@@ -628,7 +628,7 @@ private struct ActiveRecipeDetail: View {
                         Label("Meal options", systemImage: "arrow.left.arrow.right")
                             .font(.headline)
                             .foregroundStyle(NourishTheme.forest)
-                        Text("Nourish will only show replacements that still fit your diet, allergens, targets, and the variety of your whole week.")
+                        Text("FamilyChef will only show replacements that still fit your diet, allergens, targets, and the variety of your whole week.")
                             .font(.subheadline)
                             .foregroundStyle(.secondary)
                         Button {
@@ -1228,7 +1228,7 @@ private struct PlanStudioView: View {
                 }
                 .font(.title2.bold()).foregroundStyle(NourishTheme.forest)
                 if generationStore.lastAdoptionStatus == "scheduled" {
-                    Text("Your current week stays active. Nourish will switch on the new plan’s local start date.")
+                    Text("Your current week stays active. FamilyChef will switch on the new plan’s local start date.")
                         .foregroundStyle(.secondary)
                 } else {
                     Text("Today, Week, Groceries, and Prep now use this immutable reviewed plan.")
@@ -1308,7 +1308,7 @@ private struct PlanStudioView: View {
         } else {
             VStack(alignment: .leading, spacing: 12) {
                 Text("Create your first reviewed week").font(.title2.bold())
-                Text("Nourish will only activate a plan built from published recipes with approved nutrition review.")
+                Text("FamilyChef will only activate a plan built from published recipes with approved nutrition review.")
                     .foregroundStyle(.secondary)
                 optionalSnackToggle(profile)
                 Button("Generate reviewed week") {
@@ -1955,7 +1955,7 @@ private struct IllustrativePlanBanner: View {
 
     private var detail: LocalizedStringKey {
         switch activeStore.state {
-        case .loading: "Your saved week stays visible while Nourish refreshes."
+        case .loading: "Your saved week stays visible while FamilyChef refreshes."
         case .noActivePlan: "Explore the experience with sample meals, then create and adopt your own reviewed week."
         case .pending, .conflict: "Your sample week remains available while the planning service reconnects."
         case .signedOut: "Explore with sample meals. Sign in later to restore your own reviewed week."
@@ -2773,7 +2773,7 @@ private struct ProfilePreview: View {
                                 .font(.footnote)
                                 .textSelection(.enabled)
                         }
-                        Button("Delete Nourish account", role: .destructive) { showingDeleteAccount = true }
+                        Button("Delete FamilyChef account", role: .destructive) { showingDeleteAccount = true }
                     } else {
                         LabeledContent("Mode") { Text("Local preview") }
                         Label("Profile stored with iOS file protection", systemImage: "lock.shield")
@@ -2818,7 +2818,7 @@ private struct ProfilePreview: View {
                     } else if authenticationStore.identity != nil {
                         LabeledContent("Server state") { Text("Checking") }
                     }
-                    Button("View Nourish plans") { showingSubscriptionPurchase = true }
+                    Button("View FamilyChef plans") { showingSubscriptionPurchase = true }
                         .disabled(authenticationStore.identity == nil)
                     Button("Restore App Store purchases") {
                         Task {
@@ -2835,10 +2835,10 @@ private struct ProfilePreview: View {
                                 }
                                 await accountStore.refreshEntitlement()
                                 subscriptionMessage = verifiedTransactions > 0
-                                    ? "Purchase history was verified by Apple and linked to this Nourish account."
+                                    ? "Purchase history was verified by Apple and linked to this FamilyChef account."
                                     : "Purchase history synchronized. No current subscription entitlement was found."
                             } catch {
-                                subscriptionMessage = "The App Store purchase could not be verified for this Nourish account right now. Existing server access is unchanged."
+                                subscriptionMessage = "The App Store purchase could not be verified for this FamilyChef account right now. Existing server access is unchanged."
                             }
                         }
                     }
@@ -2856,7 +2856,7 @@ private struct ProfilePreview: View {
                 Section("Privacy & measurement") {
                     Toggle("Share first-party product usage", isOn: $analyticsMeasurementEnabled)
                         .accessibilityIdentifier("settings.analytics-consent")
-                    Text("Off by default. When enabled, Nourish records only named product events with bounded properties. It does not include email, profile answers, meal history, free text, advertising identifiers, or device fingerprints.")
+                    Text("Off by default. When enabled, FamilyChef records only named product events with bounded properties. It does not include email, profile answers, meal history, free text, advertising identifiers, or device fingerprints.")
                         .font(.footnote)
                         .foregroundStyle(.secondary)
                 }

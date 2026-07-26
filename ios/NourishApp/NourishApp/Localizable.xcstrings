@@ -91,14 +91,14 @@
         "hi" : { "stringUnit" : { "state" : "translated", "value" : "मेरा सप्ताह" } }
       }
     },
-    "Nourish supports general wellness and meal organization—not clinical diets." : {
+    "FamilyChef supports general wellness and meal organization—not clinical diets." : {
       "localizations" : {
-        "hi" : { "stringUnit" : { "state" : "translated", "value" : "Nourish सामान्य स्वास्थ्य और भोजन व्यवस्था में मदद करता है—चिकित्सकीय आहार में नहीं।" } }
+        "hi" : { "stringUnit" : { "state" : "translated", "value" : "FamilyChef सामान्य स्वास्थ्य और भोजन व्यवस्था में मदद करता है—चिकित्सकीय आहार में नहीं।" } }
       }
     },
-    "Off by default. When enabled, Nourish records only named product events with bounded properties. It does not include email, profile answers, meal history, free text, advertising identifiers, or device fingerprints." : {
+    "Off by default. When enabled, FamilyChef records only named product events with bounded properties. It does not include email, profile answers, meal history, free text, advertising identifiers, or device fingerprints." : {
       "localizations" : {
-        "hi" : { "stringUnit" : { "state" : "translated", "value" : "यह डिफ़ॉल्ट रूप से बंद है। चालू करने पर Nourish केवल सीमित उत्पाद-उपयोग घटनाएँ दर्ज करता है; ईमेल, प्रोफ़ाइल उत्तर, भोजन इतिहास, मुक्त पाठ, विज्ञापन पहचानकर्ता या डिवाइस फ़िंगरप्रिंट नहीं।" } }
+        "hi" : { "stringUnit" : { "state" : "translated", "value" : "यह डिफ़ॉल्ट रूप से बंद है। चालू करने पर FamilyChef केवल सीमित उत्पाद-उपयोग घटनाएँ दर्ज करता है; ईमेल, प्रोफ़ाइल उत्तर, भोजन इतिहास, मुक्त पाठ, विज्ञापन पहचानकर्ता या डिवाइस फ़िंगरप्रिंट नहीं।" } }
       }
     },
     "Onboarding progress" : {
@@ -251,9 +251,9 @@
         "hi" : { "stringUnit" : { "state" : "translated", "value" : "अगला सप्ताह तय हो गया" } }
       }
     },
-    "Nourish membership" : {
+    "FamilyChef membership" : {
       "localizations" : {
-        "hi" : { "stringUnit" : { "state" : "translated", "value" : "Nourish सदस्यता" } }
+        "hi" : { "stringUnit" : { "state" : "translated", "value" : "FamilyChef सदस्यता" } }
       }
     },
     "Normalized from the active reviewed plan. Planned leftovers are counted once." : {
@@ -371,9 +371,9 @@
         "hi" : { "stringUnit" : { "state" : "translated", "value" : "साप्ताहिक खरीदारी" } }
       }
     },
-    "Your current week stays active. Nourish will switch on the new plan’s local start date." : {
+    "Your current week stays active. FamilyChef will switch on the new plan’s local start date." : {
       "localizations" : {
-        "hi" : { "stringUnit" : { "state" : "translated", "value" : "आपका वर्तमान सप्ताह सक्रिय रहेगा। Nourish नई योजना की स्थानीय शुरुआत की तारीख पर इसे बदल देगा।" } }
+        "hi" : { "stringUnit" : { "state" : "translated", "value" : "आपका वर्तमान सप्ताह सक्रिय रहेगा। FamilyChef नई योजना की स्थानीय शुरुआत की तारीख पर इसे बदल देगा।" } }
       }
     },
     "Your meal history never changes your price" : {
@@ -486,9 +486,9 @@
         "hi" : { "stringUnit" : { "state" : "translated", "value" : "अधिक विविधता" } }
       }
     },
-    "Nourish will only activate a plan built from published recipes with approved nutrition review." : {
+    "FamilyChef will only activate a plan built from published recipes with approved nutrition review." : {
       "localizations" : {
-        "hi" : { "stringUnit" : { "state" : "translated", "value" : "Nourish केवल प्रकाशित रेसिपी और स्वीकृत पोषण समीक्षा वाली योजना को सक्रिय करेगा।" } }
+        "hi" : { "stringUnit" : { "state" : "translated", "value" : "FamilyChef केवल प्रकाशित रेसिपी और स्वीकृत पोषण समीक्षा वाली योजना को सक्रिय करेगा।" } }
       }
     },
     "Nutrition methodology" : {
@@ -996,24 +996,24 @@
         "hi" : { "stringUnit" : { "state" : "translated", "value" : "भोजन सूचनाएँ संबंधित समीक्षित भोजन खोलती हैं। आपकी प्रोफ़ाइल में चालू न किए गए भोजन समय उपलब्ध नहीं होंगे।" } }
       }
     },
-    "Nourish is for adults using meal organization for general wellness. It is not medical advice, diagnosis, or treatment. Users remain responsible for checking ingredients, allergens, food condition, and suitability." : {
+    "FamilyChef is for adults using meal organization for general wellness. It is not medical advice, diagnosis, or treatment. Users remain responsible for checking ingredients, allergens, food condition, and suitability." : {
       "localizations" : {
-        "hi" : { "stringUnit" : { "state" : "translated", "value" : "Nourish सामान्य स्वास्थ्य के लिए भोजन व्यवस्था करने वाले वयस्कों के लिए है। यह चिकित्सकीय सलाह, निदान या उपचार नहीं है। सामग्री, एलर्जी, भोजन की स्थिति और उपयुक्तता जाँचना उपयोगकर्ता की जिम्मेदारी है।" } }
+        "hi" : { "stringUnit" : { "state" : "translated", "value" : "FamilyChef सामान्य स्वास्थ्य के लिए भोजन व्यवस्था करने वाले वयस्कों के लिए है। यह चिकित्सकीय सलाह, निदान या उपचार नहीं है। सामग्री, एलर्जी, भोजन की स्थिति और उपयुक्तता जाँचना उपयोगकर्ता की जिम्मेदारी है।" } }
       }
     },
-    "Nourish stores account identity, planning preferences, adopted plans, grocery and prep state, feedback, subscription state, and security/audit records needed to operate the service. Sensitive tokens stay in Keychain. Export and deletion are available in-app. Nourish does not sell personal data." : {
+    "FamilyChef stores account identity, planning preferences, adopted plans, grocery and prep state, feedback, subscription state, and security/audit records needed to operate the service. Sensitive tokens stay in Keychain. Export and deletion are available in-app. FamilyChef does not sell personal data." : {
       "localizations" : {
-        "hi" : { "stringUnit" : { "state" : "translated", "value" : "Nourish सेवा चलाने के लिए खाता पहचान, योजना प्राथमिकताएँ, अपनाई गई योजनाएँ, किराने और तैयारी की स्थिति, प्रतिक्रिया, सदस्यता स्थिति और सुरक्षा/ऑडिट रिकॉर्ड रखता है। संवेदनशील टोकन Keychain में रहते हैं। निर्यात और हटाने की सुविधा ऐप में उपलब्ध है। Nourish व्यक्तिगत डेटा नहीं बेचता।" } }
+        "hi" : { "stringUnit" : { "state" : "translated", "value" : "FamilyChef सेवा चलाने के लिए खाता पहचान, योजना प्राथमिकताएँ, अपनाई गई योजनाएँ, किराने और तैयारी की स्थिति, प्रतिक्रिया, सदस्यता स्थिति और सुरक्षा/ऑडिट रिकॉर्ड रखता है। संवेदनशील टोकन Keychain में रहते हैं। निर्यात और हटाने की सुविधा ऐप में उपलब्ध है। FamilyChef व्यक्तिगत डेटा नहीं बेचता।" } }
       }
     },
-    "Notifications are disabled for Nourish. Enable them in the iOS Settings app after saving your choices." : {
+    "Notifications are disabled for FamilyChef. Enable them in the iOS Settings app after saving your choices." : {
       "localizations" : {
-        "hi" : { "stringUnit" : { "state" : "translated", "value" : "Nourish की सूचनाएँ बंद हैं। अपनी पसंद सहेजने के बाद उन्हें iOS सेटिंग ऐप में चालू करें।" } }
+        "hi" : { "stringUnit" : { "state" : "translated", "value" : "FamilyChef की सूचनाएँ बंद हैं। अपनी पसंद सहेजने के बाद उन्हें iOS सेटिंग ऐप में चालू करें।" } }
       }
     },
-    "Nutrition values and targets are estimates. Do not use Nourish for pregnancy, eating-disorder care, kidney disease, diabetes treatment, therapeutic diets, or another condition requiring individualized clinical advice without a qualified professional." : {
+    "Nutrition values and targets are estimates. Do not use FamilyChef for pregnancy, eating-disorder care, kidney disease, diabetes treatment, therapeutic diets, or another condition requiring individualized clinical advice without a qualified professional." : {
       "localizations" : {
-        "hi" : { "stringUnit" : { "state" : "translated", "value" : "पोषण मान और लक्ष्य अनुमान हैं। योग्य पेशेवर की सलाह के बिना Nourish का उपयोग गर्भावस्था, भोजन विकार देखभाल, गुर्दे की बीमारी, मधुमेह उपचार, चिकित्सकीय आहार या व्यक्तिगत नैदानिक सलाह वाली किसी अन्य स्थिति के लिए न करें।" } }
+        "hi" : { "stringUnit" : { "state" : "translated", "value" : "पोषण मान और लक्ष्य अनुमान हैं। योग्य पेशेवर की सलाह के बिना FamilyChef का उपयोग गर्भावस्था, भोजन विकार देखभाल, गुर्दे की बीमारी, मधुमेह उपचार, चिकित्सकीय आहार या व्यक्तिगत नैदानिक सलाह वाली किसी अन्य स्थिति के लिए न करें।" } }
       }
     },
     "Opens completion and preference feedback near the end of the week." : {
@@ -1261,9 +1261,9 @@
         "hi" : { "stringUnit" : { "state" : "translated", "value" : "समीक्षित योजना तैयार है" } }
       }
     },
-    "Your saved illustrative week remains visible while Nourish refreshes." : {
+    "Your saved illustrative week remains visible while FamilyChef refreshes." : {
       "localizations" : {
-        "hi" : { "stringUnit" : { "state" : "translated", "value" : "Nourish के रीफ़्रेश होने तक आपका सहेजा हुआ उदाहरणात्मक सप्ताह दिखाई देता रहेगा।" } }
+        "hi" : { "stringUnit" : { "state" : "translated", "value" : "FamilyChef के रीफ़्रेश होने तक आपका सहेजा हुआ उदाहरणात्मक सप्ताह दिखाई देता रहेगा।" } }
       }
     },
     "Generate and adopt a week after the catalogue has enough licensed, reviewed recipes." : {
@@ -1271,9 +1271,9 @@
         "hi" : { "stringUnit" : { "state" : "translated", "value" : "कैटलॉग में पर्याप्त लाइसेंस प्राप्त और समीक्षित रेसिपी होने के बाद सप्ताह बनाएँ और अपनाएँ।" } }
       }
     },
-    "This visible week is illustrative; Nourish will never relabel draft meals as production content." : {
+    "This visible week is illustrative; FamilyChef will never relabel draft meals as production content." : {
       "localizations" : {
-        "hi" : { "stringUnit" : { "state" : "translated", "value" : "यह दिखाई देने वाला सप्ताह उदाहरणात्मक है; Nourish ड्राफ़्ट भोजन को उत्पादन सामग्री के रूप में कभी नहीं दिखाएगा।" } }
+        "hi" : { "stringUnit" : { "state" : "translated", "value" : "यह दिखाई देने वाला सप्ताह उदाहरणात्मक है; FamilyChef ड्राफ़्ट भोजन को उत्पादन सामग्री के रूप में कभी नहीं दिखाएगा।" } }
       }
     },
     "Sign in to restore an adopted reviewed plan. These meals and values are development fixtures." : {
@@ -1501,9 +1501,9 @@
         "hi" : { "stringUnit" : { "state" : "translated", "value" : "इस रूप में साइन इन: " } }
       }
     },
-    "Nourish user" : {
+    "FamilyChef user" : {
       "localizations" : {
-        "hi" : { "stringUnit" : { "state" : "translated", "value" : "Nourish उपयोगकर्ता" } }
+        "hi" : { "stringUnit" : { "state" : "translated", "value" : "FamilyChef उपयोगकर्ता" } }
       }
     },
     "Day " : {
@@ -1583,8 +1583,8 @@
     "Please try again." : {
       "localizations" : { "hi" : { "stringUnit" : { "state" : "translated", "value" : "कृपया फिर से प्रयास करें।" } } }
     },
-    "Your Nourish session is stored in Keychain." : {
-      "localizations" : { "hi" : { "stringUnit" : { "state" : "translated", "value" : "आपका Nourish सत्र Keychain में सुरक्षित है।" } } }
+    "Your FamilyChef session is stored in Keychain." : {
+      "localizations" : { "hi" : { "stringUnit" : { "state" : "translated", "value" : "आपका FamilyChef सत्र Keychain में सुरक्षित है।" } } }
     },
     "Deletion could not be confirmed." : {
       "localizations" : { "hi" : { "stringUnit" : { "state" : "translated", "value" : "हटाने की पुष्टि नहीं हो सकी।" } } }
@@ -1598,14 +1598,14 @@
     "Local profile storage is unavailable on this device." : {
       "localizations" : { "hi" : { "stringUnit" : { "state" : "translated", "value" : "इस डिवाइस पर स्थानीय प्रोफ़ाइल संग्रह उपलब्ध नहीं है।" } } }
     },
-    "Nourish could not restore the local profile." : {
-      "localizations" : { "hi" : { "stringUnit" : { "state" : "translated", "value" : "Nourish स्थानीय प्रोफ़ाइल वापस नहीं ला सका।" } } }
+    "FamilyChef could not restore the local profile." : {
+      "localizations" : { "hi" : { "stringUnit" : { "state" : "translated", "value" : "FamilyChef स्थानीय प्रोफ़ाइल वापस नहीं ला सका।" } } }
     },
     "Check the target, meal slots, cooking days, region, and timezone." : {
       "localizations" : { "hi" : { "stringUnit" : { "state" : "translated", "value" : "लक्ष्य, भोजन समय, खाना पकाने के दिन, क्षेत्र और समय क्षेत्र जाँचें।" } } }
     },
-    "Nourish could not save this profile. Please try again." : {
-      "localizations" : { "hi" : { "stringUnit" : { "state" : "translated", "value" : "Nourish इस प्रोफ़ाइल को सहेज नहीं सका। कृपया फिर प्रयास करें।" } } }
+    "FamilyChef could not save this profile. Please try again." : {
+      "localizations" : { "hi" : { "stringUnit" : { "state" : "translated", "value" : "FamilyChef इस प्रोफ़ाइल को सहेज नहीं सका। कृपया फिर प्रयास करें।" } } }
     },
     "Enter a valid email address." : {
       "localizations" : { "hi" : { "stringUnit" : { "state" : "translated", "value" : "मान्य ईमेल पता दर्ज करें।" } } }
@@ -1628,20 +1628,20 @@
     "Reminder schedule updated." : {
       "localizations" : { "hi" : { "stringUnit" : { "state" : "translated", "value" : "रिमाइंडर समय-सारणी अपडेट हो गई।" } } }
     },
-    "All Nourish reminders are off." : {
-      "localizations" : { "hi" : { "stringUnit" : { "state" : "translated", "value" : "सभी Nourish रिमाइंडर बंद हैं।" } } }
+    "All FamilyChef reminders are off." : {
+      "localizations" : { "hi" : { "stringUnit" : { "state" : "translated", "value" : "सभी FamilyChef रिमाइंडर बंद हैं।" } } }
     },
     "Your choices were saved, but iOS could not schedule every reminder." : {
       "localizations" : { "hi" : { "stringUnit" : { "state" : "translated", "value" : "आपकी पसंद सहेजी गई, लेकिन iOS हर रिमाइंडर निर्धारित नहीं कर सका।" } } }
     },
-    "All Nourish reminders were cancelled." : {
-      "localizations" : { "hi" : { "stringUnit" : { "state" : "translated", "value" : "सभी Nourish रिमाइंडर रद्द कर दिए गए।" } } }
+    "All FamilyChef reminders were cancelled." : {
+      "localizations" : { "hi" : { "stringUnit" : { "state" : "translated", "value" : "सभी FamilyChef रिमाइंडर रद्द कर दिए गए।" } } }
     },
     "Sign in before creating a reviewed week." : {
       "localizations" : { "hi" : { "stringUnit" : { "state" : "translated", "value" : "समीक्षित सप्ताह बनाने से पहले साइन इन करें।" } } }
     },
-    "Nourish could not determine the next plan start date." : {
-      "localizations" : { "hi" : { "stringUnit" : { "state" : "translated", "value" : "Nourish अगली योजना की शुरुआत की तारीख तय नहीं कर सका।" } } }
+    "FamilyChef could not determine the next plan start date." : {
+      "localizations" : { "hi" : { "stringUnit" : { "state" : "translated", "value" : "FamilyChef अगली योजना की शुरुआत की तारीख तय नहीं कर सका।" } } }
     },
     "The plan service is unavailable. Your current week is unchanged." : {
       "localizations" : { "hi" : { "stringUnit" : { "state" : "translated", "value" : "योजना सेवा उपलब्ध नहीं है। आपका वर्तमान सप्ताह नहीं बदला है।" } } }
@@ -1667,14 +1667,14 @@
     "Generation is taking longer than expected. Reopen this screen to check again." : {
       "localizations" : { "hi" : { "stringUnit" : { "state" : "translated", "value" : "योजना बनने में अपेक्षा से अधिक समय लग रहा है। दोबारा जाँचने के लिए यह स्क्रीन फिर खोलें।" } } }
     },
-    "Nourish could not generate this week." : {
-      "localizations" : { "hi" : { "stringUnit" : { "state" : "translated", "value" : "Nourish यह सप्ताह नहीं बना सका।" } } }
+    "FamilyChef could not generate this week." : {
+      "localizations" : { "hi" : { "stringUnit" : { "state" : "translated", "value" : "FamilyChef यह सप्ताह नहीं बना सका।" } } }
     },
     "There are not enough licensed, reviewed recipes for this profile yet. Your current week is unchanged." : {
       "localizations" : { "hi" : { "stringUnit" : { "state" : "translated", "value" : "इस प्रोफ़ाइल के लिए अभी पर्याप्त लाइसेंस प्राप्त, समीक्षित रेसिपी नहीं हैं। आपका वर्तमान सप्ताह नहीं बदला है।" } } }
     },
-    "Nourish could not build a safe varied week. Try fewer locks or review cooking constraints." : {
-      "localizations" : { "hi" : { "stringUnit" : { "state" : "translated", "value" : "Nourish सुरक्षित और विविध सप्ताह नहीं बना सका। कम भोजन लॉक करें या खाना पकाने की सीमाएँ जाँचें।" } } }
+    "FamilyChef could not build a safe varied week. Try fewer locks or review cooking constraints." : {
+      "localizations" : { "hi" : { "stringUnit" : { "state" : "translated", "value" : "FamilyChef सुरक्षित और विविध सप्ताह नहीं बना सका। कम भोजन लॉक करें या खाना पकाने की सीमाएँ जाँचें।" } } }
     },
     "Complete the required planning preferences before generating a week." : {
       "localizations" : { "hi" : { "stringUnit" : { "state" : "translated", "value" : "सप्ताह बनाने से पहले आवश्यक योजना प्राथमिकताएँ पूरी करें।" } } }
@@ -1691,11 +1691,11 @@
     "App Store plans could not be loaded. No purchase was started." : {
       "localizations" : { "hi" : { "stringUnit" : { "state" : "translated", "value" : "App Store योजनाएँ लोड नहीं हो सकीं। कोई खरीद शुरू नहीं हुई।" } } }
     },
-    "Apple could not verify this transaction. No Nourish access was changed." : {
-      "localizations" : { "hi" : { "stringUnit" : { "state" : "translated", "value" : "Apple इस लेनदेन की पुष्टि नहीं कर सका। Nourish पहुँच नहीं बदली।" } } }
+    "Apple could not verify this transaction. No FamilyChef access was changed." : {
+      "localizations" : { "hi" : { "stringUnit" : { "state" : "translated", "value" : "Apple इस लेनदेन की पुष्टि नहीं कर सका। FamilyChef पहुँच नहीं बदली।" } } }
     },
-    "Purchase verified. Your Nourish access is now linked to this account." : {
-      "localizations" : { "hi" : { "stringUnit" : { "state" : "translated", "value" : "खरीद सत्यापित हुई। आपकी Nourish पहुँच अब इस खाते से जुड़ी है।" } } }
+    "Purchase verified. Your FamilyChef access is now linked to this account." : {
+      "localizations" : { "hi" : { "stringUnit" : { "state" : "translated", "value" : "खरीद सत्यापित हुई। आपकी FamilyChef पहुँच अब इस खाते से जुड़ी है।" } } }
     },
     "The purchase is awaiting approval. Access will update after Apple confirms it." : {
       "localizations" : { "hi" : { "stringUnit" : { "state" : "translated", "value" : "खरीद स्वीकृति की प्रतीक्षा में है। Apple की पुष्टि के बाद पहुँच अपडेट होगी।" } } }
@@ -1706,14 +1706,14 @@
     "The App Store returned an unknown purchase result. No access was changed." : {
       "localizations" : { "hi" : { "stringUnit" : { "state" : "translated", "value" : "App Store ने अज्ञात खरीद परिणाम दिया। पहुँच नहीं बदली।" } } }
     },
-    "The purchase could not be verified by the Nourish server. Existing access is unchanged." : {
-      "localizations" : { "hi" : { "stringUnit" : { "state" : "translated", "value" : "Nourish सर्वर खरीद सत्यापित नहीं कर सका। मौजूदा पहुँच नहीं बदली है।" } } }
+    "The purchase could not be verified by the FamilyChef server. Existing access is unchanged." : {
+      "localizations" : { "hi" : { "stringUnit" : { "state" : "translated", "value" : "FamilyChef सर्वर खरीद सत्यापित नहीं कर सका। मौजूदा पहुँच नहीं बदली है।" } } }
     },
-    "The App Store purchase could not be verified for this Nourish account right now. Existing server access is unchanged." : {
-      "localizations" : { "hi" : { "stringUnit" : { "state" : "translated", "value" : "इस Nourish खाते के लिए App Store खरीद अभी सत्यापित नहीं हो सकी। मौजूदा सर्वर पहुँच नहीं बदली है।" } } }
+    "The App Store purchase could not be verified for this FamilyChef account right now. Existing server access is unchanged." : {
+      "localizations" : { "hi" : { "stringUnit" : { "state" : "translated", "value" : "इस FamilyChef खाते के लिए App Store खरीद अभी सत्यापित नहीं हो सकी। मौजूदा सर्वर पहुँच नहीं बदली है।" } } }
     },
-    "Purchase history was verified by Apple and linked to this Nourish account." : {
-      "localizations" : { "hi" : { "stringUnit" : { "state" : "translated", "value" : "खरीद इतिहास Apple द्वारा सत्यापित होकर इस Nourish खाते से जुड़ गया।" } } }
+    "Purchase history was verified by Apple and linked to this FamilyChef account." : {
+      "localizations" : { "hi" : { "stringUnit" : { "state" : "translated", "value" : "खरीद इतिहास Apple द्वारा सत्यापित होकर इस FamilyChef खाते से जुड़ गया।" } } }
     },
     "Purchase history synchronized. No current subscription entitlement was found." : {
       "localizations" : { "hi" : { "stringUnit" : { "state" : "translated", "value" : "खरीद इतिहास सिंक हो गया। कोई वर्तमान सदस्यता अधिकार नहीं मिला।" } } }
@@ -1769,8 +1769,8 @@
     "Daily protein target" : {
       "localizations" : { "hi" : { "stringUnit" : { "state" : "translated", "value" : "दैनिक प्रोटीन लक्ष्य" } } }
     },
-    "This is a target you provide, not a target calculated or recommended by Nourish." : {
-      "localizations" : { "hi" : { "stringUnit" : { "state" : "translated", "value" : "यह आपका दिया हुआ लक्ष्य है; Nourish इसकी गणना या सिफ़ारिश नहीं करता।" } } }
+    "This is a target you provide, not a target calculated or recommended by FamilyChef." : {
+      "localizations" : { "hi" : { "stringUnit" : { "state" : "translated", "value" : "यह आपका दिया हुआ लक्ष्य है; FamilyChef इसकी गणना या सिफ़ारिश नहीं करता।" } } }
     },
     "Available equipment" : {
       "localizations" : { "hi" : { "stringUnit" : { "state" : "translated", "value" : "उपलब्ध उपकरण" } } }
@@ -1808,8 +1808,8 @@
     "Enter a protein target between 10 and 300 grams, or turn the target off." : {
       "localizations" : { "hi" : { "stringUnit" : { "state" : "translated", "value" : "10 से 300 ग्राम के बीच प्रोटीन लक्ष्य दर्ज करें, या लक्ष्य बंद करें।" } } }
     },
-    "Equipment has not been configured for this older profile. Until you choose, Nourish will not exclude recipes by equipment." : {
-      "localizations" : { "hi" : { "stringUnit" : { "state" : "translated", "value" : "इस पुराने प्रोफ़ाइल के लिए उपकरण तय नहीं किए गए हैं। आपके चुनने तक Nourish उपकरण के आधार पर व्यंजनों को बाहर नहीं करेगा।" } } }
+    "Equipment has not been configured for this older profile. Until you choose, FamilyChef will not exclude recipes by equipment." : {
+      "localizations" : { "hi" : { "stringUnit" : { "state" : "translated", "value" : "इस पुराने प्रोफ़ाइल के लिए उपकरण तय नहीं किए गए हैं। आपके चुनने तक FamilyChef उपकरण के आधार पर व्यंजनों को बाहर नहीं करेगा।" } } }
     },
     "Choose common equipment" : {
       "localizations" : { "hi" : { "stringUnit" : { "state" : "translated", "value" : "सामान्य उपकरण चुनें" } } }
@@ -1823,8 +1823,8 @@
     "Want something different?" : {
       "localizations" : { "hi" : { "stringUnit" : { "state" : "translated", "value" : "कुछ और खाना चाहते हैं?" } } }
     },
-    "Nourish will only show replacements that still fit your diet, allergens, targets, and the variety of your whole week." : {
-      "localizations" : { "hi" : { "stringUnit" : { "state" : "translated", "value" : "Nourish केवल वे विकल्प दिखाएगा जो आपके आहार, एलर्जी, लक्ष्यों और पूरे सप्ताह की विविधता के अनुकूल हों।" } } }
+    "FamilyChef will only show replacements that still fit your diet, allergens, targets, and the variety of your whole week." : {
+      "localizations" : { "hi" : { "stringUnit" : { "state" : "translated", "value" : "FamilyChef केवल वे विकल्प दिखाएगा जो आपके आहार, एलर्जी, लक्ष्यों और पूरे सप्ताह की विविधता के अनुकूल हों।" } } }
     },
     "Find another meal" : {
       "localizations" : { "hi" : { "stringUnit" : { "state" : "translated", "value" : "कोई दूसरा भोजन खोजें" } } }
@@ -1880,8 +1880,8 @@
     "Showing your saved preview" : {
       "localizations" : { "hi" : { "stringUnit" : { "state" : "translated", "value" : "आपका सहेजा पूर्वावलोकन दिखाया जा रहा है" } } }
     },
-    "Your saved week stays visible while Nourish refreshes." : {
-      "localizations" : { "hi" : { "stringUnit" : { "state" : "translated", "value" : "Nourish के ताज़ा होने तक आपका सहेजा सप्ताह दिखाई देता रहेगा।" } } }
+    "Your saved week stays visible while FamilyChef refreshes." : {
+      "localizations" : { "hi" : { "stringUnit" : { "state" : "translated", "value" : "FamilyChef के ताज़ा होने तक आपका सहेजा सप्ताह दिखाई देता रहेगा।" } } }
     },
     "Explore the experience with sample meals, then create and adopt your own reviewed week." : {
       "localizations" : { "hi" : { "stringUnit" : { "state" : "translated", "value" : "नमूना भोजन के साथ अनुभव देखें, फिर अपना समीक्षित सप्ताह बनाएँ और अपनाएँ।" } } }

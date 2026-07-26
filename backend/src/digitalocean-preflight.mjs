@@ -19,7 +19,7 @@ const INPUTS = Object.freeze({
 const FAMILY_CHEF_STAGING = Object.freeze({
   apiDomain: "api-staging.familychef.in",
   controlRoomOrigin: "https://control-staging.familychef.in",
-  emailFrom: "Nourish <sign-in@familychef.in>",
+  emailFrom: "FamilyChef <sign-in@familychef.in>",
 });
 
 export class DigitalOceanPreflightError extends Error {

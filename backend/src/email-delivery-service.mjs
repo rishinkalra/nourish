@@ -175,9 +175,9 @@ function magicLinkMessage({ email, token, requestID, expiresAt, magicLinkPrefix 
   return {
     email,
     requestID: safeRequestID(requestID),
-    subject: "Your Nourish sign-in link",
+    subject: "Your FamilyChef sign-in link",
     text: [
-      "Sign in to Nourish",
+      "Sign in to FamilyChef",
       "",
       `Open this secure link: ${link}`,
       "",
@@ -194,11 +194,11 @@ function magicLinkHTML({ link, expiryText }) {
 <html lang="en">
   <body style="margin:0;background:#f6f4ee;color:#24332b;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif">
     <div style="max-width:560px;margin:0 auto;padding:40px 24px">
-      <p style="font-size:14px;font-weight:700;letter-spacing:.08em;text-transform:uppercase">Nourish</p>
+      <p style="font-size:14px;font-weight:700;letter-spacing:.08em;text-transform:uppercase">FamilyChef</p>
       <h1 style="font-size:28px;line-height:1.2;margin:24px 0 12px">Sign in to your meal plan</h1>
       <p style="font-size:16px;line-height:1.6">Use this one-time link to continue securely.</p>
       <p style="margin:28px 0">
-        <a href="${safeLink}" style="display:inline-block;background:#276749;color:#fff;text-decoration:none;padding:14px 22px;border-radius:12px;font-weight:700">Open Nourish</a>
+        <a href="${safeLink}" style="display:inline-block;background:#276749;color:#fff;text-decoration:none;padding:14px 22px;border-radius:12px;font-weight:700">Open FamilyChef</a>
       </p>
       <p style="font-size:14px;line-height:1.6;color:#52645a">This link expires at ${escapeHTML(expiryText)}. If you did not request it, you can safely ignore this email.</p>
     </div>

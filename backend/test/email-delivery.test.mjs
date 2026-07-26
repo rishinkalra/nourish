@@ -17,11 +17,11 @@ const deliveryInput = Object.freeze({
   expiresAt: new Date(fixedNow.getTime() + 15 * 60_000),
 });
 
-test("Postmark delivery sends a one-time Nourish link with tracking disabled", async () => {
+test("Postmark delivery sends a one-time FamilyChef link with tracking disabled", async () => {
   const calls = [];
   const delivery = new PostmarkMagicLinkDelivery({
     serverToken: "postmark-test-server-token-long-enough",
-    from: "Nourish <sign-in@nourish.example>",
+    from: "FamilyChef <sign-in@nourish.example>",
     endpoint: "https://email.example.test/send",
     fetchImplementation: async (url, options) => {
       calls.push({ url, options });
@@ -41,7 +41,7 @@ test("Postmark delivery sends a one-time Nourish link with tracking disabled", a
   assert.equal(body.TrackLinks, "None");
   assert.equal(body.MessageStream, "outbound");
   assert.match(body.TextBody, /nourish:\/\/auth\/magic-link\?token=safe_test_token/);
-  assert.match(body.HtmlBody, /Open Nourish/);
+  assert.match(body.HtmlBody, /Open FamilyChef/);
   assert.equal(JSON.stringify(body).includes("accessToken"), false);
 });
 
@@ -49,7 +49,7 @@ test("Brevo delivery uses its transactional endpoint and an idempotent request b
   const calls = [];
   const delivery = new BrevoMagicLinkDelivery({
     apiKey: "brevo-test-api-key-long-enough",
-    from: "Nourish <sign-in@nourish.example>",
+    from: "FamilyChef <sign-in@nourish.example>",
     endpoint: "https://email.example.test/v3/smtp/email",
     fetchImplementation: async (url, options) => {
       calls.push({ url, options });
@@ -63,7 +63,7 @@ test("Brevo delivery uses its transactional endpoint and an idempotent request b
   assert.deepEqual(result, { provider: "brevo", providerMessageID: "brevo-message-1" });
   assert.equal(calls[0].options.headers["api-key"], "brevo-test-api-key-long-enough");
   const body = JSON.parse(calls[0].options.body);
-  assert.deepEqual(body.sender, { name: "Nourish", email: "sign-in@nourish.example" });
+  assert.deepEqual(body.sender, { name: "FamilyChef", email: "sign-in@nourish.example" });
   assert.deepEqual(body.to, [{ email: deliveryInput.email }]);
   assert.equal(body.headers["Idempotency-Key"], deliveryInput.requestID);
   assert.deepEqual(body.tags, ["magic-link"]);
@@ -160,7 +160,7 @@ test("delivery factory retains local capture and selects either configured produ
   assert.equal(createMagicLinkDelivery({
     production: true,
     emailProvider: "brevo",
-    emailFrom: "Nourish <sign-in@nourish.example>",
+    emailFrom: "FamilyChef <sign-in@nourish.example>",
     brevoAPIKey: "brevo-test-api-key-long-enough",
     magicLinkPrefix: "nourish://auth/magic-link?token=",
   }).constructor.name, "BrevoMagicLinkDelivery");

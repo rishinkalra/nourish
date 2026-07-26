@@ -199,7 +199,7 @@ function normalizeEvent(input = {}, source, receivedAt, retentionDays) {
   const definition = analyticsEventCatalogue[eventName];
   if (!definition) throw validation("Choose a supported analytics event.");
   if (source === "client" && !clientEventNames.has(eventName)) {
-    throw new AnalyticsEventError("VALIDATION_ERROR", "This event can only be recorded by the Nourish service.", 403);
+    throw new AnalyticsEventError("VALIDATION_ERROR", "This event can only be recorded by the FamilyChef service.", 403);
   }
   if (source === "server" && definition.source !== "server") {
     throw validation("Client-observed analytics events must use the authenticated ingestion route.");

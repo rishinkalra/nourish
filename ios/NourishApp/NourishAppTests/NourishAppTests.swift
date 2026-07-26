@@ -348,8 +348,8 @@ final class NourishAppTests: XCTestCase {
             "तैयारी कार्य और भंडारण नोट खोलता है।"
         )
         XCTAssertEqual(
-            catalog["Notifications are disabled for Nourish. Enable them in the iOS Settings app after saving your choices."],
-            "Nourish की सूचनाएँ बंद हैं। अपनी पसंद सहेजने के बाद उन्हें iOS सेटिंग ऐप में चालू करें।"
+            catalog["Notifications are disabled for FamilyChef. Enable them in the iOS Settings app after saving your choices."],
+            "FamilyChef की सूचनाएँ बंद हैं। अपनी पसंद सहेजने के बाद उन्हें iOS सेटिंग ऐप में चालू करें।"
         )
         XCTAssertEqual(
             catalog["Illustrative local preview"],

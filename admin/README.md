@@ -1,4 +1,4 @@
-# Nourish Control Room
+# FamilyChef Control Room
 
 The private dashboard is available at `http://127.0.0.1:4173/admin/` when the workspace is served from its root.
 
@@ -26,7 +26,7 @@ The dashboard currently provides:
 - candidate-pool and hard-rejection funnels, typed failures, correlation IDs, duration, and lease/retry evidence;
 - a curated operations projection that excludes profile snapshots and raw deterministic seeds;
 - operator-only subscription case search with preserved-access, renewal, mismatch, delay, and pending state;
-- privacy-safe Apple identity references, mixed Apple/Nourish timelines, and durable retry evidence;
+- privacy-safe Apple identity references, mixed Apple/FamilyChef timelines, and durable retry evidence;
 - reason-required verified retry actions that cannot manually grant or revoke entitlement access;
 - automated publication-gate results;
 - separate-reviewer approval and reason-required rejection;

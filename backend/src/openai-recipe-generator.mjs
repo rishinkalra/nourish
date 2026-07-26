@@ -234,7 +234,7 @@ function recipeSystemPrompt() {
 
 function imagePrompt(proposal) {
   return [
-    "Original editorial food photograph for the Nourish meal-planning app.",
+    "Original editorial food photograph for the FamilyChef meal-planning app.",
     `${proposal.displayName}, ${proposal.cuisine} cuisine.`,
     `Show the finished dish accurately using these visible ingredients: ${proposal.ingredients.slice(0, 12).map((item) => item.canonicalName).join(", ")}.`,
     "Natural appetizing plating, realistic home-cooked texture, soft daylight, warm neutral background, three-quarter camera angle.",

@@ -190,7 +190,7 @@ final class NourishAppUITests: XCTestCase {
             "-NourishUITestMain", "-NourishSeedProfile", "-NourishOpenPaywall",
         ])
 
-        XCTAssertTrue(app.navigationBars["Nourish membership"].waitForExistence(timeout: 5))
+        XCTAssertTrue(app.navigationBars["FamilyChef membership"].waitForExistence(timeout: 5))
         XCTAssertTrue(app.staticTexts.matching(NSPredicate(
             format: "label CONTAINS %@", "final local price"
         )).firstMatch.exists)
@@ -278,7 +278,7 @@ final class NourishAppUITests: XCTestCase {
             "-NourishUITestMain", "-NourishSeedProfile", "-NourishOpenPaywall",
         ])
 
-        XCTAssertTrue(app.navigationBars["Nourish सदस्यता"].waitForExistence(timeout: 5))
+        XCTAssertTrue(app.navigationBars["FamilyChef सदस्यता"].waitForExistence(timeout: 5))
         let disclosure = app.staticTexts["paywall.disclosure"]
         XCTAssertTrue(disclosure.waitForExistence(timeout: 2))
         XCTAssertTrue(disclosure.label.contains("अंतिम स्थानीय कीमत"))

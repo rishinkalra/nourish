@@ -57,7 +57,7 @@ if (!runtimeConfiguration.production) {
 server.listen(port, host, () => {
   const persistence = postgresRuntime.databasePool ? "PostgreSQL durable persistence" : "in-memory persistence";
   const environmentName = runtimeConfiguration.production ? "production" : "development";
-  process.stdout.write(`Nourish ${environmentName} API listening on http://${host}:${port} (${persistence})\n`);
+  process.stdout.write(`FamilyChef ${environmentName} API listening on http://${host}:${port} (${persistence})\n`);
 });
 
 for (const signal of ["SIGINT", "SIGTERM"]) {

@@ -180,11 +180,11 @@ export class AccountService {
     }
     const issued = await this.issueAppAccountToken(userID);
     if (event.appAccountToken.toLowerCase() !== issued.appAccountToken.toLowerCase()) {
-      throw new AccountError("APPLE_APP_ACCOUNT_TOKEN_MISMATCH", "This App Store transaction is not linked to the signed-in Nourish account.", 409);
+      throw new AccountError("APPLE_APP_ACCOUNT_TOKEN_MISMATCH", "This App Store transaction is not linked to the signed-in FamilyChef account.", 409);
     }
     const resolution = await this.store.resolveAppStoreUser(event);
     if (resolution.mismatch || (resolution.userID && resolution.userID !== userID)) {
-      throw new AccountError("APPLE_SUBSCRIPTION_OWNERSHIP_MISMATCH", "This App Store subscription is already linked to another Nourish account.", 409);
+      throw new AccountError("APPLE_SUBSCRIPTION_OWNERSHIP_MISMATCH", "This App Store subscription is already linked to another FamilyChef account.", 409);
     }
     const existing = await this.store.readEntitlement(userID);
     if (!existing?.lastVerifiedAt || String(existing.originalTransactionID ?? "") !== String(event.originalTransactionID)) {
@@ -210,7 +210,7 @@ export class AccountService {
       await this.store.markVerifiedNotification(event.eventID, {
         processingState: "failed", processedAt: receivedAt, failureCode: "APPLE_SUBSCRIPTION_OWNERSHIP_MISMATCH",
       });
-      throw new AccountError("APPLE_SUBSCRIPTION_OWNERSHIP_MISMATCH", "The verified Apple identities resolve to different Nourish accounts.", 409);
+      throw new AccountError("APPLE_SUBSCRIPTION_OWNERSHIP_MISMATCH", "The verified Apple identities resolve to different FamilyChef accounts.", 409);
     }
     if (!resolution.userID) return { status: "pending" };
     try {

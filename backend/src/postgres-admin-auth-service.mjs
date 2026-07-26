@@ -34,7 +34,7 @@ export class PostgresAdminAuthService {
         );
         const user = selected.rows[0];
         auditUserID = user?.id ?? null;
-        if (!user || user.status !== "active") throw new AdminAuthError("AUTHENTICATION_REQUIRED", "This administrator has no active Nourish access.", 403);
+        if (!user || user.status !== "active") throw new AdminAuthError("AUTHENTICATION_REQUIRED", "This administrator has no active FamilyChef access.", 403);
         const grants = await activeRoles(client, user.id);
         if (!grants.length) throw new AdminAuthError("AUTHENTICATION_REQUIRED", "This administrator has no active role grants.", 403);
         const accessToken = this.tokenFactory();

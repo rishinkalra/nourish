@@ -57,7 +57,7 @@ struct ProfileEditorView: View {
                                 Text(verbatim: NourishFormatting.massGrams(Double(draft.optionalDailyProteinTargetGrams ?? 90)))
                             }
                         }
-                        Text("This is a target you provide, not a target calculated or recommended by Nourish.")
+                        Text("This is a target you provide, not a target calculated or recommended by FamilyChef.")
                             .font(.footnote).foregroundStyle(.secondary)
                     }
                     Picker("Target source", selection: $draft.targetSource) {
@@ -125,7 +125,7 @@ struct ProfileEditorView: View {
                     Text("Recipes that require equipment you do not have will be excluded.")
                         .font(.footnote).foregroundStyle(.secondary)
                     if draft.availableEquipment == nil {
-                        Text("Equipment has not been configured for this older profile. Until you choose, Nourish will not exclude recipes by equipment.")
+                        Text("Equipment has not been configured for this older profile. Until you choose, FamilyChef will not exclude recipes by equipment.")
                             .font(.footnote).foregroundStyle(.secondary)
                         Button("Choose common equipment") {
                             draft.availableEquipment = [.stovetop, .pan, .pot, .pressureCooker, .microwave, .blender]
@@ -303,7 +303,7 @@ struct ReminderSettingsView: View {
                         Text(verbatim: NourishFormatting.integer(reminderStore.scheduledCount))
                     }
                     if reminderStore.authorizationState == .denied {
-                        Text("Notifications are disabled for Nourish. Enable them in the iOS Settings app after saving your choices.")
+                        Text("Notifications are disabled for FamilyChef. Enable them in the iOS Settings app after saving your choices.")
                             .font(.footnote).foregroundStyle(.secondary)
                     }
                     if let message = reminderStore.statusMessage {

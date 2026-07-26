@@ -5,7 +5,7 @@
 	<key>CFBundleDevelopmentRegion</key>
 	<string>$(DEVELOPMENT_LANGUAGE)</string>
 	<key>CFBundleDisplayName</key>
-	<string>Nourish</string>
+	<string>FamilyChef</string>
 	<key>CFBundleExecutable</key>
 	<string>$(EXECUTABLE_NAME)</string>
 	<key>CFBundleIdentifier</key>
@@ -55,7 +55,7 @@
 		</dict>
 	</dict>
 	<key>NSLocalNetworkUsageDescription</key>
-	<string>Nourish connects to your Mac during local app testing.</string>
+	<string>FamilyChef connects to your Mac during local app testing.</string>
 	<key>NourishSubscriptionProductIDs</key>
 	<array/>
 	<key>NourishAPIBaseURL</key>

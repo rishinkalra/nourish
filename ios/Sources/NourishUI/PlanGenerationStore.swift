@@ -89,7 +89,7 @@ final class PlanGenerationStore: ObservableObject {
                 preferredWeekday: planStartWeekday
             )
         guard let weekStart else {
-            state = .failed("Nourish could not determine the next plan start date.", retryable: false)
+            state = .failed("FamilyChef could not determine the next plan start date.", retryable: false)
             return
         }
         let recentRecipeIDs = Set(activePlan?.days.flatMap(\.items).map(\.recipeSnapshot.recipeID) ?? [])
@@ -276,12 +276,12 @@ final class PlanGenerationStore: ObservableObject {
     }
 
     private func guidance(for error: APIErrorEnvelope?) -> String {
-        guard let error else { return "Nourish could not generate this week." }
+        guard let error else { return "FamilyChef could not generate this week." }
         switch error.code {
         case .contentInsufficient:
             return "There are not enough licensed, reviewed recipes for this profile yet. Your current week is unchanged."
         case .noFeasiblePlan:
-            return "Nourish could not build a safe varied week. Try fewer locks or review cooking constraints."
+            return "FamilyChef could not build a safe varied week. Try fewer locks or review cooking constraints."
         case .profileIneligible:
             return "Complete the required planning preferences before generating a week."
         default:

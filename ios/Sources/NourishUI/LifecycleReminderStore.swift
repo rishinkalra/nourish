@@ -119,7 +119,7 @@ final class LifecycleReminderStore: ObservableObject {
         do {
             try await replaceSchedules(with: LifecycleReminderPlanner.descriptors(settings: updated, profile: profile))
             await refreshScheduledCount()
-            statusMessage = updated.hasEnabledReminders ? "Reminder schedule updated." : "All Nourish reminders are off."
+            statusMessage = updated.hasEnabledReminders ? "Reminder schedule updated." : "All FamilyChef reminders are off."
             return true
         } catch {
             statusMessage = "Your choices were saved, but iOS could not schedule every reminder."
@@ -133,7 +133,7 @@ final class LifecycleReminderStore: ObservableObject {
         persist(settings)
         await cancelLifecycleRequests()
         scheduledCount = 0
-        statusMessage = "All Nourish reminders were cancelled."
+        statusMessage = "All FamilyChef reminders were cancelled."
     }
 
     func refreshAuthorization() async {

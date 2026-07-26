@@ -109,7 +109,7 @@ export function createNourishServer({ authService, adminAuthService, profileServ
           const dependency = readinessCheck ? await readinessCheck() : { status: "ok", persistence: "memory" };
           return send(response, 200, { status: "ready", dependency }, correlationID);
         } catch {
-          return sendError(response, 503, "TEMPORARY_FAILURE", "Nourish persistence is not ready.", correlationID, true);
+          return sendError(response, 503, "TEMPORARY_FAILURE", "FamilyChef persistence is not ready.", correlationID, true);
         }
       }
       if (request.method === "POST" && url.pathname === "/v1/auth/magic-link") {
@@ -698,7 +698,7 @@ export function createNourishServer({ authService, adminAuthService, profileServ
       if (error?.code === "BODY_TOO_LARGE") {
         return sendError(response, 413, "VALIDATION_ERROR", "Request body is too large.", correlationID, false);
       }
-      return sendError(response, 500, "TEMPORARY_FAILURE", "Nourish could not complete the request.", correlationID, true);
+      return sendError(response, 500, "TEMPORARY_FAILURE", "FamilyChef could not complete the request.", correlationID, true);
     }
   });
 

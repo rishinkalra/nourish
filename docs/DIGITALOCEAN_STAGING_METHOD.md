@@ -4,7 +4,7 @@
 
 `.do/app.staging.yaml` is a fail-closed template for a Bangalore staging deployment. It defines one public API component, one background worker, one pre-deploy migration job, and a binding to an existing managed PostgreSQL cluster. It does not create or submit anything by itself.
 
-The approved staging API domain is `api-staging.familychef.in`; the exact Control Room CORS origin is `https://control-staging.familychef.in`; and the sender identity is `Nourish <sign-in@familychef.in>`. These non-secret boundaries are pinned in the template. See `FAMILYCHEF_DOMAIN_CONFIGURATION.md` for production hostnames and DNS sequencing.
+The approved staging API domain is `api-staging.familychef.in`; the exact Control Room CORS origin is `https://control-staging.familychef.in`; and the sender identity is `FamilyChef <sign-in@familychef.in>`. These non-secret boundaries are pinned in the template. See `FAMILYCHEF_DOMAIN_CONFIGURATION.md` for production hostnames and DNS sequencing.
 
 Use these regional placements:
 

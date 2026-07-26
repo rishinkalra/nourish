@@ -75,7 +75,7 @@ export class AdminAuthService {
     const user = userID ? this.store.usersByID.get(userID) : null;
     if (!user || user.status !== "active") {
       this.#audit(null, verified.subject, "admin.session.exchange", context.route, null, "denied", context.correlationID);
-      throw new AdminAuthError("AUTHENTICATION_REQUIRED", "This administrator has no active Nourish access.", 403);
+      throw new AdminAuthError("AUTHENTICATION_REQUIRED", "This administrator has no active FamilyChef access.", 403);
     }
     const roles = [...(this.store.grantsByUserID.get(user.id) ?? [])];
     if (!roles.length) {

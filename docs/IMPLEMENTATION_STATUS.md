@@ -46,7 +46,7 @@ The source-of-truth documents are:
 
 ## Current verification evidence
 
-- Complete backend suite: 154 checks pass.
+- Complete backend suite: 155 checks pass.
 - Shared Swift core checks pass.
 - Debug and Release iOS simulator builds pass.
 - Native application tests: 15 pass.

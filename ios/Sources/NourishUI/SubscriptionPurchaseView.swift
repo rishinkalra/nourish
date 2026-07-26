@@ -92,7 +92,7 @@ struct SubscriptionPurchaseView: View {
                     Section { localizedRuntimeMessage(message).font(.footnote).foregroundStyle(.secondary) }
                 }
             }
-            .navigationTitle("Nourish membership")
+            .navigationTitle("FamilyChef membership")
             .navigationBarTitleDisplayMode(.inline)
             .toolbar {
                 ToolbarItem(placement: .cancellationAction) {
@@ -145,12 +145,12 @@ struct SubscriptionPurchaseView: View {
             switch result {
             case let .success(verification):
                 guard case let .verified(transaction) = verification else {
-                    message = "Apple could not verify this transaction. No Nourish access was changed."
+                    message = "Apple could not verify this transaction. No FamilyChef access was changed."
                     return
                 }
                 try await accountStore.bindAppStoreTransaction(signedTransactionInfo: verification.jwsRepresentation)
                 await transaction.finish()
-                message = "Purchase verified. Your Nourish access is now linked to this account."
+                message = "Purchase verified. Your FamilyChef access is now linked to this account."
             case .pending:
                 message = "The purchase is awaiting approval. Access will update after Apple confirms it."
             case .userCancelled:
@@ -159,7 +159,7 @@ struct SubscriptionPurchaseView: View {
                 message = "The App Store returned an unknown purchase result. No access was changed."
             }
         } catch {
-            message = "The purchase could not be verified by the Nourish server. Existing access is unchanged."
+            message = "The purchase could not be verified by the FamilyChef server. Existing access is unchanged."
         }
     }
 }
