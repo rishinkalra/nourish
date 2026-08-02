@@ -1,10 +1,10 @@
-# Project Nourish production owner checklist
+# FamilyChef production owner checklist
 
 This is the exhaustive hand-off for work that cannot be completed or truthfully verified on a local development machine. All locally actionable engineering work is tracked in `REQUIREMENTS_TRACEABILITY.md`; an unchecked item below requires an account owner, paid service, production credential, qualified reviewer, deployed environment, or real beta population.
 
 ## 1. Company, Apple and commercial ownership
 
-- [ ] Finish enrollment in a new Apple Developer Program organization owned by the intended Nourish legal entity; grant Account Holder/Admin access for Certificates, Identifiers & Profiles.
+- [ ] Finish enrollment in a new Apple Developer Program organization owned by the intended FamilyChef legal entity; grant Account Holder/Admin access for Certificates, Identifiers & Profiles.
 - [x] Adopt FamilyChef as the customer-facing app/web brand and `familychef.in` as its domain family; preserve the internal project identifiers and existing bundle identifier until the Apple organization is ready.
 - [ ] Confirm the final legal entity, App Store positioning, launch geography, supported diets/cuisines, age position, customer-support ownership and grievance contact.
 - [ ] Create App Store Connect products and approve monthly/annual pricing, introductory offer or trial, preview depth, tax/accounting treatment and customer-facing terms.
@@ -28,14 +28,14 @@ Local evidence: `AI_RECIPE_GENERATION_METHOD.md`, `NUTRITION_DATA_METHOD.md`, `P
 
 ## 3. Production infrastructure and secrets
 
-- [ ] Approve the billable cloud submission and provision isolated DigitalOcean BLR1 managed PostgreSQL, App Platform API/worker/migration components, a private BLR1 Space and final HTTPS domains/DNS.
+- [ ] Approve the USD 45/month staging envelope in `DIGITALOCEAN_STAGING_COST.md`, configure the USD 40 notification-only billing alert, and provision isolated DigitalOcean BLR1 managed PostgreSQL, App Platform API/worker/migration components, a private BLR1 Space and final HTTPS domains/DNS.
 - [ ] Create separate least-privilege API and worker storage identities; keep all secrets in the platform secret store, not source control.
 - [ ] Generate and escrow the application-encryption key ring; document rotation, recovery, owner access and offboarding.
 - [ ] Run the fail-closed DigitalOcean preflight, 28 checksum-verified migrations, readiness/smoke checks, production-like concurrency test and rollback rehearsal.
 - [ ] Validate managed PostgreSQL point-in-time recovery, failover, encryption and isolated restore; validate private-object backup/replica expiry, complete deletion, signed delivery and downstream-processor deletion.
 - [ ] Configure the independent shared rate limiter and calibrate authentication/export thresholds under production-shaped concurrency.
 
-Local evidence: `DIGITALOCEAN_STAGING_METHOD.md`, `STAGING_DEPLOYMENT_METHOD.md`, `DISASTER_RECOVERY_METHOD.md`, `RATE_LIMITING_METHOD.md`.
+Local evidence: `DIGITALOCEAN_STAGING_METHOD.md`, `DIGITALOCEAN_STAGING_COST.md`, `STAGING_DEPLOYMENT_METHOD.md`, `DISASTER_RECOVERY_METHOD.md`, `RATE_LIMITING_METHOD.md`.
 
 ## 4. Identity, email, monitoring and operations
 

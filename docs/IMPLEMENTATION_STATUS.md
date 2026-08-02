@@ -1,6 +1,6 @@
-# Nourish implementation status
+# FamilyChef implementation status
 
-Updated 25 July 2026.
+Updated 2 August 2026.
 
 ## Current outcome
 
@@ -11,6 +11,7 @@ The source-of-truth documents are:
 - `REQUIREMENTS_TRACEABILITY.md` for every numbered requirement, interface, release criterion, evidence path and remaining qualification;
 - `PRODUCTION_OWNER_CHECKLIST.md` for the exhaustive non-local production gates;
 - `FAMILYCHEF_DOMAIN_CONFIGURATION.md` for the approved public/API/Control Room/email hostname boundary and DNS sequence;
+- `DIGITALOCEAN_STAGING_COST.md` for the current billable staging estimate and approval envelope;
 - the focused method documents in this folder for operation and verification details.
 
 ## Product and native app
@@ -46,7 +47,7 @@ The source-of-truth documents are:
 
 ## Current verification evidence
 
-- Complete backend suite: 155 checks pass.
+- Complete backend suite: 156 checks pass.
 - Shared Swift core checks pass.
 - Debug and Release iOS simulator builds pass.
 - Native application tests: 15 pass.

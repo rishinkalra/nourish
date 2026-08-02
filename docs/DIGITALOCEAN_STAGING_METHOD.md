@@ -60,6 +60,8 @@ Before allowing any billable submission, run `scripts/verify_release_candidate.s
 8. Review the estimated monthly cost and billing alerts with the account owner.
 9. Select a restricted log destination, uptime check, and named staging alert responder using `OBSERVABILITY_METHOD.md`; keep every monitoring credential outside source control.
 
+The concrete reviewed estimate, approval envelope and owner sign-off fields are in `DIGITALOCEAN_STAGING_COST.md`. A billing alert is required before submission, but it must not be treated as a spending cap.
+
 ## First deployment sequence
 
 1. Submit the reviewed spec with automatic deployment disabled.
