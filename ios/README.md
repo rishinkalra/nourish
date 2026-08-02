@@ -54,9 +54,9 @@ FamilyChef is the customer-facing app name. The historical `NourishApp`, `Nouris
 - theme-linked WCAG contrast measurement that enforces 4.5:1 for branded text and 3:1 for graphical accents so palette changes cannot silently weaken critical contrast;
 - a real Xcode application target that runs the package-backed SwiftUI app.
 
-Open `NourishApp/NourishApp.xcodeproj` in Xcode, choose an iPhone Simulator, and run the shared `NourishApp` scheme. The target uses the local package in this folder, so changes to `NourishCore`, `NourishAPI`, or `NourishUI` are picked up directly.
+Open `NourishApp/NourishApp.xcodeproj` in Xcode, choose an iPhone Simulator, and run the shared `NourishApp` scheme. The target uses the local package in this folder, so changes to `NourishCore`, `NourishAPI`, or `NourishUI` are picked up directly. For physical-device staging tests, select the shared `FamilyChef Staging` scheme; it connects the Debug app to the current DigitalOcean HTTPS origin while the ordinary `NourishApp` scheme continues to use the local service.
 
-Run `swift run NourishCoreChecks` from this folder to verify the shared domain layer. The shared `NourishApp` scheme also includes `NourishAppTests` and `NourishAppUITests`; use Xcode’s Test action on an iPhone Simulator to run the fifteen XCTest cases and eighteen end-to-end UI journeys together. Debug uses the local API origin; Release is pinned to `https://api.familychef.in`.
+Run `swift run NourishCoreChecks` from this folder to verify the shared domain layer. The shared `NourishApp` scheme also includes `NourishAppTests` and `NourishAppUITests`; use Xcode’s Test action on an iPhone Simulator to run the fifteen XCTest cases and eighteen end-to-end UI journeys together. Debug uses the local API origin; the `FamilyChef Staging` launch scheme overrides Debug with the temporary DigitalOcean staging origin; Release is pinned to `https://api.familychef.in`.
 
 All meals and nutrition values in the native fallback plan are illustrative. Its recipe detail deliberately shows an unapproved-content notice so sample data cannot be mistaken for reviewed production nutrition. An authenticated adopted plan instead renders its immutable published and approved recipe snapshots across Today, Week, Groceries, and Prep.
 

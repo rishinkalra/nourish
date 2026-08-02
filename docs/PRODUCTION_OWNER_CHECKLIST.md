@@ -30,10 +30,12 @@ Local evidence: `AI_RECIPE_GENERATION_METHOD.md`, `NUTRITION_DATA_METHOD.md`, `P
 
 - [x] Approve the USD 30/month staging envelope in `DIGITALOCEAN_STAGING_COST.md` (approved by Rishin on 2 August 2026).
 - [x] Configure the USD 25 notification-only billing alert and create the isolated `FamilyChef Staging` DigitalOcean project plus restricted `familychef-staging-private` SYD1 Space with distinct API read and worker write/delete identities.
-- [ ] Provision the DigitalOcean BLR App Platform API/worker/migration components, disposable development PostgreSQL and final HTTPS domains/DNS.
+- [x] Provision the DigitalOcean BLR App Platform API/worker/migration components and disposable development PostgreSQL; verify the provider HTTPS origin is active (completed 2 August 2026).
+- [ ] Publish the `api-staging.familychef.in` CNAME, wait for the managed certificate to become active and repeat the final smoke check through that hostname.
 - [ ] Create separate least-privilege API and worker storage identities; keep all secrets in the platform secret store, not source control.
 - [ ] Generate and escrow the application-encryption key ring; document rotation, recovery, owner access and offboarding.
-- [ ] Run the fail-closed DigitalOcean preflight, 28 checksum-verified migrations, readiness/smoke checks, production-like concurrency test and rollback rehearsal.
+- [x] Run the fail-closed DigitalOcean preflight, 28 checksum-verified migrations and external readiness/smoke checks against the active provider HTTPS origin (completed 2 August 2026).
+- [ ] Run the production-like staging concurrency test and a documented application rollback rehearsal.
 - [ ] Validate managed PostgreSQL point-in-time recovery, failover, encryption and isolated restore; validate private-object backup/replica expiry, complete deletion, signed delivery and downstream-processor deletion.
 - [ ] Configure the independent shared rate limiter and calibrate authentication/export thresholds under production-shaped concurrency.
 

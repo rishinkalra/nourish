@@ -8,13 +8,19 @@ private enum NourishAppConfiguration {
     static let apiBaseURL: URL = {
         let configuredValue = Bundle.main.object(forInfoDictionaryKey: "NourishAPIBaseURL") as? String
         #if DEBUG
+        // A shared staging scheme may override the local Debug origin at launch.
+        // Release builds deliberately ignore process environment overrides.
+        let runtimeOverride = ProcessInfo.processInfo.environment["NOURISH_API_BASE_URL_OVERRIDE"]?
+            .trimmingCharacters(in: .whitespacesAndNewlines)
+        let selectedValue = runtimeOverride?.isEmpty == false ? runtimeOverride : configuredValue
         let allowsLocalHTTP = true
         #else
+        let selectedValue = configuredValue
         let allowsLocalHTTP = false
         #endif
         do {
             return try APIBaseURLPolicy.validated(
-                rawValue: configuredValue,
+                rawValue: selectedValue,
                 allowsLocalHTTP: allowsLocalHTTP
             )
         } catch {

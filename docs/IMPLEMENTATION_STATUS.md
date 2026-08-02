@@ -43,11 +43,11 @@ The source-of-truth documents are:
 - First-party analytics uses the exact 26-event typed catalogue, default-off consent, server-derived identity for authoritative outcomes, bounded fields and 90-day default retention.
 - API responses advertise compatibility version 1. The frozen native/API compatibility window has an executable regression check.
 - Structured telemetry carries validated correlation IDs across API, jobs, privacy, notification, subscription and recipe-generation work without raw health or credential data.
-- The DigitalOcean template defines separate 512 MiB API, worker and migration components, disposable PostgreSQL 16 development storage, private Spaces-compatible encrypted storage, health checks and initial resource alerts. This USD 22 base topology fits the owner-approved USD 30 staging envelope but must use test data only; managed PostgreSQL backup/recovery qualification remains a production gate. The `FamilyChef Staging` project, USD 25 spend alert and restricted `familychef-staging-private` SYD1 Space now exist; BLR1/SGP1 Spaces were unavailable to this account at creation time. Staging is pinned to `api-staging.familychef.in`, its Control Room CORS boundary is `control-staging.familychef.in`, and transactional email uses the future verified `familychef.in` sender. The iOS Release build is pinned to `api.familychef.in`. The template cannot deploy automatically and its renderer fails closed on placeholders or unsafe configuration.
+- The DigitalOcean staging app is active with separate 512 MiB API and worker components, a completed migration job, disposable PostgreSQL 16 development storage, private Spaces-compatible encrypted storage, health checks and initial resource alerts. Its approximately USD 20 recurring topology fits the owner-approved USD 30 staging envelope and must use test data only; managed PostgreSQL backup/recovery qualification remains a production gate. The `FamilyChef Staging` project, USD 25 spend alert and restricted `familychef-staging-private` SYD1 Space exist; BLR1/SGP1 Spaces were unavailable to this account at creation time. The provider HTTPS origin passes the external health/readiness smoke contract with all 28 migrations current. `api-staging.familychef.in` is attached but awaits its DNS CNAME and certificate; the Control Room CORS boundary remains `control-staging.familychef.in`, and transactional email uses the future verified `familychef.in` sender. The iOS Release build is pinned to `api.familychef.in`, while the shared `FamilyChef Staging` Xcode scheme safely points Debug device runs to the active provider origin.
 
 ## Current verification evidence
 
-- Complete backend suite: 156 checks pass.
+- Complete backend suite: 157 checks pass.
 - Shared Swift core checks pass.
 - Debug and Release iOS simulator builds pass.
 - Native application tests: 15 pass.
@@ -60,6 +60,6 @@ The source-of-truth documents are:
 
 ## What remains
 
-No additional item can be truthfully completed only by changing local code. Production still requires the owner-dependent checklist in `PRODUCTION_OWNER_CHECKLIST.md`: the new legal/Apple organization, counsel and nutrition approval, licensed reviewed content, paid cloud resources and secrets, production identity/email/monitoring, Apple sandbox and APNs evidence, managed backup/restore/failover, professional translation/accessibility review, physical-device performance/background/offline evidence and statistically valid beta gates.
+No additional product feature remains unimplemented locally. Production still requires the owner-dependent checklist in `PRODUCTION_OWNER_CHECKLIST.md`: staging DNS/TLS, the new legal/Apple organization, counsel and nutrition approval, licensed reviewed content, production identity/email/monitoring, Apple sandbox and APNs evidence, managed backup/restore/failover, staging concurrency and rollback evidence, professional translation/accessibility review, physical-device performance/background/offline evidence and statistically valid beta gates.
 
 Until those controls are complete, this is a verified local release candidate—not an authorized production release.
