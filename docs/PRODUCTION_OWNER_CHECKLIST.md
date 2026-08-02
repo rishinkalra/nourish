@@ -32,6 +32,7 @@ Local evidence: `AI_RECIPE_GENERATION_METHOD.md`, `NUTRITION_DATA_METHOD.md`, `P
 - [x] Configure the USD 25 notification-only billing alert and create the isolated `FamilyChef Staging` DigitalOcean project plus restricted `familychef-staging-private` SYD1 Space with distinct API read and worker write/delete identities.
 - [x] Provision the DigitalOcean BLR App Platform API/worker/migration components and disposable development PostgreSQL; verify the provider HTTPS origin is active (completed 2 August 2026).
 - [ ] Publish the `api-staging.familychef.in` CNAME, wait for the managed certificate to become active and repeat the final smoke check through that hostname.
+- [ ] Publish the `staging.familychef.in` CNAME and ownership-verification TXT records, approve public preview access, wait for its managed certificate and validate the labelled sample-data web journey.
 - [ ] Create separate least-privilege API and worker storage identities; keep all secrets in the platform secret store, not source control.
 - [ ] Generate and escrow the application-encryption key ring; document rotation, recovery, owner access and offboarding.
 - [x] Run the fail-closed DigitalOcean preflight, 28 checksum-verified migrations and external readiness/smoke checks against the active provider HTTPS origin (completed 2 August 2026).
