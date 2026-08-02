@@ -10,7 +10,7 @@ Use these regional placements:
 
 - App Platform: `blr`;
 - App Platform PostgreSQL 16 development database in the app region, containing disposable test data only; and
-- Spaces Standard Storage: `BLR1`, private and without CDN.
+- Spaces Standard Storage: `SYD1`, private and without CDN. The account did not offer BLR1 or SGP1 for new Spaces buckets on 2 August 2026; Sydney was the closest available location.
 
 The template uses the development database's bindable URL, runs checksum-verified migrations before a deployment becomes live, checks `/readyz` for release health, checks `/healthz` for process liveness, and gives the worker time to release leased work on termination.
 
@@ -34,12 +34,12 @@ Generate a new 256-bit application key using `openssl rand -base64 32`. Supply a
 
 ## Spaces controls
 
-Create a Standard Storage Space in `BLR1`. Keep file listing private, do not enable the CDN, and do not make any object public. Create separate limited access keys:
+Use the `familychef-staging-private` Standard Storage Space in `SYD1`. Keep file listing restricted, CDN and object versioning disabled, and do not make any object public. The bucket was created in the `FamilyChef Staging` project with separate limited access keys:
 
 - API key: read access to this bucket only;
 - worker key: read/write/delete access to this bucket only.
 
-The AWS SDK compatibility configuration is intentionally `region=us-east-1`, endpoint `https://blr1.digitaloceanspaces.com`, virtual-hosted addressing, and provider SSE `none`. DigitalOcean uses the endpoint to select the actual storage region. Nourish encrypts every private object before upload with AES-256-GCM, authenticating both ciphertext and the exact object key.
+The AWS SDK compatibility configuration is intentionally `region=us-east-1`, endpoint `https://syd1.digitaloceanspaces.com`, virtual-hosted addressing, and provider SSE `none`. DigitalOcean uses the endpoint to select the actual storage region. FamilyChef encrypts every private object before upload with AES-256-GCM, authenticating both ciphertext and the exact object key.
 
 Do not enable bucket versioning for staging until version-aware privacy deletion is implemented and verified. With versioning enabled, a normal delete can leave older object versions behind. Configure access logs into a separate restricted logging bucket, and ensure lifecycle rules never retain customer exports beyond the documented deletion contract.
 

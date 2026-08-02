@@ -13,7 +13,7 @@ The approved staging envelope is **USD 30 per month**. No cloud resource may be 
 | App Platform API | `apps-s-1vcpu-0.5gb`, one instance | USD 5.00 |
 | App Platform worker | `apps-s-1vcpu-0.5gb`, one instance | USD 5.00 |
 | App Platform PostgreSQL | development database, 512 MiB | USD 7.00 |
-| Spaces Standard Storage | one private BLR1 subscription/bucket | USD 5.00 |
+| Spaces Standard Storage | one private SYD1 subscription/bucket | USD 5.00 |
 | Pre-deploy migration job | `apps-s-1vcpu-0.5gb`, billed only while running | usage-based |
 | **Expected base total** | | **USD 22.00/month** |
 
@@ -38,11 +38,12 @@ Any one of those additions requires a fresh written cost review. Production must
 ## Owner approval record
 
 - Account/team owner: Rishin (DigitalOcean team identity pending confirmation)
-- DigitalOcean team and project: pending
+- DigitalOcean team and project: My Team / FamilyChef Staging (`7f260330-c626-494b-bfcf-21e26c5063f8`)
 - Billing email: pending
 - Approved monthly envelope: USD 30
 - Approval date: 2 August 2026
-- Billing alert configured and tested: pending
+- Billing alert configured: USD 25 monthly budget, 50%/75%/100% thresholds, team owners/billers
+- Billing alert delivery tested: pending until first threshold or controlled test
 - First weekly review date: pending
 
 ## Published sources

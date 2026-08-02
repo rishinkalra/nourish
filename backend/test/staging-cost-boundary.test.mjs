@@ -15,6 +15,7 @@ test("the documented staging estimate matches the checked-in billable topology",
   assert.equal((spec.match(/instance_size_slug: apps-s-1vcpu-1gb-fixed/g) ?? []).length, 0);
   assert.equal((spec.match(/instance_size_slug: apps-s-1vcpu-0\.5gb/g) ?? []).length, 3);
   assert.match(spec, /name: nourish-postgres[\s\S]*version: "16"/);
+  assert.match(spec, /value: https:\/\/syd1\.digitaloceanspaces\.com/);
   assert.doesNotMatch(spec, /production: true|cluster_name:/);
   assert.match(cost, /USD 22\.00 per month/);
   assert.match(cost, /USD 30\/month staging envelope/);

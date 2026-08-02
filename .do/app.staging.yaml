@@ -54,7 +54,7 @@ envs:
     scope: RUN_TIME
     type: GENERAL
   - key: NOURISH_PRIVATE_OBJECT_ENDPOINT
-    value: https://blr1.digitaloceanspaces.com
+    value: https://syd1.digitaloceanspaces.com
     scope: RUN_TIME
     type: GENERAL
   - key: NOURISH_PRIVATE_OBJECT_PREFIX

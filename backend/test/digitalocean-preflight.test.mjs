@@ -36,6 +36,7 @@ test("DigitalOcean preflight renders a placeholder-free, fail-closed staging spe
   assert.doesNotMatch(result.rendered, /CHANGE_ME/);
   assert.match(result.rendered, /repo: "project-nourish\/app"/);
   assert.match(result.rendered, /value: "project-nourish-private-staging"/);
+  assert.match(result.rendered, /value: https:\/\/syd1\.digitaloceanspaces\.com/);
   assert.match(result.rendered, /domain: api-staging\.familychef\.in/);
   assert.match(result.rendered, /value: https:\/\/control-staging\.familychef\.in/);
   assert.match(result.rendered, /value: "FamilyChef <sign-in@familychef\.in>"/);
