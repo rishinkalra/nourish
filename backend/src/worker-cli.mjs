@@ -36,6 +36,7 @@ const pool = await createPostgresPool({
   connectionString: runtimeConfiguration.databaseURL,
   maximumConnections: runtimeConfiguration.databasePoolMaximum,
   requireTLS: runtimeConfiguration.databaseRequireTLS,
+  caCertificate: runtimeConfiguration.databaseCACertificate,
   applicationName: runtimeConfiguration.databaseApplicationName,
 });
 if (runtimeConfiguration.databaseAutoMigrate) await runMigrations(pool);

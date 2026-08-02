@@ -29,6 +29,7 @@ import { PostgresRecipeGenerationService } from "./recipe-generation-service.mjs
 export async function createPostgresRuntime({
   connectionString,
   requireTLS = false,
+  caCertificate,
   maximumConnections = 10,
   autoMigrate = false,
   applicationName = "project-nourish-api",
@@ -40,7 +41,13 @@ export async function createPostgresRuntime({
   pushAppBundleID = "com.projectnourish.app",
   rateLimitSecret = "nourish-development-rate-limit-secret",
 } = {}) {
-  const pool = await createPostgresPool({ connectionString, requireTLS, maximumConnections, applicationName });
+  const pool = await createPostgresPool({
+    connectionString,
+    requireTLS,
+    caCertificate,
+    maximumConnections,
+    applicationName,
+  });
   try {
     if (autoMigrate) await runMigrations(pool);
     const planService = new PostgresPlannerService({ pool });

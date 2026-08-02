@@ -37,6 +37,10 @@ envs:
     value: "true"
     scope: RUN_TIME
     type: GENERAL
+  - key: DATABASE_CA_CERT
+    value: ${nourish-postgres.CA_CERT}
+    scope: RUN_TIME
+    type: SECRET
   - key: DATABASE_AUTO_MIGRATE
     value: "false"
     scope: RUN_TIME

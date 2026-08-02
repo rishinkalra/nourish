@@ -170,6 +170,7 @@ export function validateRuntimeConfiguration(environment = process.env, { proces
     port,
     databaseURL,
     databaseRequireTLS: environment.DATABASE_REQUIRE_TLS === "true",
+    databaseCACertificate: nonEmpty(environment.DATABASE_CA_CERT),
     databasePoolMaximum,
     databaseApplicationName: `project-nourish-${processType}`,
     databaseAutoMigrate: environment.DATABASE_AUTO_MIGRATE === "true",

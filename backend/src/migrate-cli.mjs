@@ -8,6 +8,7 @@ const pool = await createPostgresPool({
   connectionString: runtimeConfiguration.databaseURL,
   maximumConnections: 2,
   requireTLS: runtimeConfiguration.databaseRequireTLS,
+  caCertificate: runtimeConfiguration.databaseCACertificate,
   applicationName: runtimeConfiguration.databaseApplicationName,
 });
 

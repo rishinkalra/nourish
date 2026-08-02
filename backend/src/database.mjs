@@ -10,6 +10,7 @@ export async function createPostgresPool({
   connectionString,
   maximumConnections = 10,
   requireTLS = false,
+  caCertificate,
   applicationName = "project-nourish-api",
 } = {}) {
   if (!connectionString) throw new DatabaseConfigurationError("DATABASE_URL is required for PostgreSQL mode.");
@@ -25,7 +26,10 @@ export async function createPostgresPool({
     idleTimeoutMillis: 30_000,
     connectionTimeoutMillis: 5_000,
     application_name: applicationName,
-    ssl: requireTLS ? { rejectUnauthorized: true } : undefined,
+    ssl: requireTLS ? {
+      rejectUnauthorized: true,
+      ...(caCertificate ? { ca: caCertificate } : {}),
+    } : undefined,
   });
   pool.on("error", (error) => {
     process.stderr.write(`PostgreSQL idle client error: ${error.message}\n`);

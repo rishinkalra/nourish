@@ -8,6 +8,7 @@ const runtimeConfiguration = validateRuntimeConfiguration(process.env, { process
 const pool = await createPostgresPool({
   connectionString: runtimeConfiguration.databaseURL,
   requireTLS: runtimeConfiguration.databaseRequireTLS,
+  caCertificate: runtimeConfiguration.databaseCACertificate,
   maximumConnections: 2,
   applicationName: runtimeConfiguration.databaseApplicationName,
 });

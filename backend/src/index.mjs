@@ -20,6 +20,7 @@ const postgresRuntime = runtimeConfiguration.databaseURL
   ? await createPostgresRuntime({
     connectionString: runtimeConfiguration.databaseURL,
     requireTLS: runtimeConfiguration.databaseRequireTLS,
+    caCertificate: runtimeConfiguration.databaseCACertificate,
     maximumConnections: runtimeConfiguration.databasePoolMaximum,
     applicationName: runtimeConfiguration.databaseApplicationName,
     autoMigrate: runtimeConfiguration.databaseAutoMigrate,
