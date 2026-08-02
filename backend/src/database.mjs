@@ -6,6 +6,14 @@ export class DatabaseConfigurationError extends Error {
   }
 }
 
+export function connectionStringWithoutInlineTLS(connectionString) {
+  const url = new URL(connectionString);
+  for (const key of ["sslcert", "sslkey", "sslrootcert", "sslmode"]) {
+    url.searchParams.delete(key);
+  }
+  return url.toString();
+}
+
 export async function createPostgresPool({
   connectionString,
   maximumConnections = 10,
@@ -21,7 +29,7 @@ export async function createPostgresPool({
     throw new DatabaseConfigurationError(`Install backend dependencies before enabling PostgreSQL mode: ${error.message}`);
   }
   const pool = new Pool({
-    connectionString,
+    connectionString: requireTLS ? connectionStringWithoutInlineTLS(connectionString) : connectionString,
     max: maximumConnections,
     idleTimeoutMillis: 30_000,
     connectionTimeoutMillis: 5_000,
