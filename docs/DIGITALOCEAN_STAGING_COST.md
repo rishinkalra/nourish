@@ -2,26 +2,28 @@
 
 ## Decision
 
-The recommended always-on FamilyChef staging topology has an estimated DigitalOcean base cost of **USD 35.15 per month**, before taxes, third-party services and usage overages. This estimate was reviewed on 2 August 2026 against DigitalOcean's current published pricing.
+The owner-approved FamilyChef staging topology has an estimated DigitalOcean base cost of **USD 22.00 per month**, before taxes, third-party services and usage overages. This estimate was revised and approved by Rishin on 2 August 2026 against DigitalOcean's current published pricing.
 
-No cloud resource may be created until the account owner explicitly approves this estimate, confirms the billing team/project and enables a billing alert. A DigitalOcean billing alert is notification-only; it is not a spending cap.
+The approved staging envelope is **USD 30 per month**. No cloud resource may be created until the billing team/project is confirmed and a USD 25 billing alert is enabled. A DigitalOcean billing alert is notification-only; it is not a spending cap.
 
 ## Resource estimate
 
 | Resource | Checked-in or proposed size | Monthly base |
 |---|---|---:|
-| App Platform API | `apps-s-1vcpu-1gb-fixed`, one instance | USD 10.00 |
+| App Platform API | `apps-s-1vcpu-0.5gb`, one instance | USD 5.00 |
 | App Platform worker | `apps-s-1vcpu-0.5gb`, one instance | USD 5.00 |
-| Managed PostgreSQL | Basic Regular, 1 GiB RAM, 1 vCPU, 10 GiB, single node | USD 15.15 |
+| App Platform PostgreSQL | development database, 512 MiB | USD 7.00 |
 | Spaces Standard Storage | one private BLR1 subscription/bucket | USD 5.00 |
 | Pre-deploy migration job | `apps-s-1vcpu-0.5gb`, billed only while running | usage-based |
-| **Expected base total** | | **USD 35.15/month** |
+| **Expected base total** | | **USD 22.00/month** |
 
-The API and worker prices map directly to `.do/app.staging.yaml`. The migration job uses the 512 MiB container but App Platform bills jobs only while they run, with a one-minute minimum; it is therefore excluded from the always-on subtotal. The database estimate deliberately uses the smallest managed production PostgreSQL node rather than an App Platform development database because the release method requires managed backups and restore evidence. The single-node staging database is not a production high-availability design.
+The API and worker prices map directly to `.do/app.staging.yaml`. The migration job uses the 512 MiB container but App Platform bills jobs only while they run, with a one-minute minimum; it is therefore excluded from the always-on subtotal.
+
+The development database has no built-in backup feature and must contain disposable test data only. It is appropriate for this budget-limited pre-production environment, not for production or real customer data. Managed PostgreSQL backup, point-in-time recovery, failover and isolated-restore evidence remain mandatory production gates. DigitalOcean supports upgrading an App Platform development database to a managed database later.
 
 ## Approval envelope
 
-Approve an initial **USD 45/month staging envelope** to allow short migration runs and modest transfer/storage overage without silently authorizing a larger architecture. Configure the DigitalOcean team billing alert at **USD 40** and review month-to-date spend weekly. Because the alert does not stop resources, the accountable owner must investigate immediately and manually scale down or remove unintended resources.
+Rishin approved a **USD 30/month staging envelope** on 2 August 2026. The USD 8 difference between the steady base and the envelope allows short migration runs and modest transfer/storage overage without authorizing a larger architecture. Configure the DigitalOcean team billing alert at **USD 25** and review month-to-date spend weekly. Because the alert does not stop resources, the accountable owner must investigate immediately and manually scale down or remove unintended resources.
 
 This envelope excludes:
 
@@ -29,17 +31,17 @@ This envelope excludes:
 - Brevo, OpenAI API, domain renewal or external monitoring charges;
 - App Platform transfer beyond the included container allowances;
 - Spaces storage or transfer beyond the subscription allowance;
-- a database standby/high-availability node, dedicated egress IP or production environment.
+- managed-database conversion, a database standby/high-availability node, dedicated egress IP or production environment.
 
 Any one of those additions requires a fresh written cost review. Production must receive its own cost boundary after staging measurements exist.
 
 ## Owner approval record
 
-- Account/team owner: pending
+- Account/team owner: Rishin (DigitalOcean team identity pending confirmation)
 - DigitalOcean team and project: pending
 - Billing email: pending
-- Approved monthly envelope: pending (recommended USD 45)
-- Approval date: pending
+- Approved monthly envelope: USD 30
+- Approval date: 2 August 2026
 - Billing alert configured and tested: pending
 - First weekly review date: pending
 
@@ -49,4 +51,3 @@ Any one of those additions requires a fresh written cost review. Production must
 - DigitalOcean Managed Databases pricing: https://www.digitalocean.com/pricing/managed-databases
 - DigitalOcean Spaces pricing: https://docs.digitalocean.com/products/spaces/details/pricing/
 - DigitalOcean billing alerts: https://docs.digitalocean.com/platform/billing/billing-alerts/
-

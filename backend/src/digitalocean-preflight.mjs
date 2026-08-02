@@ -2,7 +2,6 @@ import { validateRuntimeConfiguration } from "./runtime-configuration.mjs";
 
 const INPUTS = Object.freeze({
   CHANGE_ME_GITHUB_REPOSITORY: "NOURISH_DO_GITHUB_REPOSITORY",
-  CHANGE_ME_EXISTING_MANAGED_POSTGRES_CLUSTER: "NOURISH_DO_POSTGRES_CLUSTER",
   CHANGE_ME_PRIVATE_SPACE_NAME: "NOURISH_DO_SPACE_NAME",
   CHANGE_ME_REVIEWED_VERSION: "NOURISH_DO_NUTRITION_VERSION",
   CHANGE_ME_RATE_LIMIT_SECRET: "NOURISH_DO_RATE_LIMIT_SECRET",
@@ -67,7 +66,7 @@ export function renderDigitalOceanStagingSpec({ template, environment = process.
       status: "ok",
       region: "blr",
       components: Object.freeze(["nourish-api", "nourish-worker", "nourish-migrate"]),
-      managedDatabaseBound: true,
+      developmentDatabaseBound: true,
       privateSpaceConfigured: true,
       applicationEncryptionConfigured: true,
       separateSpaceAccessKeys: true,
@@ -85,14 +84,14 @@ function validateTemplateTopology(template, issues) {
     "name: nourish-worker",
     "name: nourish-migrate",
     "kind: PRE_DEPLOY",
-    "value: ${nourish-postgres.DATABASE_PRIVATE_URL}",
+    "value: ${nourish-postgres.DATABASE_URL}",
     "value: https://blr1.digitaloceanspaces.com",
     "key: NOURISH_PRIVATE_OBJECT_ENCRYPTION_KEYS",
     "key: NOURISH_RATE_LIMIT_SECRET",
     "key: NOURISH_BREVO_API_KEY",
     "key: NOURISH_OPENAI_API_KEY",
     "value: none",
-    "production: true",
+    'version: "16"',
     `domain: ${FAMILY_CHEF_STAGING.apiDomain}`,
     `value: ${FAMILY_CHEF_STAGING.controlRoomOrigin}`,
     `value: "${FAMILY_CHEF_STAGING.emailFrom}"`,
@@ -117,10 +116,6 @@ function validateDeploymentInputs(values, issues) {
   const repository = values.CHANGE_ME_GITHUB_REPOSITORY;
   if (repository && !/^[^/\s]+\/[^/\s]+$/.test(repository)) {
     issues.push("NOURISH_DO_GITHUB_REPOSITORY must use owner/repository format");
-  }
-  const cluster = values.CHANGE_ME_EXISTING_MANAGED_POSTGRES_CLUSTER;
-  if (cluster && !/^[A-Za-z0-9][A-Za-z0-9-]{0,62}$/.test(cluster)) {
-    issues.push("NOURISH_DO_POSTGRES_CLUSTER must be a safe DigitalOcean cluster name");
   }
   const space = values.CHANGE_ME_PRIVATE_SPACE_NAME;
   if (space && !/^[a-z0-9][a-z0-9.-]{1,61}[a-z0-9]$/.test(space)) {

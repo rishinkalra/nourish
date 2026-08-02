@@ -12,7 +12,6 @@ const backendDirectory = resolve(dirname(fileURLToPath(import.meta.url)), "..");
 const template = await readFile(resolve(backendDirectory, "../.do/app.staging.yaml"), "utf8");
 const validEnvironment = Object.freeze({
   NOURISH_DO_GITHUB_REPOSITORY: "project-nourish/app",
-  NOURISH_DO_POSTGRES_CLUSTER: "nourish-staging-db",
   NOURISH_DO_SPACE_NAME: "project-nourish-private-staging",
   NOURISH_DO_NUTRITION_VERSION: "ai-weighted-grams-v1",
   NOURISH_DO_RATE_LIMIT_SECRET: "digitalocean-test-rate-limit-secret-64-characters-long-value",
@@ -33,6 +32,7 @@ test("DigitalOcean preflight renders a placeholder-free, fail-closed staging spe
   const result = renderDigitalOceanStagingSpec({ template, environment: validEnvironment });
   assert.equal(result.summary.status, "ok");
   assert.equal(result.summary.applicationEncryptionConfigured, true);
+  assert.equal(result.summary.developmentDatabaseBound, true);
   assert.doesNotMatch(result.rendered, /CHANGE_ME/);
   assert.match(result.rendered, /repo: "project-nourish\/app"/);
   assert.match(result.rendered, /value: "project-nourish-private-staging"/);

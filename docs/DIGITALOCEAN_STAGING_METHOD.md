@@ -2,30 +2,31 @@
 
 ## Intended topology
 
-`.do/app.staging.yaml` is a fail-closed template for a Bangalore staging deployment. It defines one public API component, one background worker, one pre-deploy migration job, and a binding to an existing managed PostgreSQL cluster. It does not create or submit anything by itself.
+`.do/app.staging.yaml` is a fail-closed template for a Bangalore staging deployment. It defines one public API component, one background worker, one pre-deploy migration job, and a disposable App Platform development PostgreSQL database. It does not create or submit anything by itself.
 
 The approved staging API domain is `api-staging.familychef.in`; the exact Control Room CORS origin is `https://control-staging.familychef.in`; and the sender identity is `FamilyChef <sign-in@familychef.in>`. These non-secret boundaries are pinned in the template. See `FAMILYCHEF_DOMAIN_CONFIGURATION.md` for production hostnames and DNS sequencing.
 
 Use these regional placements:
 
 - App Platform: `blr`;
-- managed PostgreSQL: `BLR1`, attached to the app as a trusted source; and
+- App Platform PostgreSQL 16 development database in the app region, containing disposable test data only; and
 - Spaces Standard Storage: `BLR1`, private and without CDN.
 
-The template uses the managed database's private bindable URL, runs checksum-verified migrations before a deployment becomes live, checks `/readyz` for release health, checks `/healthz` for process liveness, and gives the worker time to release leased work on termination.
+The template uses the development database's bindable URL, runs checksum-verified migrations before a deployment becomes live, checks `/readyz` for release health, checks `/healthz` for process liveness, and gives the worker time to release leased work on termination.
 
 ## Required manual replacements
 
 The checked-in file remains a secret-free template. `npm run digitalocean:preflight` renders every `CHANGE_ME` value from environment input, validates the production API and worker configuration, and prints only a non-secret summary. Supply:
 
 1. `NOURISH_DO_GITHUB_REPOSITORY`: GitHub `owner/repository` for all components.
-2. `NOURISH_DO_POSTGRES_CLUSTER`: existing managed PostgreSQL cluster name.
-3. `NOURISH_DO_SPACE_NAME`: private Spaces bucket name.
-4. `NOURISH_DO_NUTRITION_VERSION`: exact reviewed nutrition-calculation version.
-5. `NOURISH_DO_ENCRYPTION_ACTIVE_KEY_ID` and `NOURISH_DO_ENCRYPTION_KEYS`: active ID and one-line JSON key ring.
-6. `NOURISH_DO_API_SPACES_ACCESS_KEY_ID` / `NOURISH_DO_API_SPACES_SECRET_ACCESS_KEY`: bucket-read API identity.
-7. `NOURISH_DO_WORKER_SPACES_ACCESS_KEY_ID` / `NOURISH_DO_WORKER_SPACES_SECRET_ACCESS_KEY`: distinct bucket-read/write/delete worker identity.
-8. `NOURISH_DO_BREVO_API_KEY`: restricted transactional-send API key after `familychef.in` is verified.
+2. `NOURISH_DO_SPACE_NAME`: private Spaces bucket name.
+3. `NOURISH_DO_NUTRITION_VERSION`: exact reviewed nutrition-calculation version.
+4. `NOURISH_DO_ENCRYPTION_ACTIVE_KEY_ID` and `NOURISH_DO_ENCRYPTION_KEYS`: active ID and one-line JSON key ring.
+5. `NOURISH_DO_API_SPACES_ACCESS_KEY_ID` / `NOURISH_DO_API_SPACES_SECRET_ACCESS_KEY`: bucket-read API identity.
+6. `NOURISH_DO_WORKER_SPACES_ACCESS_KEY_ID` / `NOURISH_DO_WORKER_SPACES_SECRET_ACCESS_KEY`: distinct bucket-read/write/delete worker identity.
+7. `NOURISH_DO_BREVO_API_KEY`: restricted transactional-send API key after `familychef.in` is verified.
+8. `NOURISH_DO_OPENAI_API_KEY`: staging-only recipe-generation project key with a separately approved provider budget.
+9. `NOURISH_DO_RATE_LIMIT_SECRET`: independent high-entropy HMAC secret for privacy-safe shared abuse counters.
 
 The checked-in staging template keeps APNs delivery disabled until Apple configuration is ready. To validate plan-ready delivery, add `NOURISH_APNS_TEAM_ID`, `NOURISH_APNS_KEY_ID`, and the `.p8` value as worker-only secrets, then change the worker's `NOURISH_APNS_ENABLED` to `true`. Keep `NOURISH_APNS_BUNDLE_ID=com.projectnourish.app`. Never attach the APNs signing key to the public API component.
 
@@ -44,7 +45,7 @@ Do not enable bucket versioning for staging until version-aware privacy deletion
 
 ## Database controls
 
-Provision managed PostgreSQL separately rather than an App Platform development database. Require TLS, backups, point-in-time recovery, and an app trusted-source rule. Before use, perform an isolated restore drill and capture the evidence. The migration job uses `${nourish-postgres.DATABASE_PRIVATE_URL}` and must be the only mechanism that mutates schema during deployment.
+The USD 30 staging envelope uses App Platform's PostgreSQL 16 development database. It has no built-in backup feature and must contain disposable synthetic/test data only. The migration job uses `${nourish-postgres.DATABASE_URL}` and must be the only mechanism that mutates schema during deployment. Before production, upgrade or replace it with managed PostgreSQL and require TLS, backups, point-in-time recovery, a trusted-source rule and an isolated restore drill; this qualification remains a release blocker.
 
 ## Pre-submission gates
 
@@ -56,7 +57,7 @@ Before allowing any billable submission, run `scripts/verify_release_candidate.s
 4. Write a temporary rendered spec outside the workspace and validate it in DigitalOcean without creating the app.
 5. Confirm both Spaces keys are limited to the one staging bucket.
 6. Confirm the encryption JSON contains a valid base64-encoded 32-byte key and is marked secret.
-7. Confirm the database backup and restore evidence is current.
+7. Confirm the development database contains no real customer or irreplaceable data and the managed-database backup/restore qualification remains blocked for production.
 8. Review the estimated monthly cost and billing alerts with the account owner.
 9. Select a restricted log destination, uptime check, and named staging alert responder using `OBSERVABILITY_METHOD.md`; keep every monitoring credential outside source control.
 

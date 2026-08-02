@@ -30,7 +30,7 @@ envs:
     scope: RUN_TIME
     type: GENERAL
   - key: DATABASE_URL
-    value: ${nourish-postgres.DATABASE_PRIVATE_URL}
+    value: ${nourish-postgres.DATABASE_URL}
     scope: RUN_TIME
     type: SECRET
   - key: DATABASE_REQUIRE_TLS
@@ -104,7 +104,7 @@ services:
     dockerfile_path: backend/Dockerfile
     run_command: node src/index.mjs
     http_port: 8080
-    instance_size_slug: apps-s-1vcpu-1gb-fixed
+    instance_size_slug: apps-s-1vcpu-0.5gb
     instance_count: 1
     health_check:
       http_path: /readyz
@@ -279,5 +279,4 @@ jobs:
 databases:
   - name: nourish-postgres
     engine: PG
-    production: true
-    cluster_name: CHANGE_ME_EXISTING_MANAGED_POSTGRES_CLUSTER
+    version: "16"
